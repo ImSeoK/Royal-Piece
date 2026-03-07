@@ -67,9 +67,9 @@ Royal Piece는 **체스 전략 + 가챠 수집 + 덱빌딩**을 결합한 Unity 
 
 # 🧱 Project Architecture
 
-Chess.Core - 게임 데이터, 유닛 정의, 희귀도 시스템
-Chess.Simulation - 전투 로직, 게임 규칙
-Chess.Presentation - UI, HUD, 카드 렌더링
+ - Chess.Core - 게임 데이터, 유닛 정의, 희귀도 시스템
+ - Chess.Simulation - 전투 로직, 게임 규칙
+ - Chess.Presentation - UI, HUD, 카드 렌더링
 
 ---
 
