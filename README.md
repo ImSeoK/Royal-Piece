@@ -104,7 +104,7 @@ Royal Piece는 **체스 전략 + 가챠 수집 + 덱빌딩**을 결합한 Unity 
 
 | Gacha | Inventory | Deck Builder | Combat |
 |-------|-----------|--------------|--------|
-| ![Gacha](images/gacha.png) | ![Inventory](images/inventory.png) | ![DeckBuilder](images/deckbuilder.png) | ![Combat](images/combat.png) |
+| ![Gacha](images/Gacha.png) | ![Inventory](images/Inventory.png) | ![DeckBuilder](images/DeckBuilder.png) | ![Combat](images/Combat.png) |
 
 ---
 
