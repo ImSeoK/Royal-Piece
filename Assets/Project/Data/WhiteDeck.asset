@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 482c0bf3b5d7e3f40bb92eba6877f8fd, type: 3}
+  m_Name: WhiteDeck
+  m_EditorClassIdentifier: 
+  customUnits:
+  - {fileID: 11400000, guid: 318566ba575162e47a0f2ca48d1240f8, type: 2}
+  - {fileID: 11400000, guid: 318566ba575162e47a0f2ca48d1240f8, type: 2}
+  - {fileID: 11400000, guid: 318566ba575162e47a0f2ca48d1240f8, type: 2}
+  - {fileID: 11400000, guid: 318566ba575162e47a0f2ca48d1240f8, type: 2}
+  - {fileID: 11400000, guid: 318566ba575162e47a0f2ca48d1240f8, type: 2}
+  - {fileID: 11400000, guid: 318566ba575162e47a0f2ca48d1240f8, type: 2}
+  - {fileID: 11400000, guid: 318566ba575162e47a0f2ca48d1240f8, type: 2}
+  king: {fileID: 11400000, guid: 0ec27e33927227c45be22b7624a28eed, type: 2}
+  pawn: {fileID: 11400000, guid: f4b123cf7b5c0804a893bceab635b2cc, type: 2}
+  maxCustomUnits: 7
+  fixedPawns: 8
