@@ -110,7 +110,7 @@ Royal Piece는 **체스 전략 + 가챠 수집 + 덱빌딩**을 결합한 Unity 
 
 # 🎥 Gameplay Video
 
-[Gameplay Video](https://youtube.com/placeholder)
+[Gameplay Video](https://www.youtube.com/shorts/ivgyv9zHlcA)
 
 ---
 
