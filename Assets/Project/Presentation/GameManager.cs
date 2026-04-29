@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 using Chess.Core;
 using Chess.Simulation;
 
@@ -9,95 +10,73 @@ namespace Chess.Presentation
 {
     public class GameManager : MonoBehaviour
     {
-        [Header("«¡∏Æ∆’")]
+        [Header("Prefabs")]
         public GameObject unitViewPrefab;
-        public GameObject tilePrefab;
-        public GameObject moveHighlightPrefab;
-        public GameObject damagePopupPrefab;
-        public GameObject attackLinePrefab;
-
-        [Header("∫∏µÂ º≥¡§")]
-        public Color lightTileColor = Color.white;
-        public Color darkTileColor = new Color(0.4f, 0.4f, 0.4f);
-
-        [Header("«œ¿Ã∂Û¿Ã∆Æ ªˆªÛ")]
-        public Color moveHighlightColor = new Color(0, 1, 0, 0.5f);
-        public Color attackHighlightColor = new Color(1, 0, 0, 0.5f);
-
-        [Header("«√∑π¿ÃæÓ º≥¡§")]
-        public string player0Name = "«√∑π¿ÃæÓ";
-        public string player1Name = "AI";
-        public int player0Wins = 0;
-        public int player0Losses = 0;
-        public int player1Wins = 0;
-        public int player1Losses = 0;
-
-        [Header("AI º≥¡§")]
-        public bool useAI = true;
-        public float aiDelaySeconds = 1f;
 
         [Header("UI")]
         public VictoryUI victoryUI;
-        public TurnUI turnUI;
         public UnitInfoPanel unitInfoPanel;
         public EnemyUnitInfoPanel enemyUnitInfoPanel;
         public PlayerInfoUI myPlayerInfoUI;
         public PlayerInfoUI enemyPlayerInfoUI;
 
-        [Header("µ¶ º≥¡§")]  // °Á √ﬂ∞°!
+        [Header("Skill Slots")]
+        public SkillSlotUI skillSlot1;
+        public SkillSlotUI skillSlot2;
+
+        [Header("Settings")]
+        public Button menuButton;
+        public InGameSettingsPanel inGameSettingsPanel;
+
+        [Header("Deck")]
         public PlayerDeck player0Deck;
         public PlayerDeck player1Deck;
 
-        // ∞‘¿” ªÛ≈¬
         private BoardState board;
         private Dictionary<int, UnitView> unitViews = new Dictionary<int, UnitView>();
         private int nextUnitID = 0;
 
-        // «√∑π¿ÃæÓ µ•¿Ã≈Õ
-        private PlayerData player0Data;
-        private PlayerData player1Data;
-
-        // ¿‘∑¬ ∞¸∑√
         private UnitState selectedUnit;
         private List<Vector2Int> validMoves = new List<Vector2Int>();
-        private int currentPlayer = 0;
 
-        // «œ¿Ã∂Û¿Ã∆Æ ∞¸∏Æ
-        private List<GameObject> activeHighlights = new List<GameObject>();
+        private SkillDefinition pendingActiveSkill;
+        private bool isSelectingActiveSkillTarget = false;
 
-        // AI
-        private SimpleAI ai;
-        private bool isAIThinking = false;
+        private SkillDefinition pendingPassiveSkill;
+        private UnitState pendingPassiveCaster;
+        private List<Vector2Int> pendingPassiveValidMoves;
+        private bool isSelectingPassiveSkillTarget = false;
+        private UnitState passiveSkillSelectedTarget = null;
+        private bool passiveTargetConfirmed = false;
+
+        private TurnManager turnManager;
+        private BoardVisualizer boardVisualizer;
+        private CombatAnimator combatAnimator;
+
+        private bool hasMovedThisTurn = false;
+        private Dictionary<SkillDefinition, int> skillRemainingUses = new Dictionary<SkillDefinition, int>();
 
         void Start()
         {
-            // DeckTransferø°º≠ µ¶ ∞°¡Æø¿±‚ (øÏº±º¯¿ß 1)
-            if (DeckTransfer.Instance != null && DeckTransfer.Instance.Player0Deck != null)
-            {
+            inGameSettingsPanel?.Initialize(this);
+            menuButton?.onClick.AddListener(() => inGameSettingsPanel?.Open());
+
+            turnManager = GetComponent<TurnManager>();
+            boardVisualizer = GetComponent<BoardVisualizer>();
+            combatAnimator = GetComponent<CombatAnimator>();
+
+            if (DeckTransfer.Instance?.Player0Deck != null)
                 player0Deck = DeckTransfer.Instance.Player0Deck;
-                Debug.Log("[GameManager] DeckTransferø°º≠ Player0 µ¶ ∑ŒµÂ!");
-            }
-            else if (player0Deck == null)
-            {
-                Debug.LogError("[GameManager] Player0 µ¶¿Ã º≥¡§µ«¡ˆ æ æ“Ω¿¥œ¥Ÿ!");
-            }
 
-            // Player1 µ¶ (AI ∂«¥¬ ≈◊Ω∫∆ÆøÎ)
-            if (player1Deck == null)
-            {
-                Debug.LogError("[GameManager] Player1 µ¶¿Ã º≥¡§µ«¡ˆ æ æ“Ω¿¥œ¥Ÿ!");
-            }
-
-            // PlayerData √ ±‚»≠
-            player0Data = new PlayerData(0, player0Name, false, player0Wins, player0Losses);
-            player1Data = new PlayerData(1, player1Name, useAI, player1Wins, player1Losses);
+            player1Deck = GenerateAIDeck();
 
             board = new BoardState();
-            ai = new SimpleAI(board, 1);
 
-            CreateBoard();
+            boardVisualizer.Initialize(board);
+            boardVisualizer.CreateBoard();
+            combatAnimator.Initialize(unitViews);
+            turnManager.Initialize(board, ExecuteMove);
 
-            // µ¶ ±‚π› πËƒ°  // °Á ºˆ¡§!
             if (player0Deck != null && player1Deck != null)
             {
                 SetupUnitsFromDeck(player0Deck, 0);
@@ -105,89 +84,496 @@ namespace Chess.Presentation
             }
             else
             {
-                Debug.LogError("[Deck] PlayerDeck¿Ã º≥¡§µ«¡ˆ æ æ“Ω¿¥œ¥Ÿ!");
+                Debug.LogError("[Deck] PlayerDeck not assigned!");
             }
 
-            // UI √ ±‚»≠
-            if (turnUI != null)
+            myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
+            enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
+
+            SetupSkillSlots();
+        }
+
+        PlayerDeck GenerateAIDeck()
+        {
+            if (PlayerInventory.Instance == null)
             {
-                turnUI.UpdateTurn(GetCurrentPlayerData());
+                Debug.LogError("[AI Deck] PlayerInventoryÍ∞Ä ÏóÜÏäµÎãàÎã§.");
+                return player1Deck;
             }
 
-            if (myPlayerInfoUI != null)
+            var db = PlayerInventory.Instance.allUnitsDatabase;
+            var king = db.Find(u => u.isKing);
+            var pawn = db.Find(u => u.isPawn);
+            var pool = db.Where(u => !u.isKing && !u.isPawn && u.rarity <= UnitRarity.Rare).ToList();
+
+            if (king == null || pawn == null)
             {
-                myPlayerInfoUI.UpdateInfo(player0Data);
+                Debug.LogError("[AI Deck] King ÎòêÎäî Pawn Ïú†ÎãõÏùÑ Ï∞æÏùÑ Ïàò ÏóÜÏäµÎãàÎã§.");
+                return player1Deck;
             }
 
-            if (enemyPlayerInfoUI != null)
+            if (pool.Count == 0)
             {
-                enemyPlayerInfoUI.UpdateInfo(player1Data);
+                Debug.LogError("[AI Deck] Rare Ïù¥Ìïò Ïú†ÎãõÏù¥ ÏóÜÏäµÎãàÎã§.");
+                return player1Deck;
+            }
+
+            var deck = ScriptableObject.CreateInstance<PlayerDeck>();
+            deck.king = king;
+            deck.pawn = pawn;
+            deck.customUnits = new List<UnitDefinition>();
+            for (int i = 0; i < deck.maxCustomUnits; i++)
+                deck.customUnits.Add(pool[Random.Range(0, pool.Count)]);
+
+            return deck;
+        }
+
+        void SetupSkillSlots()
+        {
+            if (player0Deck == null) return;
+
+            var skills = player0Deck.selectedActiveSkills;
+
+            skillRemainingUses.Clear();
+
+            var skill1 = skills != null && skills.Count > 0 ? skills[0] : null;
+            var skill2 = skills != null && skills.Count > 1 ? skills[1] : null;
+
+            if (skill1 != null) skillRemainingUses[skill1] = skill1.maxUseCount;
+            if (skill2 != null) skillRemainingUses[skill2] = skill2.maxUseCount;
+
+            skillSlot1?.SetSkill(skill1, OnSkillUsed);
+            skillSlot2?.SetSkill(skill2, OnSkillUsed);
+        }
+
+        void OnSkillUsed(SkillDefinition skill)
+        {
+            if (turnManager.CurrentPlayer != 0) return;
+            if (hasMovedThisTurn) return;
+            if (!skillRemainingUses.TryGetValue(skill, out int remaining) || remaining <= 0) return;
+
+            skillRemainingUses[skill]--;
+            UpdateSkillSlotUI(skill);
+
+            if (skill.targetType == SkillTargetType.SingleEnemy ||
+                skill.targetType == SkillTargetType.SingleAlly)
+            {
+                pendingActiveSkill = skill;
+                isSelectingActiveSkillTarget = true;
+            }
+            else
+            {
+                SkillExecutor.ExecuteActive(skill, board);
+
+                foreach (var view in unitViews.Values)
+                    view.UpdateVisuals();
             }
         }
 
-        void CreateBoard()
+        void UpdateSkillSlotUI(SkillDefinition skill)
         {
-            for (int x = 0; x < 8; x++)
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    GameObject tile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
-                    tile.name = $"Tile_{x}_{y}";
-                    tile.transform.parent = transform;
+            int remaining = skillRemainingUses.TryGetValue(skill, out int r) ? r : 0;
+            if (skillSlot1 != null && skillSlot1.Skill == skill) skillSlot1.UpdateUses(remaining);
+            if (skillSlot2 != null && skillSlot2.Skill == skill) skillSlot2.UpdateUses(remaining);
+        }
 
-                    SpriteRenderer sr = tile.GetComponent<SpriteRenderer>();
-                    sr.color = (x + y) % 2 == 0 ? lightTileColor : darkTileColor;
+        void Update()
+        {
+            if (turnManager.IsAIThinking) return;
+
+            if (turnManager.CurrentPlayer == 0)
+                HandleInput();
+            else if (turnManager.UseAI)
+                turnManager.StartAITurn();
+        }
+
+        void HandleInput()
+        {
+            if (!Input.GetMouseButtonDown(0)) return;
+
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2Int gridPos = new Vector2Int(
+                Mathf.FloorToInt(worldPos.x + 0.5f),
+                Mathf.FloorToInt(worldPos.y + 0.5f)
+            );
+
+            if (!board.IsInBounds(gridPos)) return;
+
+            if (isSelectingActiveSkillTarget)
+            {
+                HandleActiveSkillTargetSelection(gridPos);
+                return;
+            }
+
+            if (isSelectingPassiveSkillTarget)
+            {
+                HandlePassiveSkillTargetSelection(gridPos);
+                return;
+            }
+
+            HandleClick(gridPos);
+        }
+
+        void HandleActiveSkillTargetSelection(Vector2Int gridPos)
+        {
+            if (board.TryGetUnit(gridPos, out UnitState target))
+            {
+                bool isEnemy = pendingActiveSkill.targetType == SkillTargetType.SingleEnemy;
+                bool validTarget = isEnemy ? target.ownerID != 0 : target.ownerID == 0;
+
+                if (validTarget)
+                {
+                    SkillExecutor.ExecuteActiveSingle(pendingActiveSkill, target, board);
+
+                    foreach (var view in unitViews.Values)
+                        view.UpdateVisuals();
+                }
+            }
+
+            pendingActiveSkill = null;
+            isSelectingActiveSkillTarget = false;
+            boardVisualizer.ClearHighlights();
+        }
+
+        void HandlePassiveSkillTargetSelection(Vector2Int gridPos)
+        {
+            if (!board.TryGetUnit(gridPos, out UnitState target)) return;
+            if (!target.IsAlive) return;
+            if (!pendingPassiveValidMoves.Contains(gridPos)) return;
+
+            bool isEnemy = pendingPassiveSkill.targetType == SkillTargetType.SingleEnemy;
+            bool validTarget = isEnemy
+                ? target.ownerID != pendingPassiveCaster.ownerID
+                : target.ownerID == pendingPassiveCaster.ownerID;
+
+            if (!validTarget) return;
+
+            passiveSkillSelectedTarget = target;
+            passiveTargetConfirmed = true;
+            isSelectingPassiveSkillTarget = false;
+            boardVisualizer.ClearHighlights();
+        }
+
+        void HandleClick(Vector2Int position)
+        {
+            if (selectedUnit != null)
+            {
+                if (validMoves.Contains(position))
+                    ExecuteMove(selectedUnit, position);
+
+                selectedUnit = null;
+                validMoves.Clear();
+                boardVisualizer.ClearHighlights();
+                unitInfoPanel?.Hide();
+                return;
+            }
+
+            if (board.TryGetUnit(position, out UnitState unit))
+            {
+                if (unit.ownerID == turnManager.CurrentPlayer)
+                {
+                    selectedUnit = unit;
+                    validMoves = MovementResolver.GetValidMoves(unit, board);
+                    boardVisualizer.ShowHighlights(unit, validMoves);
+                    unitInfoPanel?.Show(unit);
+                }
+                else
+                {
+                    enemyUnitInfoPanel?.Show(unit);
+                }
+            }
+            else
+            {
+                enemyUnitInfoPanel?.Hide();
+            }
+        }
+
+        void ExecuteMove(UnitState unit, Vector2Int targetPos)
+        {
+            board.MoveUnit(unit, targetPos);
+            unitViews[unit.id].UpdatePosition();
+            hasMovedThisTurn = true;
+            skillSlot1?.SetInteractable(false);
+            skillSlot2?.SetInteractable(false);
+            StartCoroutine(PlayMoveAndCombat(unit));
+        }
+
+        IEnumerator PlayMoveAndCombat(UnitState unit)
+        {
+            yield return StartCoroutine(TriggerPassiveSkillsAuto(unit, SkillTrigger.OnMove, null));
+            yield return StartCoroutine(TriggerPassiveSkillsAuto(unit, SkillTrigger.OnAdjacent, null));
+            yield return StartCoroutine(PlayCombatSequence(unit));
+        }
+
+        IEnumerator PlayCombatSequence(UnitState movedUnit)
+        {
+            var combatants = new List<UnitState> { movedUnit };
+
+            foreach (var enemy in board.GetAllUnits().Where(u => u.ownerID != movedUnit.ownerID && u.IsAlive))
+            {
+                if (AttackResolver.GetAttackTargets(enemy, board).Contains(movedUnit))
+                    combatants.Add(enemy);
+            }
+
+            foreach (var target in AttackResolver.GetAttackTargets(movedUnit, board))
+            {
+                if (!combatants.Contains(target))
+                    combatants.Add(target);
+            }
+
+            // Ï†ÑÌà¨ Ï†Ñ Ìå®ÏãúÎ∏å Ï≤¥ÌÅ¨
+            yield return StartCoroutine(TriggerPassiveSkillsBeforeCombat(movedUnit));
+
+            // Ìå®ÏãúÎ∏åÎ°ú Ï£ΩÏùÄ Ïú†Îãõ Ï≤òÎ¶¨
+            var passiveDeadUnits = board.GetAllUnits()
+                .Where(u => !u.IsAlive)
+                .ToList();
+
+            foreach (var deadUnit in passiveDeadUnits)
+            {
+                yield return StartCoroutine(TriggerPassiveSkillsAuto(deadUnit, SkillTrigger.OnDeath, null));
+
+                if (unitViews.ContainsKey(deadUnit.id))
+                    yield return StartCoroutine(combatAnimator.PlayDeathEffect(unitViews[deadUnit.id]));
+
+                DestroyUnit(deadUnit);
+
+                if (deadUnit.definition.isKing)
+                {
+                    int winnerID = 1 - deadUnit.ownerID;
+                    var winner = turnManager.GetPlayerData(winnerID);
+                    var loser = turnManager.GetPlayerData(deadUnit.ownerID);
+                    winner.wins++;
+                    loser.losses++;
+
+                    myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
+                    enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
+
+                    victoryUI?.Show(winner);
+                    enabled = false;
+                    yield break;
+                }
+            }
+
+            // Ìå®ÏãúÎ∏åÎ°ú Ï£ΩÏùÄ Ïú†ÎãõÏù¥ Ï†ÑÌà¨ Ï∞∏Ïó¨ÏûêÏóê ÏûàÏúºÎ©¥ Ï†úÍ±∞
+            combatants.RemoveAll(u => !u.IsAlive);
+
+            var sortedCombatants = combatants
+                .OrderByDescending(u => u.GetSpeed())
+                .ThenBy(u => Random.value)
+                .ToList();
+
+            var deadUnits = new List<UnitState>();
+
+            foreach (var attacker in sortedCombatants)
+            {
+                if (!attacker.IsAlive) continue;
+
+                foreach (var target in AttackResolver.GetAttackTargets(attacker, board))
+                {
+                    if (!target.IsAlive) continue;
+
+                    yield return StartCoroutine(combatAnimator.PlayAttackEffect(attacker, target));
+
+                    target.TakeDamage(attacker.GetAttack());
+                    yield return StartCoroutine(TriggerPassiveSkillsAuto(target, SkillTrigger.OnDamaged, attacker));
+
+                    if (unitViews.ContainsKey(target.id))
+                        unitViews[target.id].UpdateVisuals();
+
+                    if (!target.IsAlive)
+                        deadUnits.Add(target);
+
+                    yield return new WaitForSeconds(0.2f);
+                }
+            }
+
+            foreach (var deadUnit in deadUnits)
+            {
+                yield return StartCoroutine(TriggerPassiveSkillsAuto(deadUnit, SkillTrigger.OnDeath, null));
+
+                if (unitViews.ContainsKey(deadUnit.id))
+                    yield return StartCoroutine(combatAnimator.PlayDeathEffect(unitViews[deadUnit.id]));
+
+                DestroyUnit(deadUnit);
+
+                if (deadUnit.definition.isKing)
+                {
+                    int winnerID = 1 - deadUnit.ownerID;
+                    var winner = turnManager.GetPlayerData(winnerID);
+                    var loser = turnManager.GetPlayerData(deadUnit.ownerID);
+                    winner.wins++;
+                    loser.losses++;
+
+                    myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
+                    enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
+
+                    victoryUI?.Show(winner);
+                    enabled = false;
+                    yield break;
+                }
+            }
+
+            foreach (var unit in board.GetAllUnits())
+                unit.TickBuffs();
+
+            if (movedUnit.ownerID == turnManager.CurrentPlayer)
+            {
+                int prevPlayer = turnManager.CurrentPlayer;
+                turnManager.SwitchTurn();
+
+                hasMovedThisTurn = false;
+
+                // ÌîåÎ†àÏù¥Ïñ¥ ÌÑ¥Ïù¥ ÎèåÏïÑÏôîÏùÑ ÎïåÎßå Ïä¨Î°Ø Ïû¨ÌôúÏÑ±Ìôî
+                if (turnManager.CurrentPlayer == 0)
+                {
+                    if (skillSlot1 != null && skillSlot1.Skill != null && skillRemainingUses.TryGetValue(skillSlot1.Skill, out int r1) && r1 > 0)
+                        skillSlot1.SetInteractable(true);
+                    if (skillSlot2 != null && skillSlot2.Skill != null && skillRemainingUses.TryGetValue(skillSlot2.Skill, out int r2) && r2 > 0)
+                        skillSlot2.SetInteractable(true);
+                }
+
+                if (prevPlayer == 1 && turnManager.UseAI)
+                    turnManager.SetAIThinking(false);
+
+                if (turnManager.CurrentPlayer == 1 && turnManager.UseAI)
+                    yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        IEnumerator TriggerPassiveSkillsBeforeCombat(UnitState movedUnit)
+        {
+            if (movedUnit.definition.passiveSkills == null) yield break;
+
+            foreach (var skill in movedUnit.definition.passiveSkills)
+            {
+                if (skill == null) continue;
+                if (skill.skillType != SkillType.Passive) continue;
+                if (skill.trigger != SkillTrigger.OnAttack) continue;
+
+                if (skill.targetType == SkillTargetType.SingleEnemy ||
+                    skill.targetType == SkillTargetType.SingleAlly)
+                {
+                    yield return StartCoroutine(WaitForPassiveSkillTarget(skill, movedUnit));
+                }
+                else
+                {
+                    SkillExecutor.ExecutePassive(skill, movedUnit, board);
+
+                    foreach (var view in unitViews.Values)
+                        view.UpdateVisuals();
                 }
             }
         }
 
-        void UpdatePlayerInfoUI()
+        IEnumerator WaitForPassiveSkillTarget(SkillDefinition skill, UnitState caster)
         {
-            if (myPlayerInfoUI != null)
+            pendingPassiveSkill = skill;
+            pendingPassiveCaster = caster;
+
+            var attackTargets = AttackResolver.GetAttackTargets(caster, board);
+            pendingPassiveValidMoves = attackTargets.Select(u => u.position).ToList();
+
+            passiveSkillSelectedTarget = null;
+            passiveTargetConfirmed = false;
+
+            bool targetAlly = skill.targetType == SkillTargetType.SingleAlly;
+
+            bool hasValidTarget = pendingPassiveValidMoves.Any(pos =>
             {
-                myPlayerInfoUI.UpdateInfo(player0Data);
+                if (!board.TryGetUnit(pos, out var unit)) return false;
+                if (!unit.IsAlive) return false;
+                bool isAlly = unit.ownerID == caster.ownerID;
+                return targetAlly == isAlly;
+            });
+
+            if (!hasValidTarget)
+            {
+                ClearPassiveSkillState();
+                yield break;
             }
 
-            if (enemyPlayerInfoUI != null)
+            isSelectingPassiveSkillTarget = true;
+            boardVisualizer.ShowSkillTargetHighlights(pendingPassiveValidMoves, targetAlly, caster.ownerID);
+
+            while (!passiveTargetConfirmed)
+                yield return null;
+
+            if (passiveSkillSelectedTarget != null)
             {
-                enemyPlayerInfoUI.UpdateInfo(player1Data);
+                SkillExecutor.ExecuteActiveSingle(skill, passiveSkillSelectedTarget, board);
+
+                foreach (var view in unitViews.Values)
+                    view.UpdateVisuals();
             }
+
+            ClearPassiveSkillState();
+        }
+
+        void ClearPassiveSkillState()
+        {
+            pendingPassiveSkill = null;
+            pendingPassiveCaster = null;
+            pendingPassiveValidMoves = null;
+            passiveSkillSelectedTarget = null;
+            passiveTargetConfirmed = false;
+            isSelectingPassiveSkillTarget = false;
+        }
+
+        IEnumerator TriggerPassiveSkillsAuto(UnitState unit, SkillTrigger trigger, UnitState other)
+        {
+            if (unit == null || unit.definition.passiveSkills == null) yield break;
+
+            // OnAdjacent: Ïù∏Ï†ë Ïú†ÎãõÏù¥ ÏóÜÏúºÎ©¥ Î∞úÎèôÌïòÏßÄ ÏïäÏùå
+            if (trigger == SkillTrigger.OnAdjacent && !HasAdjacentUnit(unit))
+                yield break;
+
+            bool anyFired = false;
+            foreach (var skill in unit.definition.passiveSkills)
+            {
+                if (skill == null || skill.skillType != SkillType.Passive) continue;
+                if (skill.trigger != trigger) continue;
+
+                SkillExecutor.ExecutePassive(skill, unit, board);
+                anyFired = true;
+            }
+
+            if (anyFired)
+                foreach (var view in unitViews.Values)
+                    view.UpdateVisuals();
+        }
+
+        bool HasAdjacentUnit(UnitState unit)
+        {
+            for (int dx = -1; dx <= 1; dx++)
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0) continue;
+                    if (board.TryGetUnit(unit.position + new Vector2Int(dx, dy), out _))
+                        return true;
+                }
+            return false;
         }
 
         void SetupUnitsFromDeck(PlayerDeck deck, int owner)
         {
             if (!deck.IsValid(out string error))
             {
-                Debug.LogError($"[Deck] Player {owner}¿« µ¶¿Ã ¿Ø»ø«œ¡ˆ æ Ω¿¥œ¥Ÿ: {error}");
+                Debug.LogError($"[Deck] Player {owner} deck invalid: {error}");
                 return;
             }
 
-            Debug.Log($"[Deck] Player {owner} µ¶ πËƒ°: {deck.GetDeckInfo()}");
-
-            // «√∑π¿ÃæÓ: 0-1¡Ÿ, AI: 7-6¡Ÿ (ø™º¯)
             int mainRow = owner == 0 ? 0 : 7;
             int pawnRow = owner == 0 ? 1 : 6;
 
-            // === Row 0 ∂«¥¬ 7: King + ƒøΩ∫≈“ 7∞≥ ===
+            CreateUnit(deck.king, new Vector2Int(3, mainRow), owner);
 
-            // King πËƒ° (¡ﬂæ”, x=3 ∂«¥¬ 4)
-            int kingX = 3;  // ∂«¥¬ 4, ø¯«œ¥¬ ¿ßƒ°
-            CreateUnit(deck.king, new Vector2Int(kingX, mainRow), owner);
-
-            // ƒøΩ∫≈“ ¿Ø¥÷ 7∞≥ πËƒ°
-            List<int> positions = new List<int> { 0, 1, 2, 4, 5, 6, 7 };  // King ¿ßƒ°(3) ¡¶ø‹
-
+            var positions = new List<int> { 0, 1, 2, 4, 5, 6, 7 };
             for (int i = 0; i < deck.customUnits.Count && i < positions.Count; i++)
-            {
                 CreateUnit(deck.customUnits[i], new Vector2Int(positions[i], mainRow), owner);
-            }
-
-            // === Row 1 ∂«¥¬ 6: Pawn 8∞≥ ∞Ì¡§ ===
 
             for (int x = 0; x < 8; x++)
-            {
                 CreateUnit(deck.pawn, new Vector2Int(x, pawnRow), owner);
-            }
         }
 
         void CreateUnit(UnitDefinition def, Vector2Int position, int owner)
@@ -201,380 +587,10 @@ namespace Chess.Presentation
 
             UnitView view = viewObj.GetComponent<UnitView>();
             view.Initialize(unit);
-
-            view.spriteRenderer.color = owner == 0 ? Color.white : Color.black;
+            // Ï†ÅÍµ∞(owner=1)ÏùÄ Ïä§ÌîÑÎùºÏù¥Ìä∏Î•º Ï¢åÏö∞ Î∞òÏ†ÑÌï¥ ÌåÄ Íµ¨Î∂Ñ
+            view.spriteRenderer.flipX = owner == 1;
 
             unitViews[unit.id] = view;
-        }
-
-        void Update()
-        {
-            if (isAIThinking)
-                return;
-
-            if (currentPlayer == 0)
-            {
-                HandleInput();
-            }
-            else if (useAI)
-            {
-                Debug.Log($"[Update] AI ≈œ ∞®¡ˆ, AITurn ƒ⁄∑Á∆æ Ω√¿€");
-                StartCoroutine(AITurn());
-            }
-        }
-
-        IEnumerator AITurn()
-        {
-            if (isAIThinking)
-            {
-                Debug.LogWarning("[AI] ¿ÃπÃ Ω««‡ ¡ﬂ! ¡ﬂ∫π »£√‚ ¬˜¥‹");
-                yield break;
-            }
-
-            isAIThinking = true;
-            Debug.Log($"[AI] ≈œ Ω√¿€, isAIThinking = true, currentPlayer = {currentPlayer}");
-
-            yield return new WaitForSeconds(aiDelaySeconds);
-
-            var (unit, targetPos) = ai.DecideMove();
-
-            if (unit != null)
-            {
-                Debug.Log($"[AI] {unit.definition.unitName} ¿Ãµø ∞·¡§: ({unit.position.x}, {unit.position.y}) °Ê ({targetPos.x}, {targetPos.y})");
-                ExecuteMove(unit, targetPos);
-            }
-            else
-            {
-                Debug.Log("[AI] ¿Ãµø ∫“∞°, ≈œ ≥—±Ë");
-                currentPlayer = 0;
-
-                if (turnUI != null)
-                {
-                    turnUI.UpdateTurn(GetCurrentPlayerData());
-                }
-
-                isAIThinking = false;
-                Debug.Log($"[AI] ≈œ ¡æ∑· (¿Ãµø ∫“∞°), isAIThinking = false");
-            }
-
-            Debug.Log($"[AI] ExecuteMove »£√‚ øœ∑·, ¿¸≈ı ¥Î±‚ ¡ﬂ...");
-        }
-
-        void HandleInput()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2Int gridPos = new Vector2Int(
-                    Mathf.FloorToInt(worldPos.x + 0.5f),
-                    Mathf.FloorToInt(worldPos.y + 0.5f)
-                );
-
-                if (!board.IsInBounds(gridPos)) return;
-
-                HandleClick(gridPos);
-            }
-        }
-
-        void HandleClick(Vector2Int position)
-        {
-            if (selectedUnit != null)
-            {
-                if (validMoves.Contains(position))
-                {
-                    ExecuteMove(selectedUnit, position);
-                }
-
-                selectedUnit = null;
-                validMoves.Clear();
-                ClearHighlights();
-                unitInfoPanel?.Hide();  // ¿Ãµø Ω√ø°∏∏ ≥ª ∆–≥Œ º˚±Ë
-                return;
-            }
-
-            if (board.TryGetUnit(position, out UnitState unit))
-            {
-                Debug.Log($"¿Ø¥÷ ≈¨∏Ø: {unit.definition.unitName}, º“¿Ø¿⁄: {unit.ownerID}, «ˆ¿Á «√∑π¿ÃæÓ: {currentPlayer}");
-
-                // ≥ª ¿Ø¥÷ º±≈√
-                if (unit.ownerID == currentPlayer)
-                {
-                    selectedUnit = unit;
-                    validMoves = MovementResolver.GetValidMoves(unit, board);
-
-                    Debug.Log($"{unit.definition.unitName} º±≈√µ . ¿Ãµø ∞°¥…: {validMoves.Count}ƒ≠");
-
-                    ShowMoveHighlights(unit);
-                    unitInfoPanel?.Show(unit);  // øÏ√¯ ∆–≥Œ «•Ω√
-                                                // enemyUnitInfoPanel¿∫ ±◊¥Î∑Œ ¿Ø¡ˆ (º˚±‚¡ˆ æ ¿Ω)
-                }
-                // ªÛ¥Î ¿Ø¥÷ ≈¨∏Ø
-                else
-                {
-                    Debug.Log($"ªÛ¥Î ¿Ø¥÷ ≈¨∏Ø! EnemyPanel «•Ω√");
-                    enemyUnitInfoPanel?.Show(unit);  // ¡¬√¯ ∆–≥Œ «•Ω√
-                                                     // unitInfoPanel¿∫ ±◊¥Î∑Œ ¿Ø¡ˆ (º˚±‚¡ˆ æ ¿Ω)
-                }
-            }
-            else
-            {
-                // ∫Û ƒ≠ ≈¨∏Ø Ω√ ªÛ¥Î ∆–≥Œ∏∏ º˚±Ë
-                enemyUnitInfoPanel?.Hide();
-            }
-        }
-
-        void ShowMoveHighlights(UnitState unit)
-        {
-            ClearHighlights();
-
-            foreach (var pos in validMoves)
-            {
-                bool hasEnemy = board.TryGetUnit(pos, out var targetUnit) &&
-                                targetUnit.ownerID != unit.ownerID;
-
-                GameObject highlight = Instantiate(
-                    moveHighlightPrefab,
-                    new Vector3(pos.x, pos.y, 0),
-                    Quaternion.identity
-                );
-
-                highlight.name = $"Highlight_{pos.x}_{pos.y}";
-                highlight.transform.parent = transform;
-
-                SpriteRenderer sr = highlight.GetComponent<SpriteRenderer>();
-                sr.color = hasEnemy ? attackHighlightColor : moveHighlightColor;
-
-                activeHighlights.Add(highlight);
-            }
-
-            var attackTargets = AttackResolver.GetAttackTargets(unit, board);
-            foreach (var target in attackTargets)
-            {
-                if (validMoves.Contains(target.position))
-                    continue;
-
-                GameObject highlight = Instantiate(
-                    moveHighlightPrefab,
-                    new Vector3(target.position.x, target.position.y, 0),
-                    Quaternion.identity
-                );
-
-                highlight.name = $"AttackHighlight_{target.position.x}_{target.position.y}";
-                highlight.transform.parent = transform;
-
-                SpriteRenderer sr = highlight.GetComponent<SpriteRenderer>();
-                sr.color = new Color(1, 0, 0, 0.7f);
-
-                activeHighlights.Add(highlight);
-            }
-        }
-
-        void ClearHighlights()
-        {
-            foreach (var highlight in activeHighlights)
-            {
-                if (highlight != null)
-                {
-                    Destroy(highlight);
-                }
-            }
-            activeHighlights.Clear();
-        }
-
-        void ExecuteMove(UnitState unit, Vector2Int targetPos)
-        {
-            Debug.Log($"=== ExecuteMove Ω√¿€ ===");
-            Debug.Log($"¿Ø¥÷: {unit.definition.unitName} (º“¿Ø¿⁄: {unit.ownerID})");
-            Debug.Log($"«ˆ¿Á ≈œ: {currentPlayer}, isAIThinking: {isAIThinking}");
-
-            board.MoveUnit(unit, targetPos);
-            unitViews[unit.id].UpdatePosition();
-
-            Debug.Log($"[¿Ãµø] {unit.definition.unitName} °Ê ({targetPos.x}, {targetPos.y})");
-
-            StartCoroutine(PlayCombatSequence(unit));
-        }
-
-        IEnumerator PlayCombatSequence(UnitState movedUnit)
-        {
-            Debug.Log($"=== PlayCombatSequence Ω√¿€ ===");
-
-            // 1¥‹∞Ë: ¿¸≈ı ¬¸∞°¿⁄ ºˆ¡˝
-            var combatants = new List<UnitState>();
-            combatants.Add(movedUnit);
-
-            var allEnemies = board.GetAllUnits()
-                .Where(u => u.ownerID != movedUnit.ownerID && u.IsAlive);
-
-            foreach (var enemy in allEnemies)
-            {
-                var targets = AttackResolver.GetAttackTargets(enemy, board);
-                if (targets.Contains(movedUnit))
-                {
-                    combatants.Add(enemy);
-                }
-            }
-
-            var myTargets = AttackResolver.GetAttackTargets(movedUnit, board);
-            foreach (var target in myTargets)
-            {
-                if (!combatants.Contains(target))
-                {
-                    combatants.Add(target);
-                }
-            }
-
-            // 2¥‹∞Ë: º”µµ º¯ ¡§∑ƒ
-            var sortedCombatants = combatants
-                .OrderByDescending(u => u.definition.speed)
-                .ThenBy(u => Random.value)
-                .ToList();
-
-            Debug.Log($"[¿¸≈ı] ¬¸∞°¿⁄: {combatants.Count}∏Ì");
-
-            var deadUnits = new List<UnitState>();
-
-            // 3¥‹∞Ë: º¯¬˜ ∞¯∞›
-            foreach (var attacker in sortedCombatants)
-            {
-                if (!attacker.IsAlive)
-                {
-                    Debug.Log($"[¿¸≈ı] {attacker.definition.unitName}¥¬ ¿ÃπÃ ªÁ∏¡");
-                    continue;
-                }
-
-                var targets = AttackResolver.GetAttackTargets(attacker, board);
-                Debug.Log($"[¿¸≈ı] {attacker.definition.unitName}(º”µµ:{attacker.definition.speed}) ∞¯∞› ¥ÎªÛ: {targets.Count}∏Ì");
-
-                foreach (var target in targets)
-                {
-                    if (!target.IsAlive)
-                        continue;
-
-                    yield return StartCoroutine(PlayAttackEffect(attacker, target));
-
-                    int damage = attacker.definition.attackPower;
-                    target.TakeDamage(damage);
-
-                    Debug.Log($"[¿¸≈ı] {attacker.definition.unitName} °Ê {target.definition.unitName} ({damage} µ•πÃ¡ˆ, ≥≤¿∫ HP: {target.currentHP})");
-
-                    if (unitViews.ContainsKey(target.id))
-                    {
-                        unitViews[target.id].UpdateVisuals();
-                    }
-
-                    if (!target.IsAlive)
-                    {
-                        deadUnits.Add(target);
-                        Debug.Log($"[¿¸≈ı] {target.definition.unitName} ªÁ∏¡!");
-                    }
-
-                    yield return new WaitForSeconds(0.2f);
-                }
-            }
-
-            // 4¥‹∞Ë: ªÁ∏¡ √≥∏Æ
-            foreach (var deadUnit in deadUnits)
-            {
-                if (unitViews.ContainsKey(deadUnit.id))
-                {
-                    yield return StartCoroutine(unitViews[deadUnit.id].PlayDeathEffect());
-                }
-
-                DestroyUnit(deadUnit);
-
-                if (deadUnit.definition.isKing)
-                {
-                    int winnerID = 1 - deadUnit.ownerID;
-                    int loserID = deadUnit.ownerID;
-
-                    PlayerData winner = GetPlayerData(winnerID);
-                    PlayerData loser = GetPlayerData(loserID);
-
-                    // ¿¸¿˚ æ˜µ•¿Ã∆Æ  // °Á √ﬂ∞°
-                    winner.wins++;
-                    loser.losses++;
-
-                    Debug.Log($"°⁄ {winner.GetDisplayName()} Ω¬∏Æ! °⁄");
-                    Debug.Log($"[¿¸¿˚] {winner.GetDisplayName()}: {winner.GetRecord()}");
-                    Debug.Log($"[¿¸¿˚] {loser.GetDisplayName()}: {loser.GetRecord()}");
-
-                    // UI ∞ªΩ≈  // °Á √ﬂ∞°
-                    UpdatePlayerInfoUI();
-
-                    if (victoryUI != null)
-                    {
-                        victoryUI.Show(winner);
-                    }
-
-                    enabled = false;
-                    yield break;
-                }
-            }
-
-            // 5¥‹∞Ë: ≈œ ¿¸»Ø
-            int moverOwner = movedUnit.ownerID;
-
-            Debug.Log($"[≈œ ¿¸»Ø √º≈©] ¿Ãµø ¿Ø¥÷ ¡÷¿Œ: {moverOwner}, «ˆ¿Á «√∑π¿ÃæÓ: {currentPlayer}");
-
-            if (moverOwner == currentPlayer)
-            {
-                int prevPlayer = currentPlayer;
-
-                currentPlayer = 1 - currentPlayer;
-                Debug.Log($"[≈œ ¿¸»Ø] {GetPlayerData(prevPlayer).GetDisplayName()} °Ê {GetCurrentPlayerData().GetDisplayName()}");
-
-                if (turnUI != null)
-                {
-                    turnUI.UpdateTurn(GetCurrentPlayerData());
-                }
-
-                if (prevPlayer == 1 && useAI)
-                {
-                    isAIThinking = false;
-                    Debug.Log($"[AI] ≈œ ¡æ∑·, isAIThinking = false");
-                }
-
-                if (currentPlayer == 1 && useAI)
-                {
-                    Debug.Log($"[AI] 0.5√  »ƒ ¥Ÿ¿Ω AI ≈œ Ω√¿€");
-                    yield return new WaitForSeconds(0.5f);
-                }
-            }
-            else
-            {
-                Debug.LogError($"[πˆ±◊!] ¿Ãµø ¿Ø¥÷ ¡÷¿Œ({moverOwner})∞˙ «ˆ¿Á «√∑π¿ÃæÓ({currentPlayer})∞° ¥Ÿ∏ß!");
-            }
-
-            Debug.Log($"=== PlayCombatSequence ¡æ∑· ===");
-            Debug.Log($"currentPlayer: {currentPlayer}, isAIThinking: {isAIThinking}");
-        }
-
-        IEnumerator PlayAttackEffect(UnitState attacker, UnitState target)
-        {
-            Vector3 attackerPos = unitViews[attacker.id].transform.position;
-            Vector3 targetPos = unitViews[target.id].transform.position;
-
-            if (attackLinePrefab != null)
-            {
-                GameObject lineObj = Instantiate(attackLinePrefab, Vector3.zero, Quaternion.identity);
-                AttackLine line = lineObj.GetComponent<AttackLine>();
-                line.Initialize(attackerPos, targetPos);
-            }
-
-            if (unitViews.ContainsKey(target.id))
-            {
-                StartCoroutine(unitViews[target.id].PlayHitEffect());
-            }
-
-            if (damagePopupPrefab != null)
-            {
-                GameObject popup = Instantiate(damagePopupPrefab, targetPos, Quaternion.identity);
-                DamagePopup damagePopup = popup.GetComponent<DamagePopup>();
-                damagePopup.Initialize(attacker.definition.attackPower, targetPos);
-            }
-
-            yield return new WaitForSeconds(0.15f);
         }
 
         void DestroyUnit(UnitState unit)
@@ -584,18 +600,7 @@ namespace Chess.Presentation
                 Destroy(view.gameObject);
                 unitViews.Remove(unit.id);
             }
-
             board.RemoveUnit(unit.position);
-        }
-
-        PlayerData GetCurrentPlayerData()
-        {
-            return currentPlayer == 0 ? player0Data : player1Data;
-        }
-
-        PlayerData GetPlayerData(int playerID)
-        {
-            return playerID == 0 ? player0Data : player1Data;
         }
     }
 }

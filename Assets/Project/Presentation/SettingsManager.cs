@@ -27,7 +27,7 @@ namespace Chess.Presentation
         {
             BGMVolume = value;
             PlayerPrefs.SetFloat(KEY_BGM, value);
-            // AudioManager 연동 시 여기서 처리
+            AudioManager.Instance?.SetVolume(value);
         }
 
         public void SetSFX(float value)
