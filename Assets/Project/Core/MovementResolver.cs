@@ -29,6 +29,12 @@ namespace Chess.Simulation
                 moves.AddRange(GetKnightMoves(unit.position, board));
             }
 
+            // Enchanter 加己
+            if (unit.definition.moveAttributes.HasFlag(MovementAttribute.Enchanter))
+            {
+                moves.AddRange(GetEnchanterMoves(unit.position, board));
+            }
+
             // King 加己
             if (unit.definition.moveAttributes.HasFlag(MovementAttribute.King))
             {
@@ -133,6 +139,36 @@ namespace Chess.Simulation
                 {
                     moves.Add(targetPos);
                 }
+            }
+
+            return moves;
+        }
+
+        // Enchanter 捞悼
+        private static List<Vector2Int> GetEnchanterMoves(Vector2Int pos, BoardState board)
+        {
+            var moves = new List<Vector2Int>();
+
+            // Distance-2 jump on same-color tiles (8 candidate tiles)
+            // 4 diagonal + 4 straight
+            Vector2Int[] offsets = {
+        new Vector2Int(2, 2), new Vector2Int(2, -2),
+        new Vector2Int(-2, 2), new Vector2Int(-2, -2),
+        new Vector2Int(2, 0), new Vector2Int(-2, 0),
+        new Vector2Int(0, 2), new Vector2Int(0, -2)
+    };
+
+            foreach (var offset in offsets)
+            {
+                var targetPos = pos + offset;
+
+                // Out of bounds check
+                if (!board.IsInBounds(targetPos)) continue;
+
+                // Empty tile check (jumping ignores middle units, but lands on empty only)
+                if (!board.IsEmpty(targetPos)) continue;
+
+                moves.Add(targetPos);
             }
 
             return moves;

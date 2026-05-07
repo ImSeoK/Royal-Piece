@@ -13,10 +13,21 @@ MonoBehaviour:
   m_Name: WhiteKing
   m_EditorClassIdentifier: 
   unitName: King
-  icon: {fileID: 0}
+  icon: {fileID: -9021012034253912271, guid: e5a512bdc50ddfc47a161834454331a2, type: 3}
+  enhancedIcon: {fileID: 0}
   maxHP: 3
   attackPower: 1
   speed: 5
+  defense: 0
   moveAttributes: 16
   isKing: 1
   isPawn: 0
+  rarity: 0
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 0
+  atkEnhance: 0
+  spdEnhance: 0
+  defEnhance: 0
+  displayScale: 0.85
+  enhanceGoldCost: 500

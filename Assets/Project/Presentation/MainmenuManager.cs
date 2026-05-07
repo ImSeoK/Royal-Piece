@@ -1,6 +1,7 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections.Generic;
 using Chess.Core;
 
 namespace Chess.Presentation
@@ -16,7 +17,6 @@ namespace Chess.Presentation
 
         void Start()
         {
-            // ¹öÆ° ÀÌº¥Æ® ¿¬°á
             if (deckBuilderButton != null)
                 deckBuilderButton.onClick.AddListener(OnDeckBuilderClicked);
 
@@ -29,137 +29,137 @@ namespace Chess.Presentation
             if (startGameButton != null)
                 startGameButton.onClick.AddListener(OnStartGameClicked);
 
-            // UI ¾÷µ¥ÀÌÆ®
             UpdateUI();
         }
 
         void Update()
         {
-            // °ñµå ½Ç½Ã°£ ¾÷µ¥ÀÌÆ®
             UpdateUI();
         }
 
         void UpdateUI()
         {
             if (PlayerInventory.Instance != null && currencyText != null)
-            {
-                currencyText.text = PlayerInventory.Instance.currency.ToString("N0"); ;
-            }
+                currencyText.text = PlayerInventory.Instance.currency.ToString("N0");
         }
 
-        void OnDeckBuilderClicked()
-        {
-            Debug.Log("[MainMenu] µ¦ ºô´õ·Î ÀÌµ¿");
-            SceneManager.LoadScene("DeckBuilder");
-        }
-
-        void OnGachaClicked()
-        {
-            Debug.Log("[MainMenu] °¡Ã­·Î ÀÌµ¿");
-            SceneManager.LoadScene("Gacha"); 
-        }
-
-
-        void OnInventoryClicked()
-        {
-            Debug.Log("[MainMenu] °¡Ã­·Î ÀÌµ¿");
-            SceneManager.LoadScene("Inventory");
-        }
+        void OnDeckBuilderClicked() => SceneManager.LoadScene("DeckBuilder");
+        void OnGachaClicked() => SceneManager.LoadScene("Gacha");
+        void OnInventoryClicked() => SceneManager.LoadScene("Inventory");
 
         void OnStartGameClicked()
         {
-            Debug.Log("[MainMenu] °ÔÀÓ ½ÃÀÛ");
-
-            // PlayerInventory È®ÀÎ
             if (PlayerInventory.Instance == null)
             {
-                Debug.LogError("[MainMenu] PlayerInventory°¡ ¾ø½À´Ï´Ù!");
+                Debug.LogError("[MainMenu] PlayerInventoryê°€ ì—†ìŠµë‹ˆë‹¤!");
                 return;
             }
 
-            // ÀúÀåµÈ µ¦ÀÌ ÀÖ´ÂÁö È®ÀÎ
             if (!PlayerPrefs.HasKey("PlayerDeck"))
             {
-                Debug.LogWarning("[MainMenu] ÀúÀåµÈ µ¦ÀÌ ¾ø½À´Ï´Ù! µ¦ ºô´õ·Î ÀÌµ¿ÇÕ´Ï´Ù.");
+                Debug.LogWarning("[MainMenu] ì €ì¥ëœ ë±ì´ ì—†ìŠµë‹ˆë‹¤! ë± ë¹Œë”ë¡œ ì´ë™í•©ë‹ˆë‹¤.");
                 SceneManager.LoadScene("DeckBuilder");
                 return;
             }
 
-            // ÀúÀåµÈ µ¦ ·Îµå ¹× DeckTransfer¿¡ ÇÒ´ç
             if (LoadAndTransferDeck())
-            {
-                // °ÔÀÓ ½ÃÀÛ
                 SceneManager.LoadScene("SampleScene");
-            }
             else
             {
-                Debug.LogWarning("[MainMenu] µ¦ ·Îµå ½ÇÆĞ! µ¦ ºô´õ·Î ÀÌµ¿ÇÕ´Ï´Ù.");
+                Debug.LogWarning("[MainMenu] ë± ë¡œë“œ ì‹¤íŒ¨! ë± ë¹Œë”ë¡œ ì´ë™í•©ë‹ˆë‹¤.");
                 SceneManager.LoadScene("DeckBuilder");
             }
         }
+
         bool LoadAndTransferDeck()
         {
             try
             {
-                // SavedDeckData ·Îµå
                 string json = PlayerPrefs.GetString("PlayerDeck");
                 SavedDeckData data = JsonUtility.FromJson<SavedDeckData>(json);
 
                 if (data == null || data.customUnitNames.Count == 0)
                 {
-                    Debug.LogWarning("[MainMenu] µ¦ µ¥ÀÌÅÍ°¡ ºñ¾îÀÖ½À´Ï´Ù!");
+                    Debug.LogWarning("[MainMenu] ë± ë°ì´í„°ê°€ ë¹„ì–´ìˆìŠµë‹ˆë‹¤!");
                     return false;
                 }
 
-                // PlayerDeck »ı¼º
                 PlayerDeck playerDeck = ScriptableObject.CreateInstance<PlayerDeck>();
-                playerDeck.customUnits = new System.Collections.Generic.List<UnitDefinition>();
+                playerDeck.customUnits = new List<UnitDefinition>();
 
-                // À¯´Ö ÀÌ¸§ ¡æ UnitDefinition º¯È¯
+                // ìœ ë‹› ë¡œë“œ â€” ìŠ¤í‚¬ íƒìƒ‰ ë²”ìœ„ë¡œë„ ì‚¬ìš©
+                var deckUnits = new List<UnitDefinition>();
                 foreach (string unitName in data.customUnitNames)
                 {
                     UnitDefinition unit = PlayerInventory.Instance.allUnitsDatabase.Find(u => u.unitName == unitName);
-
                     if (unit != null)
                     {
                         playerDeck.customUnits.Add(unit);
+                        deckUnits.Add(unit);
                     }
                     else
+                        Debug.LogWarning($"[MainMenu] ìœ ë‹›ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ: {unitName}");
+                }
+
+                // King / Pawn ë¡œë“œ
+                if (!string.IsNullOrEmpty(data.kingName))
+                    playerDeck.king = PlayerInventory.Instance.allUnitsDatabase.Find(u => u.unitName == data.kingName);
+
+                if (!string.IsNullOrEmpty(data.pawnName))
+                    playerDeck.pawn = PlayerInventory.Instance.allUnitsDatabase.Find(u => u.unitName == data.pawnName);
+
+                // ìŠ¤í‚¬ ë¡œë“œ â€” ë±ì— í¸ì„±ëœ ìœ ë‹› ì•ˆì—ì„œë§Œ íƒìƒ‰
+                // DeckBuilderManager.FindSkillInDeck()ê³¼ ë™ì¼í•œ íƒìƒ‰ ë²”ìœ„ë¡œ í†µì¼
+                if (data.selectedSkillNames != null && data.selectedSkillNames.Count > 0)
+                {
+                    foreach (string skillName in data.selectedSkillNames)
                     {
-                        Debug.LogWarning($"[MainMenu] À¯´ÖÀ» Ã£À» ¼ö ¾øÀ½: {unitName}");
+                        SkillDefinition found = FindSkillInUnits(skillName, deckUnits);
+                        if (found != null)
+                        {
+                            playerDeck.selectedActiveSkills.Add(found);
+                            Debug.Log($"[MainMenu] ìŠ¤í‚¬ ë¡œë“œ: {skillName}");
+                        }
+                        else
+                            Debug.LogWarning($"[MainMenu] ìŠ¤í‚¬ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ: {skillName}");
                     }
                 }
 
-                // King ¼³Á¤
-                if (!string.IsNullOrEmpty(data.kingName))
-                {
-                    playerDeck.king = PlayerInventory.Instance.allUnitsDatabase.Find(u => u.unitName == data.kingName);
-                }
-
-                // Pawn ¼³Á¤
-                if (!string.IsNullOrEmpty(data.pawnName))
-                {
-                    playerDeck.pawn = PlayerInventory.Instance.allUnitsDatabase.Find(u => u.unitName == data.pawnName);
-                }
-
-                // DeckTransfer¿¡ ÇÒ´ç
                 if (DeckTransfer.Instance != null)
                 {
                     DeckTransfer.Instance.Player0Deck = playerDeck;
-                    Debug.Log($"[MainMenu] µ¦ ·Îµå ¿Ï·á! {playerDeck.customUnits.Count}°³ À¯´Ö");
+                    Debug.Log($"[MainMenu] ë± ë¡œë“œ ì™„ë£Œ â€” ìœ ë‹› {playerDeck.customUnits.Count}ê°œ, ìŠ¤í‚¬ {playerDeck.selectedActiveSkills.Count}ê°œ");
                     return true;
                 }
                 else
                 {
-                    Debug.LogError("[MainMenu] DeckTransfer°¡ ¾ø½À´Ï´Ù!");
+                    Debug.LogError("[MainMenu] DeckTransferê°€ ì—†ìŠµë‹ˆë‹¤!");
                     return false;
                 }
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[MainMenu] µ¦ ·Îµå Áß ¿¡·¯: {e.Message}");
+                Debug.LogError($"[MainMenu] ë± ë¡œë“œ ì¤‘ ì—ëŸ¬: {e.Message}");
                 return false;
             }
+        }
+
+        // ë±ì— í¸ì„±ëœ ìœ ë‹› ì•ˆì—ì„œë§Œ ìŠ¤í‚¬ íƒìƒ‰
+        // DeckBuilderManager.FindSkillInDeck()ê³¼ ë™ì¼í•œ ë²”ìœ„ë¡œ ë‘ ê²½ë¡œ í†µì¼
+        SkillDefinition FindSkillInUnits(string skillName, List<UnitDefinition> units)
+        {
+            foreach (var unit in units)
+            {
+                if (unit == null) continue;
+
+                if (unit.activeSkill != null && unit.activeSkill.skillName == skillName)
+                    return unit.activeSkill;
+
+                foreach (var passive in unit.passiveSkills)
+                    if (passive != null && passive.skillName == skillName)
+                        return passive;
+            }
+            return null;
         }
     }
 }

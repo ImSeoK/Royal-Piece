@@ -19,16 +19,16 @@ namespace Chess.Core
         [Tooltip("고정: 2번째 줄에 배치될 Pawn")]
         public UnitDefinition pawn;
 
-        [Header("덱 규칙")]
-        public int maxCustomUnits = 7;  // ← 7개로 수정!
-        public int fixedPawns = 8;       // ← 고정 8개
+        [Header("선택된 액티브 스킬")]
+        [Tooltip("덱빌더에서 선택한 액티브 스킬 (최대 2개)")]
+        public List<SkillDefinition> selectedActiveSkills = new List<SkillDefinition>();
 
-        /// <summary>
-        /// 덱 유효성 검사
-        /// </summary>
+        [Header("덱 규칙")]
+        public int maxCustomUnits = 7;
+        public int fixedPawns = 8;
+
         public bool IsValid(out string errorMessage)
         {
-            // King 체크
             if (king == null)
             {
                 errorMessage = "King이 설정되지 않았습니다.";
@@ -41,21 +41,18 @@ namespace Chess.Core
                 return false;
             }
 
-            // Pawn 체크
             if (pawn == null)
             {
                 errorMessage = "Pawn이 설정되지 않았습니다.";
                 return false;
             }
 
-            // 커스텀 유닛 개수 체크
             if (customUnits.Count != maxCustomUnits)
             {
                 errorMessage = $"커스텀 유닛 개수가 {maxCustomUnits}개가 아닙니다. (현재: {customUnits.Count}개)";
                 return false;
             }
 
-            // null 체크
             if (customUnits.Any(u => u == null))
             {
                 errorMessage = "덱에 null 유닛이 포함되어 있습니다.";
@@ -66,9 +63,6 @@ namespace Chess.Core
             return true;
         }
 
-        /// <summary>
-        /// 덱 정보 출력
-        /// </summary>
         public string GetDeckInfo()
         {
             return $"Deck: King + 커스텀 {customUnits.Count}개 + Pawn {fixedPawns}개";

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: Warden
+  m_EditorClassIdentifier: 
+  unitName: "\uC6CC\uB4E0"
+  icon: {fileID: -7124781682134005175, guid: 2381928269188f14cbf508dbec6c80b2, type: 3}
+  enhancedIcon: {fileID: 0}
+  maxHP: 220
+  attackPower: 32
+  speed: 8
+  defense: 12
+  moveAttributes: 2
+  isKing: 0
+  isPawn: 0
+  rarity: 2
+  activeSkill: {fileID: 11400000, guid: cfe8f108c2e2d0d48932036419f53dfd, type: 2}
+  passiveSkills: []
+  hpEnhance: 18
+  atkEnhance: 3
+  spdEnhance: 1
+  defEnhance: 0
+  displayScale: 1.15
+  enhanceGoldCost: 500

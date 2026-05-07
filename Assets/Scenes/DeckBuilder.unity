@@ -603,7 +603,7 @@ MonoBehaviour:
   boardCellPrefab: {fileID: 6597164929195768810, guid: 465bf8889fe719a428a47bb62ddd59df, type: 3}
   pickerContent: {fileID: 662957794}
   unitCardPrefab: {fileID: 875485122035091951, guid: ec6f4865266ed224f82410598e407043, type: 3}
-  rangeSpritePawn: {fileID: 0}
+  rangeSpritePawn: {fileID: 3126791905082641082, guid: a922cda04624186479ac6de91ef46fe8, type: 3}
   rangeSpriteRook: {fileID: 0}
   rangeSpriteBishop: {fileID: 0}
   rangeSpriteKnight: {fileID: 0}

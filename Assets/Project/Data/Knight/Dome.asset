@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: Dome
+  m_EditorClassIdentifier: 
+  unitName: "\uB3D4"
+  icon: {fileID: 1439285813507412905, guid: 029df48d28272e1499be259e15271d5e, type: 3}
+  enhancedIcon: {fileID: 0}
+  maxHP: 135
+  attackPower: 40
+  speed: 17
+  defense: 9
+  moveAttributes: 8
+  isKing: 0
+  isPawn: 0
+  rarity: 2
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 11
+  atkEnhance: 3
+  spdEnhance: 2
+  defEnhance: 0
+  displayScale: 1.15
+  enhanceGoldCost: 500

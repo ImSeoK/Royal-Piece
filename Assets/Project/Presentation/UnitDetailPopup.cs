@@ -7,30 +7,32 @@ namespace Chess.Presentation
 {
     public class UnitDetailPopup : MonoBehaviour
     {
-        [Header("ÆË¾÷")]
+        [Header("ï¿½Ë¾ï¿½")]
         public GameObject popupRoot;
         public Button closeButton;
 
-        [Header("Å¸°Ù ÆÐ³Î")]
+        [Header("Å¸ï¿½ï¿½ ï¿½Ð³ï¿½")]
         public Image targetPanelImage;
         public Image unitIconBG;
         public Image unitIcon;
         public Image levelBadgeImage;
         public TextMeshProUGUI levelBadgeText;
         public TextMeshProUGUI nameText;
-        public Image rarityChipImage;          // µî±Þº° ½ºÇÁ¶óÀÌÆ® ±³Ã¼
+        public Image rarityChipImage;          // ï¿½ï¿½Þºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ã¼
         public TextMeshProUGUI rarityText;
         public TextMeshProUGUI attrText;
 
-        [Header("½ºÅÈ")]
+        [Header("ï¿½ï¿½ï¿½ï¿½")]
         public TextMeshProUGUI hpText;
         public TextMeshProUGUI atkText;
         public TextMeshProUGUI spdText;
+        public TextMeshProUGUI defText;
         public RectTransform hpBarFill;
         public RectTransform atkBarFill;
         public RectTransform spdBarFill;
+        public RectTransform defBarFill;
 
-        [Header("µî±Þº° ½ºÇÁ¶óÀÌÆ®")]
+        [Header("ï¿½ï¿½Þºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
         public Sprite panelCommon;
         public Sprite panelRare;
         public Sprite panelEpic;
@@ -48,14 +50,14 @@ namespace Chess.Presentation
         public Sprite badgeEpic;
         public Sprite badgeLegendary;
 
-        [Header("½ºÅ³ ±×·ì")]
+        [Header("ï¿½ï¿½Å³ ï¿½×·ï¿½")]
         public Image activeSkillIcon;
         public TextMeshProUGUI activeSkillNameText;
         public TextMeshProUGUI activeSkillDescText;
         public Transform passiveSkillContainer;
         public GameObject skillItemPrefab;
 
-        [Header("°­È­ ¹öÆ°")]
+        [Header("ï¿½ï¿½È­ ï¿½ï¿½Æ°")]
         public Button enhanceButton;
 
         private OwnedUnitInstance currentInstance;
@@ -79,33 +81,38 @@ namespace Chess.Presentation
 
             if (popupRoot != null) popupRoot.SetActive(true);
 
-            // µî±Þº° ½ºÇÁ¶óÀÌÆ® ±³Ã¼
+            // ï¿½ï¿½Þºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ã¼
             if (targetPanelImage != null) targetPanelImage.sprite = GetPanelSprite(def.rarity);
             if (unitIconBG != null) unitIconBG.sprite = GetIconBGSprite(def.rarity);
             if (rarityChipImage != null) rarityChipImage.sprite = GetChipSprite(def.rarity);
             if (rarityText != null) rarityText.color = GetRarityColor(def.rarity);
 
-            // ¾ÆÀÌÄÜ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (unitIcon != null) { unitIcon.sprite = def.GetIcon(inst.enhanceLevel); unitIcon.color = Color.white; }
 
-            // ·¹º§ ¹îÁö (Ç×»ó Ç¥½Ã)
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½×»ï¿½ Ç¥ï¿½ï¿½)
             if (levelBadgeImage != null) { levelBadgeImage.gameObject.SetActive(true); levelBadgeImage.sprite = GetBadgeSpriteByLevel(inst.enhanceLevel); }
             if (levelBadgeText != null) { levelBadgeText.text = $"+{inst.enhanceLevel}"; levelBadgeText.color = GetLevelColor(inst.enhanceLevel); }
 
-            // Á¤º¸
+            // ï¿½ï¿½ï¿½ï¿½
             if (nameText != null) nameText.text = def.unitName;
             if (rarityText != null) rarityText.text = GetRarityText(def.rarity);
             if (attrText != null) attrText.text = GetAttrText(def);
 
-            // ½ºÅÈ
+            // ï¿½ï¿½ï¿½ï¿½
             int lv = inst.enhanceLevel;
             if (hpText != null) hpText.text = $"{def.GetEnhancedHP(lv)}";
             if (atkText != null) atkText.text = $"{def.GetEnhancedAttack(lv)}";
             if (spdText != null) spdText.text = $"{def.GetEnhancedSpeed(lv)}";
+            if (defText != null) defText.text = $"{def.GetEnhancedDefense(lv)}";
 
             SetBar(hpBarFill, (float)def.GetEnhancedHP(lv) / def.GetEnhancedHP(10));
             SetBar(atkBarFill, (float)def.GetEnhancedAttack(lv) / def.GetEnhancedAttack(10));
             SetBar(spdBarFill, (float)def.GetEnhancedSpeed(lv) / def.GetEnhancedSpeed(10));
+            if (def.GetEnhancedDefense(10) > 0)
+                SetBar(defBarFill, (float)def.GetEnhancedDefense(lv) / def.GetEnhancedDefense(10));
+            else
+                SetBar(defBarFill, 0f);
 
             if (enhanceButton != null) enhanceButton.interactable = inst.enhanceLevel < 10;
 
@@ -114,7 +121,7 @@ namespace Chess.Presentation
 
         void SetupSkills(UnitDefinition def)
         {
-            // ¾×Æ¼ºê ½ºÅ³
+            // ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½ï¿½Å³
             if (def.activeSkill != null)
             {
                 if (activeSkillIcon != null) { activeSkillIcon.sprite = def.activeSkill.icon; activeSkillIcon.color = Color.white; }
@@ -124,11 +131,11 @@ namespace Chess.Presentation
             else
             {
                 if (activeSkillIcon != null) activeSkillIcon.color = Color.clear;
-                if (activeSkillNameText != null) activeSkillNameText.text = "¾×Æ¼ºê ½ºÅ³ ¾øÀ½";
+                if (activeSkillNameText != null) activeSkillNameText.text = "ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½";
                 if (activeSkillDescText != null) activeSkillDescText.text = "";
             }
 
-            // ÆÐ½Ãºê ½ºÅ³ µ¿Àû »ý¼º
+            // ï¿½Ð½Ãºï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (passiveSkillContainer != null)
             {
                 foreach (Transform child in passiveSkillContainer) Destroy(child.gameObject);
@@ -139,7 +146,7 @@ namespace Chess.Presentation
                     {
                         GameObject empty = Instantiate(skillItemPrefab, passiveSkillContainer);
                         TextMeshProUGUI[] texts = empty.GetComponentsInChildren<TextMeshProUGUI>();
-                        if (texts.Length > 0) texts[0].text = "ÆÐ½Ãºê ½ºÅ³ ¾øÀ½";
+                        if (texts.Length > 0) texts[0].text = "ï¿½Ð½Ãºï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½";
                         if (texts.Length > 1) texts[1].text = "";
                     }
                     return;
@@ -210,20 +217,20 @@ namespace Chess.Presentation
 
         string GetRarityText(UnitRarity r)
         {
-            switch (r) { case UnitRarity.Common: return "Ä¿¸Õ"; case UnitRarity.Rare: return "·¹¾î"; case UnitRarity.Epic: return "¿¡ÇÈ"; case UnitRarity.Legendary: return "·¹Àü´õ¸®"; default: return ""; }
+            switch (r) { case UnitRarity.Common: return "Ä¿ï¿½ï¿½"; case UnitRarity.Rare: return "ï¿½ï¿½ï¿½ï¿½"; case UnitRarity.Epic: return "ï¿½ï¿½ï¿½ï¿½"; case UnitRarity.Legendary: return "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"; default: return ""; }
         }
 
         string GetAttrText(UnitDefinition unit)
         {
             if (unit.isKing) return "Å·";
-            if (unit.isPawn) return "Æù";
+            if (unit.isPawn) return "ï¿½ï¿½";
             bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
             bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
             bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
-            if (hasRook && hasBishop) return "Äý";
-            if (hasRook) return "·è";
-            if (hasBishop) return "ºñ¼ó";
-            if (hasKnight) return "³ªÀÌÆ®";
+            if (hasRook && hasBishop) return "ï¿½ï¿½";
+            if (hasRook) return "ï¿½ï¿½";
+            if (hasBishop) return "ï¿½ï¿½ï¿½";
+            if (hasKnight) return "ï¿½ï¿½ï¿½ï¿½Æ®";
             return "";
         }
     }

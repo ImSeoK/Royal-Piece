@@ -8,14 +8,15 @@ namespace Chess.Presentation
     {
         public UnitState state;
         public SpriteRenderer spriteRenderer;
-        public TextMesh hpText;
 
+        private SpriteRenderer hpBarBg;
+        private SpriteRenderer hpBarFill;
         private Color originalColor;
 
         private void Awake()
         {
             if (spriteRenderer == null)
-                spriteRenderer = GetComponent<SpriteRenderer>();
+                spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
             originalColor = spriteRenderer.color;
         }
@@ -23,43 +24,80 @@ namespace Chess.Presentation
         public void Initialize(UnitState unitState)
         {
             state = unitState;
-            originalColor = spriteRenderer.color;
 
-            // ========== ¾ÆÀÌÄÜ ¼³Á¤ (Ãß°¡!) ==========
             if (spriteRenderer != null && state.definition.icon != null)
             {
                 spriteRenderer.sprite = state.definition.icon;
-                Debug.Log($"[UnitView] {state.definition.unitName} ¾ÆÀÌÄÜ ¼³Á¤µÊ");
+
+                float spriteLocalHeight = state.definition.icon.bounds.size.y;
+                float scale = state.definition.displayScale / spriteLocalHeight;
+                transform.localScale = new Vector3(scale, scale, 1f);
             }
             else if (state.definition.icon == null)
             {
-                Debug.LogWarning($"[UnitView] {state.definition.unitName} ¾ÆÀÌÄÜÀÌ ¾ø½À´Ï´Ù!");
-            }
-            // =========================================
-
-            if (hpText == null)
-            {
-                CreateHPText();
+                Debug.LogWarning($"[UnitView] {state.definition.unitName} ì•„ì´ì½˜ì´ ì—†ìŠµë‹ˆë‹¤!");
             }
 
+            originalColor = spriteRenderer.color;
+            CreateHPBar();
             UpdateVisuals();
         }
 
-        void CreateHPText()
+        void CreateHPBar()
         {
-            GameObject hpObj = new GameObject("HP");
-            hpObj.transform.parent = transform;
-            hpObj.transform.localPosition = new Vector3(0, 0.4f, 0);
+            if (spriteRenderer.sprite == null) return;
 
-            hpText = hpObj.AddComponent<TextMesh>();
-            hpText.fontSize = 50;
-            hpText.characterSize = 0.1f;
-            hpText.anchor = TextAnchor.MiddleCenter;
-            hpText.alignment = TextAlignment.Center;
-            hpText.color = Color.red;
+            Sprite white = CreateWhiteSprite();
+            float parentScale = transform.localScale.x;
+            float halfH = spriteRenderer.sprite.bounds.extents.y;
 
-            MeshRenderer mr = hpObj.GetComponent<MeshRenderer>();
-            mr.sortingOrder = 10;
+            // ì›”ë“œ ê³ ì • í¬ê¸° ìƒìˆ˜ (ì¡°ì ˆ í•„ìš” ì‹œ ì´ ê°’ë§Œ ë³€ê²½)
+            const float worldBarWidth  = 0.9f;
+            const float worldBarHeight = 0.08f;
+            const float worldBarOffset = 0.12f; // ìŠ¤í”„ë¼ì´íŠ¸ í•˜ë‹¨ì—ì„œ ì•„ë˜ ì—¬ë°±
+
+            float barWidth  = worldBarWidth  / parentScale;
+            float barHeight = worldBarHeight / parentScale;
+            float barY      = -halfH - worldBarOffset / parentScale;
+
+            // ë°°ê²½ ë°”
+            GameObject bgObj = new GameObject("HPBar_BG");
+            bgObj.transform.SetParent(transform, false);
+            bgObj.transform.localPosition = new Vector3(0f, barY, 0f);
+            bgObj.transform.localScale = new Vector3(barWidth, barHeight, 1f);
+
+            hpBarBg = bgObj.AddComponent<SpriteRenderer>();
+            hpBarBg.sprite = white;
+            hpBarBg.color = new Color(0.15f, 0.15f, 0.15f, 0.9f);
+            hpBarBg.sortingOrder = 5;
+
+            // ì±„ì›€ ë°” (ì¢Œì¸¡ í”¼ë²—ìœ¼ë¡œ ì¢Œâ†’ìš° ê°ì†Œ)
+            Sprite whitePivotLeft = CreateWhiteSpritePivotLeft();
+            GameObject fillObj = new GameObject("HPBar_Fill");
+            fillObj.transform.SetParent(bgObj.transform, false);
+            fillObj.transform.localPosition = new Vector3(-0.5f, 0f, 0f);
+            fillObj.transform.localScale = Vector3.one;
+
+            hpBarFill = fillObj.AddComponent<SpriteRenderer>();
+            hpBarFill.sprite = whitePivotLeft;
+            hpBarFill.color = Color.green;
+            hpBarFill.sortingOrder = 6;
+        }
+
+        Sprite CreateWhiteSprite()
+        {
+            Texture2D tex = new Texture2D(1, 1);
+            tex.SetPixel(0, 0, Color.white);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
+        }
+
+        Sprite CreateWhiteSpritePivotLeft()
+        {
+            Texture2D tex = new Texture2D(1, 1);
+            tex.SetPixel(0, 0, Color.white);
+            tex.Apply();
+            return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0f, 0.5f), 1f);
         }
 
         public void UpdatePosition()
@@ -74,21 +112,24 @@ namespace Chess.Presentation
 
             UpdatePosition();
 
-            if (hpText != null)
+            if (hpBarFill != null)
             {
-                hpText.text = state.currentHP.ToString();
-
                 float hpPercent = (float)state.currentHP / state.definition.maxHP;
+                hpPercent = Mathf.Clamp01(hpPercent);
+
+                Vector3 s = hpBarFill.transform.localScale;
+                hpBarFill.transform.localScale = new Vector3(hpPercent, s.y, s.z);
+
                 if (hpPercent > 0.6f)
-                    hpText.color = Color.green;
+                    hpBarFill.color = Color.green;
                 else if (hpPercent > 0.3f)
-                    hpText.color = Color.yellow;
+                    hpBarFill.color = Color.yellow;
                 else
-                    hpText.color = Color.red;
+                    hpBarFill.color = Color.red;
             }
         }
 
-        // ÇÇ°İ ÇÃ·¡½Ã È¿°ú
+        // í”¼ê²© í”Œë˜ì‹œ íš¨ê³¼
         public IEnumerator PlayHitEffect()
         {
             for (int i = 0; i < 2; i++)
@@ -101,7 +142,7 @@ namespace Chess.Presentation
             }
         }
 
-        // »ç¸Á È¿°ú
+        // ì‚¬ë§ íš¨ê³¼
         public IEnumerator PlayDeathEffect()
         {
             float duration = 0.3f;
@@ -109,25 +150,32 @@ namespace Chess.Presentation
 
             Vector3 originalScale = transform.localScale;
             Color startColor = spriteRenderer.color;
+            Color bgStartColor = hpBarBg != null ? hpBarBg.color : Color.clear;
+            Color fillStartColor = hpBarFill != null ? hpBarFill.color : Color.clear;
 
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / duration;
 
-                // »ìÂ¦ Ä¿Áö¸é¼­
                 transform.localScale = Vector3.Lerp(originalScale, originalScale * 1.2f, t);
 
-                // ÆäÀÌµå¾Æ¿ô
                 Color c = startColor;
                 c.a = 1 - t;
                 spriteRenderer.color = c;
 
-                if (hpText != null)
+                if (hpBarBg != null)
                 {
-                    Color hc = hpText.color;
-                    hc.a = 1 - t;
-                    hpText.color = hc;
+                    Color bg = bgStartColor;
+                    bg.a = (1 - t) * bgStartColor.a;
+                    hpBarBg.color = bg;
+                }
+
+                if (hpBarFill != null)
+                {
+                    Color fill = fillStartColor;
+                    fill.a = 1 - t;
+                    hpBarFill.color = fill;
                 }
 
                 yield return null;

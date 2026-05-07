@@ -4,28 +4,27 @@ namespace Chess.Core
 {
     public enum SkillType
     {
-        Active,   // ¾×Æ¼ºê (Epic/Legendary Àü¿ë, ÇÃ·¹ÀÌ¾î°¡ Á÷Á¢ ½ÃÀü)
-        Passive,  // ÆÐ½Ãºê (¸ðµç µî±Þ, ÀÚµ¿ ¹ßµ¿)
+        Active,
+        Passive,
     }
 
     public enum SkillTrigger
     {
-        None,           // ÇØ´ç ¾øÀ½ (¾×Æ¼ºê)
-        Always,         // »ó½Ã Àû¿ë
-        OnAttack,       // °ø°Ý ½Ã
-        OnDamaged,      // ÇÇ°Ý ½Ã
-        OnMove,         // ÀÌµ¿ ½Ã
-        OnAdjacent,     // ÀÎÁ¢ ½Ã
-        OnDeath,        // »ç¸Á ½Ã
+        None,
+        OnAttack,
+        OnDamaged,
+        OnMove,
+        OnAdjacent,
+        OnDeath,
     }
 
     public enum SkillTargetType
     {
         Self,
         SingleEnemy,
-        AreaEnemy,
         SingleAlly,
-        AreaAlly,
+        RangeEnemy,
+        RangeAlly,
     }
 
     public enum SkillEffectType
@@ -40,25 +39,28 @@ namespace Chess.Core
     [CreateAssetMenu(fileName = "NewSkill", menuName = "Chess/Skill Definition")]
     public class SkillDefinition : ScriptableObject
     {
-        [Header("±âº» Á¤º¸")]
+        [Header("ï¿½âº» ï¿½ï¿½ï¿½ï¿½")]
         public string skillName;
         public string description;
         public Sprite icon;
 
-        [Header("½ºÅ³ ºÐ·ù")]
+        [Header("ï¿½ï¿½Å³ ï¿½Ð·ï¿½")]
         public SkillType skillType;
-        public SkillTrigger trigger;        // ÆÐ½Ãºê ¹ßµ¿ Á¶°Ç (¾×Æ¼ºê¸é None)
+        public SkillTrigger trigger;
 
-        [Header("È¿°ú")]
+        [Header("È¿ï¿½ï¿½")]
         public SkillTargetType targetType;
         public SkillEffectType effectType;
-        public int power;                   // ÇÇÇØ/È¸º¹·®
-        public int range;                   // »ç°Å¸® (¼¿ ±âÁØ)
+        public int power;
 
-        [Header("¾×Æ¼ºê Àü¿ë")]
-        public int maxUseCount = 2;         // °ÔÀÓ´ç »ç¿ë È½¼ö (Epic/Legendary °øÅë 2È¸)
+        [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
+        public StatType buffStatType = StatType.ATK;
+        public int buffDuration = 2;
 
-        [Header("ÀÌÆåÆ® (ÃßÈÄ ¿¬µ¿)")]
+        [Header("ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
+        public int maxUseCount = 2;
+
+        [Header("ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
         public GameObject castEffectPrefab;
         public GameObject hitEffectPrefab;
         public AnimationClip castAnimation;

@@ -1,18 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Chess.Core
 {
     public class UnitState
     {
-        public int id;                          // 고유 ID
-        public int currentHP;                   // 현재 체력
-        public Vector2Int position;             // 보드 위치 (0~7, 0~7)
-        public int ownerID;                     // 플레이어 ID (0 or 1)
-        public UnitDefinition definition;       // 유닛 정의
+        public int id;
+        public int currentHP;
+        public Vector2Int position;
+        public int ownerID;
+        public UnitDefinition definition;
+        public List<ActiveBuff> activeBuffs = new List<ActiveBuff>();
 
         public bool IsAlive => currentHP > 0;
 
-        // 생성자
         public UnitState(int id, UnitDefinition def, Vector2Int pos, int owner)
         {
             this.id = id;
@@ -22,11 +23,62 @@ namespace Chess.Core
             this.ownerID = owner;
         }
 
-        // 데미지 받기
         public void TakeDamage(int damage)
         {
-            currentHP -= damage;
+            int reduced = Mathf.Max(0, damage - GetDefense());
+            currentHP -= reduced;
             if (currentHP < 0) currentHP = 0;
+        }
+
+        public void Heal(int amount)
+        {
+            currentHP += amount;
+            if (currentHP > definition.maxHP)
+                currentHP = definition.maxHP;
+        }
+
+        public void ApplyBuff(ActiveBuff buff)
+        {
+            activeBuffs.Add(buff);
+        }
+
+        // Decrement buff duration each turn, remove expired buffs
+        public void TickBuffs()
+        {
+            for (int i = activeBuffs.Count - 1; i >= 0; i--)
+            {
+                activeBuffs[i].remainingTurns--;
+                if (activeBuffs[i].remainingTurns <= 0)
+                    activeBuffs.RemoveAt(i);
+            }
+        }
+
+        // Return stat values with buffs applied
+        public int GetAttack()
+        {
+            int atk = definition.attackPower;
+            foreach (var buff in activeBuffs)
+                if (buff.statType == StatType.ATK)
+                    atk += buff.amount;
+            return Mathf.Max(0, atk);
+        }
+
+        public int GetSpeed()
+        {
+            int spd = definition.speed;
+            foreach (var buff in activeBuffs)
+                if (buff.statType == StatType.SPD)
+                    spd += buff.amount;
+            return Mathf.Max(0, spd);
+        }
+
+        public int GetDefense()
+        {
+            int def = definition.defense;
+            foreach (var buff in activeBuffs)
+                if (buff.statType == StatType.DEF)
+                    def += buff.amount;
+            return Mathf.Max(0, def);
         }
     }
 }

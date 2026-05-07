@@ -13,10 +13,21 @@ MonoBehaviour:
   m_Name: WhitePawn
   m_EditorClassIdentifier: 
   unitName: Pawn
-  icon: {fileID: 0}
+  icon: {fileID: -3988769855312385993, guid: fa14d92778433ae44926cceafe838221, type: 3}
+  enhancedIcon: {fileID: 0}
   maxHP: 3
   attackPower: 1
   speed: 2
+  defense: 0
   moveAttributes: 1
   isKing: 0
   isPawn: 1
+  rarity: 0
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 0
+  atkEnhance: 0
+  spdEnhance: 0
+  defEnhance: 0
+  displayScale: 0.85
+  enhanceGoldCost: 500

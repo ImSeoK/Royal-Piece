@@ -152,22 +152,33 @@ namespace Chess.Presentation
             if (hasMovedThisTurn) return;
             if (!skillRemainingUses.TryGetValue(skill, out int remaining) || remaining <= 0) return;
 
-            skillRemainingUses[skill]--;
-            UpdateSkillSlotUI(skill);
-
             if (skill.targetType == SkillTargetType.SingleEnemy ||
                 skill.targetType == SkillTargetType.SingleAlly)
             {
+                // 타게팅 확정 후 차감 — 취소 시 횟수 낭비 방지
                 pendingActiveSkill = skill;
                 isSelectingActiveSkillTarget = true;
+                ShowActiveSkillTargetHighlights(skill);
             }
             else
             {
+                skillRemainingUses[skill]--;
+                UpdateSkillSlotUI(skill);
                 SkillExecutor.ExecuteActive(skill, board);
 
                 foreach (var view in unitViews.Values)
                     view.UpdateVisuals();
             }
+        }
+
+        void ShowActiveSkillTargetHighlights(SkillDefinition skill)
+        {
+            bool targetAlly = skill.targetType == SkillTargetType.SingleAlly;
+            var validPositions = board.GetAllUnits()
+                .Where(u => u.IsAlive && (targetAlly ? u.ownerID == 0 : u.ownerID != 0))
+                .Select(u => u.position)
+                .ToList();
+            boardVisualizer.ShowSkillTargetHighlights(validPositions, targetAlly, 0);
         }
 
         void UpdateSkillSlotUI(SkillDefinition skill)
@@ -189,6 +200,15 @@ namespace Chess.Presentation
 
         void HandleInput()
         {
+            // 우클릭으로 액티브 스킬 타게팅 취소 (횟수 차감 없음)
+            if (Input.GetMouseButtonDown(1) && isSelectingActiveSkillTarget)
+            {
+                pendingActiveSkill = null;
+                isSelectingActiveSkillTarget = false;
+                boardVisualizer.ClearHighlights();
+                return;
+            }
+
             if (!Input.GetMouseButtonDown(0)) return;
 
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -223,6 +243,8 @@ namespace Chess.Presentation
 
                 if (validTarget)
                 {
+                    skillRemainingUses[pendingActiveSkill]--;
+                    UpdateSkillSlotUI(pendingActiveSkill);
                     SkillExecutor.ExecuteActiveSingle(pendingActiveSkill, target, board);
 
                     foreach (var view in unitViews.Values)

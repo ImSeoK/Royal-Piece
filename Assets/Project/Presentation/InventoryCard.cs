@@ -16,14 +16,15 @@ namespace Chess.Presentation
         public TextMeshProUGUI hpText;
         public TextMeshProUGUI atkText;
         public TextMeshProUGUI spdText;
+        public TextMeshProUGUI defText;
 
-        [Header("µî±Þº° Ä«µå ½ºÇÁ¶óÀÌÆ®")]
+        [Header("ï¿½ï¿½Þºï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
         public Sprite cardCommon;
         public Sprite cardRare;
         public Sprite cardEpic;
         public Sprite cardLegendary;
 
-        [Header("µî±Þº° ¹îÁö ½ºÇÁ¶óÀÌÆ®")]
+        [Header("ï¿½ï¿½Þºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
         public Sprite badgeCommon;
         public Sprite badgeRare;
         public Sprite badgeEpic;
@@ -40,13 +41,13 @@ namespace Chess.Presentation
             if (btn != null) btn.onClick.AddListener(() => onClickCallback?.Invoke(this));
         }
 
-        // OwnedUnitInstance Æ÷ÇÔ ¹öÀü (ÀÎº¥Åä¸®/ÇÇÄ¿¿¡¼­ »ç¿ë)
+        // OwnedUnitInstance ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Îºï¿½ï¿½ä¸®/ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
         public void Initialize(UnitDefinition unit, OwnedUnitInstance inst, System.Action<InventoryCard> onClick = null)
         {
             ownedInstance = inst;
             Initialize(unit, onClick);
 
-            // °­È­ ·¹º§ Ç¥½Ã (Ç×»ó Ç¥½Ã)
+            // ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ (ï¿½×»ï¿½ Ç¥ï¿½ï¿½)
             if (enhanceBadgeText != null && inst != null)
             {
                 enhanceBadgeText.gameObject.SetActive(true);
@@ -58,16 +59,17 @@ namespace Chess.Presentation
                     badgeImage.sprite = GetBadgeSpriteByLevel(inst.enhanceLevel);
             }
 
-            // °­È­µÈ ½ºÅÈ ¹Ý¿µ
+            // ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¿ï¿½
             if (inst != null)
             {
                 if (hpText != null) hpText.text = $"HP  {unit.GetEnhancedHP(inst.enhanceLevel)}";
-                if (atkText != null) atkText.text = $"°ø°Ý  {unit.GetEnhancedAttack(inst.enhanceLevel)}";
-                if (spdText != null) spdText.text = $"¼Óµµ  {unit.GetEnhancedSpeed(inst.enhanceLevel)}";
+                if (atkText != null) atkText.text = $"ï¿½ï¿½ï¿½ï¿½  {unit.GetEnhancedAttack(inst.enhanceLevel)}";
+                if (spdText != null) spdText.text = $"ï¿½Óµï¿½  {unit.GetEnhancedSpeed(inst.enhanceLevel)}";
+                if (defText != null) defText.text = $"ï¿½ï¿½ï¿½Å·ï¿½  {unit.GetEnhancedDefense(inst.enhanceLevel)}";
             }
         }
 
-        // UnitDefinition¸¸ ¹Þ´Â ¹öÀü (µ¦ºô´õ È£È¯)
+        // UnitDefinitionï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È£È¯)
         public void Initialize(UnitDefinition unit, System.Action<InventoryCard> onClick = null)
         {
             if (unit == null) return;
@@ -77,8 +79,9 @@ namespace Chess.Presentation
             if (unitNameText != null) unitNameText.text = unit.unitName;
             if (attrText != null) attrText.text = GetAttrText(unit);
             if (hpText != null) hpText.text = $"HP  {unit.maxHP}";
-            if (atkText != null) atkText.text = $"°ø°Ý  {unit.attackPower}";
-            if (spdText != null) spdText.text = $"¼Óµµ  {unit.speed}";
+            if (atkText != null) atkText.text = $"ï¿½ï¿½ï¿½ï¿½  {unit.attackPower}";
+            if (spdText != null) spdText.text = $"ï¿½Óµï¿½  {unit.speed}";
+            if (defText != null) defText.text = $"ï¿½ï¿½ï¿½Å·ï¿½  {unit.defense}";
 
             if (unitImage != null)
             {
@@ -89,7 +92,7 @@ namespace Chess.Presentation
             if (cardBackground == null) cardBackground = GetComponent<Image>();
             if (cardBackground != null) { cardBackground.sprite = GetRaritySprite(unit.rarity); cardBackground.color = Color.white; }
 
-            // ¹îÁö ±âº» ºñÈ°¼º
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½âº» ï¿½ï¿½È°ï¿½ï¿½
             if (enhanceBadgeText != null) enhanceBadgeText.gameObject.SetActive(false);
         }
 
@@ -129,14 +132,14 @@ namespace Chess.Presentation
         string GetAttrText(UnitDefinition unit)
         {
             if (unit.isKing) return "Å·";
-            if (unit.isPawn) return "Æù";
+            if (unit.isPawn) return "ï¿½ï¿½";
             bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
             bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
             bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
-            if (hasRook && hasBishop) return "Äý";
-            if (hasRook) return "·è";
-            if (hasBishop) return "ºñ¼ó";
-            if (hasKnight) return "³ªÀÌÆ®";
+            if (hasRook && hasBishop) return "ï¿½ï¿½";
+            if (hasRook) return "ï¿½ï¿½";
+            if (hasBishop) return "ï¿½ï¿½ï¿½";
+            if (hasKnight) return "ï¿½ï¿½ï¿½ï¿½Æ®";
             return "";
         }
     }

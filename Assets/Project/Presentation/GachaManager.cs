@@ -13,37 +13,38 @@ namespace Chess.Presentation
         [Header("HUD")]
         public TextMeshProUGUI goldText;
         public TextMeshProUGUI pityText;
-        public RectTransform pityBarFill;   // PityBarFill RectTransform ¿¬°á
+        public RectTransform pityBarFill;   // PityBarFill RectTransform ï¿½ï¿½ï¿½ï¿½
         public Button backButton;
 
-        [Header("´ë±â È­¸é (WaitingPanel)")]
+        [Header("ï¿½ï¿½ï¿½ È­ï¿½ï¿½ (WaitingPanel)")]
         public GameObject waitingPanel;
         public Button singlePullButton;
         public Button tenPullButton;
 
-        [Header("Ä«µå °ø°³ ¿¬Ãâ (RevealPanel)")]
+        [Header("Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (RevealPanel)")]
         public GameObject revealPanel;
         public Transform revealGrid;
         public Button skipButton;
 
-        [Header("°á°ú È®ÀÎ (ResultPanel)")]
+        [Header("ï¿½ï¿½ï¿½ È®ï¿½ï¿½ (ResultPanel)")]
         public GameObject resultPanel;
         public Transform resultGrid;
         public Button pullAgainButton;
         public Button closeResultButton;
 
-        [Header("ÇÁ¸®ÆÕ")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
         public GameObject gachaCardPrefab;
 
-        [Header("¿¬Ãâ ¼³Á¤")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
         public float cardRevealInterval = 0.3f;
 
-        [Header("½Ã½ºÅÛ")]
+        [Header("ï¿½Ã½ï¿½ï¿½ï¿½")]
         public GachaSystem gachaSystem;
 
         private List<UnitDefinition> currentResults = new List<UnitDefinition>();
         private bool isRevealing = false;
         private Coroutine revealCoroutine;
+        private bool lastPullWasTen = false;
 
         void Start()
         {
@@ -52,7 +53,7 @@ namespace Chess.Presentation
 
             if (gachaSystem == null)
             {
-                Debug.LogError("[GachaManager] GachaSystemÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+                Debug.LogError("[GachaManager] GachaSystemï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
                 return;
             }
 
@@ -86,11 +87,11 @@ namespace Chess.Presentation
 
             if (gachaSystem != null)
             {
-                // ÃµÀå ÅØ½ºÆ®
+                // Ãµï¿½ï¿½ ï¿½Ø½ï¿½Æ®
                 if (pityText != null)
                     pityText.text = gachaSystem.PityCounter.ToString();
 
-                // ÃµÀå ¹Ù fill (0~1 »çÀÌ °ªÀ¸·Î anchorMax.x Á¶Á¤)
+                // Ãµï¿½ï¿½ ï¿½ï¿½ fill (0~1 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ anchorMax.x ï¿½ï¿½ï¿½ï¿½)
                 if (pityBarFill != null)
                 {
                     float fillAmount = (float)gachaSystem.PityCounter / gachaSystem.pityCap;
@@ -140,6 +141,7 @@ namespace Chess.Presentation
 
         void OnSinglePullClicked()
         {
+            lastPullWasTen = false;
             currentResults.Clear();
             UnitDefinition result;
             if (gachaSystem.TryPullSingle(out result))
@@ -151,6 +153,7 @@ namespace Chess.Presentation
 
         void OnTenPullClicked()
         {
+            lastPullWasTen = true;
             currentResults.Clear();
             List<UnitDefinition> results;
             if (gachaSystem.TryPullTen(out results))
@@ -212,7 +215,14 @@ namespace Chess.Presentation
                 SpawnCard(resultGrid, unit);
         }
 
-        void OnPullAgainClicked() => ShowWaitingPanel();
+        void OnPullAgainClicked()
+        {
+            if (lastPullWasTen)
+                OnTenPullClicked();
+            else
+                OnSinglePullClicked();
+        }
+
         void OnCloseResultClicked() => ShowWaitingPanel();
 
         void SpawnCard(Transform grid, UnitDefinition unit)

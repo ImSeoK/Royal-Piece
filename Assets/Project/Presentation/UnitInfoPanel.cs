@@ -16,10 +16,11 @@ namespace Chess.Presentation
         public TextMeshProUGUI hpText;
         public TextMeshProUGUI atkText;
         public TextMeshProUGUI spdText;
+        public TextMeshProUGUI defText;
 
         void Awake()
         {
-            if (labelText != null) labelText.text = "³» ¸»";
+            if (labelText != null) labelText.text = "ï¿½ï¿½ ï¿½ï¿½";
             Clear();
         }
 
@@ -30,8 +31,9 @@ namespace Chess.Presentation
             if (nameText != null) nameText.text = unit.definition.unitName;
             if (attrText != null) attrText.text = GetAttrText(unit.definition);
             if (hpText != null) hpText.text = $"{unit.currentHP}/{unit.definition.maxHP}";
-            if (atkText != null) atkText.text = $"°ø°Ý {unit.definition.attackPower}";
-            if (spdText != null) spdText.text = $"¼Óµµ {unit.definition.speed}";
+            if (atkText != null) atkText.text = $"ï¿½ï¿½ï¿½ï¿½ {unit.definition.attackPower}";
+            if (spdText != null) spdText.text = $"ï¿½Óµï¿½ {unit.definition.speed}";
+            if (defText != null) defText.text = $"ï¿½ï¿½ï¿½Å·ï¿½ {unit.GetDefense()}";
 
             if (unitIcon != null)
             {
@@ -63,6 +65,7 @@ namespace Chess.Presentation
             if (hpText != null) hpText.text = "";
             if (atkText != null) atkText.text = "";
             if (spdText != null) spdText.text = "";
+            if (defText != null) defText.text = "";
             if (unitIcon != null) unitIcon.color = Color.clear;
 
             if (hpBarFill != null)
@@ -76,16 +79,16 @@ namespace Chess.Presentation
         string GetAttrText(UnitDefinition unit)
         {
             if (unit.isKing) return "Å·";
-            if (unit.isPawn) return "Æù";
+            if (unit.isPawn) return "ï¿½ï¿½";
 
             bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
             bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
             bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
 
-            if (hasRook && hasBishop) return "Äý";
-            if (hasRook) return "·è";
-            if (hasBishop) return "ºñ¼ó";
-            if (hasKnight) return "³ªÀÌÆ®";
+            if (hasRook && hasBishop) return "ï¿½ï¿½";
+            if (hasRook) return "ï¿½ï¿½";
+            if (hasBishop) return "ï¿½ï¿½ï¿½";
+            if (hasKnight) return "ï¿½ï¿½ï¿½ï¿½Æ®";
             return "";
         }
     }

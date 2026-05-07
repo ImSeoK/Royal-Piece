@@ -11,6 +11,7 @@ namespace Chess.Core
         Bishop = 1 << 2,    // 4
         Knight = 1 << 3,    // 8
         King = 1 << 4,      // 16
+        Enchanter = 1 << 5,
         Queen = Rook | Bishop  // 6 (2 + 4)
     }
 }

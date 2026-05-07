@@ -117,7 +117,7 @@ namespace Chess.Presentation
                     else if (rank == 2)
                         cell.Setup(BoardCell.CellType.PawnSlot, -1, OnBoardCellClicked, isDark);
                     else
-                        cell.Setup(BoardCell.CellType.PawnSlot, -1, OnBoardCellClicked, isDark);
+                        cell.Setup(BoardCell.CellType.Normal, -1, OnBoardCellClicked, isDark);
                 }
             }
         }
@@ -232,7 +232,37 @@ namespace Chess.Presentation
             UpdateHUD();
         }
 
-        void ReturnUnitToPicker(UnitDefinition unit) { if (unit != null) SpawnPickerCard(unit); }
+        void ReturnUnitToPicker(UnitDefinition unit)
+        {
+            if (unit == null) return;
+            SpawnPickerCard(unit);
+            SortPickerCards();
+        }
+
+        void SortPickerCards()
+        {
+            pickerCards.Sort((a, b) =>
+            {
+                InventoryCard ca = a != null ? a.GetComponent<InventoryCard>() : null;
+                InventoryCard cb = b != null ? b.GetComponent<InventoryCard>() : null;
+                int ra = ca?.unitDefinition != null ? GetRarityOrder(ca.unitDefinition.rarity) : 0;
+                int rb = cb?.unitDefinition != null ? GetRarityOrder(cb.unitDefinition.rarity) : 0;
+                return rb.CompareTo(ra);
+            });
+            for (int i = 0; i < pickerCards.Count; i++)
+                if (pickerCards[i] != null) pickerCards[i].transform.SetSiblingIndex(i);
+        }
+
+        int GetRarityOrder(UnitRarity rarity)
+        {
+            switch (rarity)
+            {
+                case UnitRarity.Legendary: return 3;
+                case UnitRarity.Epic: return 2;
+                case UnitRarity.Rare: return 1;
+                default: return 0;
+            }
+        }
 
         // ── 스킬 선택 ────────────────────────────
 
@@ -246,6 +276,21 @@ namespace Chess.Presentation
                     skills.Add(unit.activeSkill);
             }
             return skills;
+        }
+
+        // 스킬 이름으로 현재 덱 내 SkillDefinition 탐색
+        SkillDefinition FindSkillInDeck(string skillName)
+        {
+            foreach (var unit in currentDeck)
+            {
+                if (unit == null) continue;
+                if (unit.activeSkill != null && unit.activeSkill.skillName == skillName)
+                    return unit.activeSkill;
+                foreach (var passive in unit.passiveSkills)
+                    if (passive != null && passive.skillName == skillName)
+                        return passive;
+            }
+            return null;
         }
 
         // ── 저장 / 로드 ──────────────────────────
@@ -381,18 +426,33 @@ namespace Chess.Presentation
             if (GetCurrentDeckCount() < maxFreeSlots) return;
             var skillNames = skillSelectPopup != null ? skillSelectPopup.GetSelectedSkillNames() : new List<string>();
             SaveDeck(skillNames);
-            GoToGame();
+            GoToGame(skillNames);
         }
 
-        void GoToGame()
+        void GoToGame(List<string> skillNames = null)
         {
             PlayerDeck playerDeck = ScriptableObject.CreateInstance<PlayerDeck>();
             playerDeck.customUnits = new List<UnitDefinition>();
+
             foreach (var unit in currentDeck)
                 if (unit != null) playerDeck.customUnits.Add(unit);
 
             playerDeck.king = defaultKing;
             playerDeck.pawn = defaultPawn;
+
+            // 선택된 스킬을 SkillDefinition으로 변환해서 PlayerDeck에 담기
+            if (skillNames != null)
+            {
+                foreach (var skillName in skillNames)
+                {
+                    SkillDefinition skill = FindSkillInDeck(skillName);
+                    if (skill != null)
+                    {
+                        playerDeck.selectedActiveSkills.Add(skill);
+                        Debug.Log($"[DeckBuilder] 스킬 전달: {skillName}");
+                    }
+                }
+            }
 
             if (DeckTransfer.Instance != null)
                 DeckTransfer.Instance.Player0Deck = playerDeck;
