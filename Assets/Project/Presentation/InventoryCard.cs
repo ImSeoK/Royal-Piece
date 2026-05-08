@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Chess.Core;
@@ -63,9 +63,9 @@ namespace Chess.Presentation
             if (inst != null)
             {
                 if (hpText != null) hpText.text = $"HP  {unit.GetEnhancedHP(inst.enhanceLevel)}";
-                if (atkText != null) atkText.text = $"����  {unit.GetEnhancedAttack(inst.enhanceLevel)}";
-                if (spdText != null) spdText.text = $"�ӵ�  {unit.GetEnhancedSpeed(inst.enhanceLevel)}";
-                if (defText != null) defText.text = $"���ŷ�  {unit.GetEnhancedDefense(inst.enhanceLevel)}";
+                if (atkText != null) atkText.text = $"공격  {unit.GetEnhancedAttack(inst.enhanceLevel)}";
+                if (spdText != null) spdText.text = $"속도  {unit.GetEnhancedSpeed(inst.enhanceLevel)}";
+                if (defText != null) defText.text = $"방어력  {unit.GetEnhancedDefense(inst.enhanceLevel)}";
             }
         }
 
@@ -79,9 +79,9 @@ namespace Chess.Presentation
             if (unitNameText != null) unitNameText.text = unit.unitName;
             if (attrText != null) attrText.text = GetAttrText(unit);
             if (hpText != null) hpText.text = $"HP  {unit.maxHP}";
-            if (atkText != null) atkText.text = $"����  {unit.attackPower}";
-            if (spdText != null) spdText.text = $"�ӵ�  {unit.speed}";
-            if (defText != null) defText.text = $"���ŷ�  {unit.defense}";
+            if (atkText != null) atkText.text = $"공격  {unit.attackPower}";
+            if (spdText != null) spdText.text = $"속도  {unit.speed}";
+            if (defText != null) defText.text = $"방어력  {unit.defense}";
 
             if (unitImage != null)
             {
@@ -131,15 +131,15 @@ namespace Chess.Presentation
 
         string GetAttrText(UnitDefinition unit)
         {
-            if (unit.isKing) return "ŷ";
-            if (unit.isPawn) return "��";
+            if (unit.isKing) return "킹";
+            if (unit.isPawn) return "폰";
             bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
             bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
             bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
-            if (hasRook && hasBishop) return "��";
-            if (hasRook) return "��";
-            if (hasBishop) return "���";
-            if (hasKnight) return "����Ʈ";
+            if (hasRook && hasBishop) return "퀸";
+            if (hasRook) return "룩";
+            if (hasBishop) return "비숍";
+            if (hasKnight) return "나이트";
             return "";
         }
     }

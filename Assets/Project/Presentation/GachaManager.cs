@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -53,7 +53,7 @@ namespace Chess.Presentation
 
             if (gachaSystem == null)
             {
-                Debug.LogError("[GachaManager] GachaSystem�� ã�� �� �����ϴ�!");
+                Debug.LogError("[GachaManager] GachaSystem을 찾을 수 없습니다!");
                 return;
             }
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Chess.Core;
@@ -131,7 +131,7 @@ namespace Chess.Presentation
             else
             {
                 if (activeSkillIcon != null) activeSkillIcon.color = Color.clear;
-                if (activeSkillNameText != null) activeSkillNameText.text = "��Ƽ�� ��ų ����";
+                if (activeSkillNameText != null) activeSkillNameText.text = "액티브 스킬 없음";
                 if (activeSkillDescText != null) activeSkillDescText.text = "";
             }
 
@@ -146,7 +146,7 @@ namespace Chess.Presentation
                     {
                         GameObject empty = Instantiate(skillItemPrefab, passiveSkillContainer);
                         TextMeshProUGUI[] texts = empty.GetComponentsInChildren<TextMeshProUGUI>();
-                        if (texts.Length > 0) texts[0].text = "�нú� ��ų ����";
+                        if (texts.Length > 0) texts[0].text = "패시브 스킬 없음";
                         if (texts.Length > 1) texts[1].text = "";
                     }
                     return;
@@ -217,20 +217,20 @@ namespace Chess.Presentation
 
         string GetRarityText(UnitRarity r)
         {
-            switch (r) { case UnitRarity.Common: return "Ŀ��"; case UnitRarity.Rare: return "����"; case UnitRarity.Epic: return "����"; case UnitRarity.Legendary: return "��������"; default: return ""; }
+            switch (r) { case UnitRarity.Common: return "커먼"; case UnitRarity.Rare: return "레어"; case UnitRarity.Epic: return "에픽"; case UnitRarity.Legendary: return "레전더리"; default: return ""; }
         }
 
         string GetAttrText(UnitDefinition unit)
         {
-            if (unit.isKing) return "ŷ";
-            if (unit.isPawn) return "��";
+            if (unit.isKing) return "킹";
+            if (unit.isPawn) return "폰";
             bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
             bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
             bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
-            if (hasRook && hasBishop) return "��";
-            if (hasRook) return "��";
-            if (hasBishop) return "���";
-            if (hasKnight) return "����Ʈ";
+            if (hasRook && hasBishop) return "퀸";
+            if (hasRook) return "룩";
+            if (hasBishop) return "비숍";
+            if (hasKnight) return "나이트";
             return "";
         }
     }

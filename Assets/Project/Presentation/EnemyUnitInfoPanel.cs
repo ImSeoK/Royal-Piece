@@ -20,7 +20,7 @@ namespace Chess.Presentation
 
         void Awake()
         {
-            if (labelText != null) labelText.text = "�� ��";
+            if (labelText != null) labelText.text = "적군";
             Clear();
         }
 
@@ -31,9 +31,9 @@ namespace Chess.Presentation
             if (nameText != null) nameText.text = unit.definition.unitName;
             if (attrText != null) attrText.text = GetAttrText(unit.definition);
             if (hpText != null) hpText.text = $"{unit.currentHP}/{unit.definition.maxHP}";
-            if (atkText != null) atkText.text = $"���� {unit.definition.attackPower}";
-            if (spdText != null) spdText.text = $"�ӵ� {unit.definition.speed}";
-            if (defText != null) defText.text = $"���ŷ� {unit.GetDefense()}";
+            if (atkText != null) atkText.text = $"공격 {unit.definition.attackPower}";
+            if (spdText != null) spdText.text = $"속도 {unit.definition.speed}";
+            if (defText != null) defText.text = $"방어력 {unit.GetDefense()}";
 
             if (unitIcon != null)
             {
@@ -78,17 +78,17 @@ namespace Chess.Presentation
 
         string GetAttrText(UnitDefinition unit)
         {
-            if (unit.isKing) return "ŷ";
-            if (unit.isPawn) return "��";
+            if (unit.isKing) return "킹";
+            if (unit.isPawn) return "폰";
 
             bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
             bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
             bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
 
-            if (hasRook && hasBishop) return "��";
-            if (hasRook) return "��";
-            if (hasBishop) return "���";
-            if (hasKnight) return "����Ʈ";
+            if (hasRook && hasBishop) return "퀸";
+            if (hasRook) return "룩";
+            if (hasBishop) return "비숍";
+            if (hasKnight) return "나이트";
             return "";
         }
     }
