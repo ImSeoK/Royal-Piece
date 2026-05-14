@@ -104,7 +104,7 @@ namespace Chess.Presentation
             if (hpText != null) hpText.text = $"{def.GetEnhancedHP(lv)}";
             if (atkText != null) atkText.text = $"{def.GetEnhancedAttack(lv)}";
             if (spdText != null) spdText.text = $"{def.GetEnhancedSpeed(lv)}";
-            if (defText != null) defText.text = $"{def.GetEnhancedDefense(lv)}";
+            if (defText != null) defText.text = $"{def.GetEnhancedDefense(lv):0.##}";
 
             SetBar(hpBarFill, (float)def.GetEnhancedHP(lv) / def.GetEnhancedHP(10));
             SetBar(atkBarFill, (float)def.GetEnhancedAttack(lv) / def.GetEnhancedAttack(10));

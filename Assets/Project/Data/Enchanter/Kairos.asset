@@ -15,10 +15,10 @@ MonoBehaviour:
   unitName: "\uCE74\uC774\uB85C\uC2A4"
   icon: {fileID: 7951773651637504698, guid: 244f871c1877a1447b6dae0721bcce94, type: 3}
   enhancedIcon: {fileID: 0}
-  maxHP: 10
-  attackPower: 0
-  speed: 0
-  defense: 0
+  maxHP: 170
+  attackPower: 42
+  speed: 28
+  defense: 12
   moveAttributes: 32
   isKing: 0
   isPawn: 0

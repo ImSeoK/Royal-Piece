@@ -15,8 +15,8 @@ MonoBehaviour:
   unitName: "\uC544\uC2A4\uD2B8\uB808\uC624"
   icon: {fileID: 2122895313700248013, guid: 5018ee9b833dd4d4a98887a9f15f138a, type: 3}
   enhancedIcon: {fileID: 0}
-  maxHP: 190
-  attackPower: 52
+  maxHP: 185
+  attackPower: 50
   speed: 20
   defense: 10
   moveAttributes: 4

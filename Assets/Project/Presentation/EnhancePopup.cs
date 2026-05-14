@@ -267,14 +267,14 @@ namespace Chess.Presentation
             if (hpCurrentText != null) hpCurrentText.text = $"{targetDef.GetEnhancedHP(lv)}";
             if (atkCurrentText != null) atkCurrentText.text = $"{targetDef.GetEnhancedAttack(lv)}";
             if (spdCurrentText != null) spdCurrentText.text = $"{targetDef.GetEnhancedSpeed(lv)}";
-            if (defCurrentText != null) defCurrentText.text = $"{targetDef.GetEnhancedDefense(lv)}";
+            if (defCurrentText != null) defCurrentText.text = $"{targetDef.GetEnhancedDefense(lv):0.##}";
 
             if (allFilled && lv < 10)
             {
                 if (hpAfterText != null) hpAfterText.text = $"→ {targetDef.GetEnhancedHP(lv + 1)}";
                 if (atkAfterText != null) atkAfterText.text = $"→ {targetDef.GetEnhancedAttack(lv + 1)}";
                 if (spdAfterText != null) spdAfterText.text = $"→ {targetDef.GetEnhancedSpeed(lv + 1)}";
-                if (defAfterText != null) defAfterText.text = $"→ {targetDef.GetEnhancedDefense(lv + 1)}";
+                if (defAfterText != null) defAfterText.text = $"→ {targetDef.GetEnhancedDefense(lv + 1):0.##}";
             }
             else
             {

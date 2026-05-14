@@ -65,7 +65,7 @@ namespace Chess.Presentation
                 if (hpText != null) hpText.text = $"HP  {unit.GetEnhancedHP(inst.enhanceLevel)}";
                 if (atkText != null) atkText.text = $"공격  {unit.GetEnhancedAttack(inst.enhanceLevel)}";
                 if (spdText != null) spdText.text = $"속도  {unit.GetEnhancedSpeed(inst.enhanceLevel)}";
-                if (defText != null) defText.text = $"방어력  {unit.GetEnhancedDefense(inst.enhanceLevel)}";
+                if (defText != null) defText.text = $"방어력  {unit.GetEnhancedDefense(inst.enhanceLevel):0.##}";
             }
         }
 

@@ -40,10 +40,10 @@ namespace Chess.Core
         public List<SkillDefinition> passiveSkills = new List<SkillDefinition>();
 
         [Header("강화 수치")]
-        public int hpEnhance;    // 레벨당 HP 증가량
-        public int atkEnhance;   // 레벨당 공격력 증가량
-        public int spdEnhance;   // 레벨당 속도 증가량
-        public int defEnhance;   // 레벨당 방어력 증가량
+        public float hpEnhance;    // 레벨당 HP 증가량
+        public float atkEnhance;   // 레벨당 공격력 증가량
+        public float spdEnhance;   // 레벨당 속도 증가량
+        public float defEnhance;   // 레벨당 방어력 증가량
 
         [Header("인게임 표시")]
         public float displayScale = 0.85f;  // 타일 크기 대비 기물 표시 비율 (1.0 = 타일과 동일)
@@ -66,10 +66,10 @@ namespace Chess.Core
         }
 
         // ��ȭ ���� ���� ���� ��� (5% per level)
-        public int GetEnhancedHP(int level) => maxHP + hpEnhance * level;
-        public int GetEnhancedAttack(int level) => attackPower + atkEnhance * level;
-        public int GetEnhancedSpeed(int level) => speed + spdEnhance * level;
-        public int GetEnhancedDefense(int level) => defense + defEnhance * level;
+        public int GetEnhancedHP(int level)      => Mathf.FloorToInt(maxHP + hpEnhance * level);
+        public int GetEnhancedAttack(int level)  => Mathf.FloorToInt(attackPower + atkEnhance * level);
+        public int GetEnhancedSpeed(int level)   => Mathf.FloorToInt(speed + spdEnhance * level);
+        public float GetEnhancedDefense(int level) => defense + defEnhance * level;
 
         // +10 ���� ��ȭ ��������Ʈ
         public Sprite GetIcon(int level) => (level >= 10 && enhancedIcon != null) ? enhancedIcon : icon;

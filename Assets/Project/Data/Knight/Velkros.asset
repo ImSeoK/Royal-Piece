@@ -16,7 +16,7 @@ MonoBehaviour:
   icon: {fileID: -4045490919749733954, guid: 0cf3c1866451f41459b5d75e6913e26a, type: 3}
   enhancedIcon: {fileID: 0}
   maxHP: 100
-  attackPower: 65
+  attackPower: 60
   speed: 27
   defense: 5
   moveAttributes: 8
