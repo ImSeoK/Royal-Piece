@@ -11,7 +11,7 @@ namespace Chess.Presentation
         public Image levelBadgeImage;
         public TextMeshProUGUI levelBadgeText;
 
-        [Header("���� ��������Ʈ")]
+        [Header("뱃지 스프라이트")]
         public Sprite badgeCommon;
         public Sprite badgeRare;
         public Sprite badgeEpic;
@@ -31,14 +31,13 @@ namespace Chess.Presentation
             ownedInstance = inst;
             onClickCallback = onClick;
 
-            // ������
+            // 아이콘
             if (unitIcon != null)
             {
                 unitIcon.sprite = def.GetIcon(inst.enhanceLevel);
                 unitIcon.color = Color.white;
             }
 
-            // ���� ����
             // 레벨 뱃지 항상 표시
             if (levelBadgeImage != null)
             {

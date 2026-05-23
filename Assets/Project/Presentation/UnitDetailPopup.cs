@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Chess.Core;
@@ -7,22 +7,22 @@ namespace Chess.Presentation
 {
     public class UnitDetailPopup : MonoBehaviour
     {
-        [Header("�˾�")]
+        [Header("팝업")]
         public GameObject popupRoot;
         public Button closeButton;
 
-        [Header("Ÿ�� �г�")]
+        [Header("타깃 패널")]
         public Image targetPanelImage;
         public Image unitIconBG;
         public Image unitIcon;
         public Image levelBadgeImage;
         public TextMeshProUGUI levelBadgeText;
         public TextMeshProUGUI nameText;
-        public Image rarityChipImage;          // ��޺� ��������Ʈ ��ü
+        public Image rarityChipImage;          // 희귀도별 스프라이트 교체
         public TextMeshProUGUI rarityText;
         public TextMeshProUGUI attrText;
 
-        [Header("����")]
+        [Header("스텟")]
         public TextMeshProUGUI hpText;
         public TextMeshProUGUI atkText;
         public TextMeshProUGUI spdText;
@@ -32,7 +32,7 @@ namespace Chess.Presentation
         public RectTransform spdBarFill;
         public RectTransform defBarFill;
 
-        [Header("��޺� ��������Ʈ")]
+        [Header("희귀도별 스프라이트")]
         public Sprite panelCommon;
         public Sprite panelRare;
         public Sprite panelEpic;
@@ -50,14 +50,14 @@ namespace Chess.Presentation
         public Sprite badgeEpic;
         public Sprite badgeLegendary;
 
-        [Header("��ų �׷�")]
+        [Header("스킬 그룹")]
         public Image activeSkillIcon;
         public TextMeshProUGUI activeSkillNameText;
         public TextMeshProUGUI activeSkillDescText;
         public Transform passiveSkillContainer;
         public GameObject skillItemPrefab;
 
-        [Header("��ȭ ��ư")]
+        [Header("강화 버튼")]
         public Button enhanceButton;
 
         private OwnedUnitInstance currentInstance;
@@ -81,25 +81,25 @@ namespace Chess.Presentation
 
             if (popupRoot != null) popupRoot.SetActive(true);
 
-            // ��޺� ��������Ʈ ��ü
+            // 희귀도별 스프라이트 교체
             if (targetPanelImage != null) targetPanelImage.sprite = GetPanelSprite(def.rarity);
             if (unitIconBG != null) unitIconBG.sprite = GetIconBGSprite(def.rarity);
             if (rarityChipImage != null) rarityChipImage.sprite = GetChipSprite(def.rarity);
             if (rarityText != null) rarityText.color = GetRarityColor(def.rarity);
 
-            // ������
+            // 아이콘
             if (unitIcon != null) { unitIcon.sprite = def.GetIcon(inst.enhanceLevel); unitIcon.color = Color.white; }
 
-            // ���� ���� (�׻� ǥ��)
+            // 레벨 뱃지 (항상 표시)
             if (levelBadgeImage != null) { levelBadgeImage.gameObject.SetActive(true); levelBadgeImage.sprite = GetBadgeSpriteByLevel(inst.enhanceLevel); }
             if (levelBadgeText != null) { levelBadgeText.text = $"+{inst.enhanceLevel}"; levelBadgeText.color = GetLevelColor(inst.enhanceLevel); }
 
-            // ����
+            // 이름
             if (nameText != null) nameText.text = def.unitName;
             if (rarityText != null) rarityText.text = GetRarityText(def.rarity);
             if (attrText != null) attrText.text = GetAttrText(def);
 
-            // ����
+            // 스텟
             int lv = inst.enhanceLevel;
             if (hpText != null) hpText.text = $"{def.GetEnhancedHP(lv)}";
             if (atkText != null) atkText.text = $"{def.GetEnhancedAttack(lv)}";
@@ -121,7 +121,7 @@ namespace Chess.Presentation
 
         void SetupSkills(UnitDefinition def)
         {
-            // ��Ƽ�� ��ų
+            // 액티브 스킬
             if (def.activeSkill != null)
             {
                 if (activeSkillIcon != null) { activeSkillIcon.sprite = def.activeSkill.icon; activeSkillIcon.color = Color.white; }
@@ -135,7 +135,7 @@ namespace Chess.Presentation
                 if (activeSkillDescText != null) activeSkillDescText.text = "";
             }
 
-            // �нú� ��ų ���� ����
+            // 패시브 스킬 목록 생성
             if (passiveSkillContainer != null)
             {
                 foreach (Transform child in passiveSkillContainer) Destroy(child.gameObject);

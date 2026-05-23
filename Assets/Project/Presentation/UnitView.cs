@@ -114,7 +114,7 @@ namespace Chess.Presentation
 
             if (hpBarFill != null)
             {
-                float hpPercent = (float)state.currentHP / state.definition.maxHP;
+                float hpPercent = (float)state.currentHP / state.definition.GetEnhancedHP(state.enhanceLevel);
                 hpPercent = Mathf.Clamp01(hpPercent);
 
                 Vector3 s = hpBarFill.transform.localScale;

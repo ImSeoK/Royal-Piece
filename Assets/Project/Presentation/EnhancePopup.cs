@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
@@ -8,22 +8,22 @@ namespace Chess.Presentation
 {
     public class EnhancePopup : MonoBehaviour
     {
-        [Header("�˾� ��Ʈ")]
+        [Header("팝업 루트")]
         public GameObject popupRoot;
         public Button closeButton;
 
-        [Header("��� ���� �г�")]
-        public Image targetPanelImage;          // ��޺� ��������Ʈ ��ü
-        public Image targetUnitIconBG;          // ��޺� ��������Ʈ ��ü
+        [Header("타깃 유닛 패널")]
+        public Image targetPanelImage;          // 희귀도별 스프라이트 교체
+        public Image targetUnitIconBG;          // 희귀도별 스프라이트 교체
         public Image targetUnitIcon;
         public TextMeshProUGUI targetNameText;
-        public Image targetRarityChipImage;     // ��޺� ��������Ʈ ��ü
+        public Image targetRarityChipImage;     // 희귀도별 스프라이트 교체
         public TextMeshProUGUI targetRarityText;
         public TextMeshProUGUI targetAttrText;
-        public Image targetLevelBadgeImage;     // ��޺� ��������Ʈ ��ü
+        public Image targetLevelBadgeImage;     // 희귀도별 스프라이트 교체
         public TextMeshProUGUI targetLevelText;
 
-        [Header("��޺� ��������Ʈ")]
+        [Header("희귀도별 스프라이트")]
         public Sprite panelCommon;
         public Sprite panelRare;
         public Sprite panelEpic;
@@ -43,7 +43,7 @@ namespace Chess.Presentation
         public Sprite badgeEpic;
         public Sprite badgeLegendary;
 
-        [Header("���� �̸�����")]
+        [Header("강화 미리보기")]
         public TextMeshProUGUI hpCurrentText;
         public TextMeshProUGUI hpAfterText;
         public RectTransform hpBarFill;
@@ -57,25 +57,25 @@ namespace Chess.Presentation
         public TextMeshProUGUI defAfterText;
         public RectTransform defBarFill;
 
-        [Header("��� �г�")]
+        [Header("재료 패널")]
         public Transform slotRow;
         public GameObject materialSlotPrefab;
         public TextMeshProUGUI materialCountText;
         public TextMeshProUGUI goldCostText;
         public TextMeshProUGUI goldCurrentText;
 
-        [Header("���� ��Ŀ")]
+        [Header("재료 피커")]
         public GameObject pickerPanel;
         public Transform pickerGrid;
         public GameObject pickerCardPrefab;
 
-        [Header("��ȭ ��ư")]
+        [Header("강화 버튼")]
         public Button enhanceButton;
 
-        [Header("����")]
+        [Header("연결")]
         public UnitDetailPopup unitDetailPopup;
 
-        // ���� ����
+        // 내부 상태
         private OwnedUnitInstance targetInstance;
         private UnitDefinition targetDef;
         private List<OwnedUnitInstance> selectedMaterials = new List<OwnedUnitInstance>();
@@ -91,7 +91,7 @@ namespace Chess.Presentation
             if (enhanceButton != null) enhanceButton.onClick.AddListener(OnEnhanceClicked);
         }
 
-        // ���� ���� / �ݱ� ����������������������������������������������������
+        // 팝업 열기 / 닫기 ────────────────────────────────────────────────────
 
         private System.Action onRefreshCallback;
 
@@ -107,6 +107,7 @@ namespace Chess.Presentation
 
             if (popupRoot != null) popupRoot.SetActive(true);
             if (pickerPanel != null) pickerPanel.SetActive(false);
+            AudioManager.Instance?.Play("sfx_enhance_start");
 
             SetupTargetPanel();
             SetupSlots();
@@ -118,26 +119,26 @@ namespace Chess.Presentation
         public void Close()
         {
             if (popupRoot != null) popupRoot.SetActive(false);
-            // DetailPopup���� ����
+            // DetailPopup에서 갱신
             if (unitDetailPopup != null && targetInstance != null)
                 unitDetailPopup.Open(targetInstance, unitDetailPopup.LastEnhanceCallback);
         }
 
-        // ���� ��� �г� ��������������������������������������������������������
+        // 타깃 유닛 패널 ──────────────────────────────────────────────────────
 
         void SetupTargetPanel()
         {
             int lv = targetInstance.enhanceLevel;
             UnitRarity rarity = targetDef.rarity;
 
-            // ��������Ʈ ��ü
+            // 스프라이트 교체
             if (targetPanelImage != null) targetPanelImage.sprite = GetPanelSprite(rarity);
             if (targetUnitIconBG != null) targetUnitIconBG.sprite = GetIconBGSprite(rarity);
             if (targetLevelBadgeImage != null) targetLevelBadgeImage.sprite = GetBadgeSpriteByLevel(lv);
             if (targetRarityChipImage != null) targetRarityChipImage.sprite = GetChipSprite(rarity);
             if (targetRarityText != null) targetRarityText.color = GetRarityColor(rarity);
 
-            // ������
+            // 아이콘
             if (targetUnitIcon != null)
             {
                 targetUnitIcon.sprite = targetDef.GetIcon(lv);
@@ -148,7 +149,7 @@ namespace Chess.Presentation
             if (targetRarityText != null) targetRarityText.text = GetRarityText(rarity);
             if (targetAttrText != null) targetAttrText.text = GetAttrText(targetDef);
 
-            // ���� ����
+            // 레벨 표시
             if (targetLevelText != null)
             {
                 targetLevelText.text = $"+{lv}";
@@ -156,7 +157,7 @@ namespace Chess.Presentation
             }
         }
 
-        // ���� ��� ���� ��������������������������������������������������������
+        // 타깃 유닛 재료 슬롯 ────────────────────────────────────────────────
 
         void SetupSlots()
         {
@@ -199,7 +200,7 @@ namespace Chess.Presentation
                 materialCountText.text = $"{filled}/{targetDef.enhanceMaterialCount}";
         }
 
-        // ���� ��Ŀ ������������������������������������������������������������������
+        // 재료 피커 ───────────────────────────────────────────────────────────
 
         void OpenPicker()
         {
@@ -240,7 +241,7 @@ namespace Chess.Presentation
 
             selectedMaterials[activeSlotIndex] = inst;
 
-            // ���� ������ ������Ʈ
+            // 슬롯 아이콘 업데이트
             Image slotIcon = slotIconImages[activeSlotIndex];
             if (slotIcon != null)
             {
@@ -257,7 +258,7 @@ namespace Chess.Presentation
             UpdateEnhanceButton();
         }
 
-        // ���� ���� ������������������������������������������������������������������
+        // 강화 스텟 미리보기 ──────────────────────────────────────────────────
 
         void UpdateStats()
         {
@@ -302,7 +303,7 @@ namespace Chess.Presentation
             fill.offsetMax = Vector2.zero;
         }
 
-        // ���� ��� / ��ư ����������������������������������������������������
+        // 골드 비용 / 버튼 ────────────────────────────────────────────────────
 
         void UpdateGold()
         {
@@ -334,6 +335,7 @@ namespace Chess.Presentation
             UpdateStats();
             UpdateGold();
             UpdateEnhanceButton();
+            AudioManager.Instance?.Play("sfx_enhance_complete");
             onRefreshCallback?.Invoke();
         }
 
@@ -343,7 +345,7 @@ namespace Chess.Presentation
             return selectedMaterials.Count > 0;
         }
 
-        // ���� ��ƿ ������������������������������������������������������������������
+        // 강화 유틸 ───────────────────────────────────────────────────────────
 
         Color GetLevelColor(int level)
         {

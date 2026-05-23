@@ -8,24 +8,24 @@ namespace Chess.Presentation
 {
     public class VictoryUI : MonoBehaviour
     {
-        [Header("UI ¿ä¼Ò")]
+        [Header("UI ì°¸ì¡°")]
         public GameObject victoryPanel;
         public TextMeshProUGUI victoryText;
         public Button restartButton;
 
         void Awake()
         {
-            Debug.Log("[VictoryUI] Awake ½ÇÇà");
+            Debug.Log("[VictoryUI] Awake í˜¸ì¶œ");
 
             if (restartButton != null)
             {
-                Debug.Log("[VictoryUI] Àç½ÃÀÛ ¹öÆ° ¿¬°áµÊ, ÀÌº¥Æ® µî·Ï");
-                restartButton.onClick.RemoveAllListeners();  // ¡ç ±âÁ¸ ¸®½º³Ê Á¦°Å
+                Debug.Log("[VictoryUI] ì¬ì‹œì‘ ë²„íŠ¼ ì°¾ìŒ, ì´ë²¤íŠ¸ ë“±ë¡");
+                restartButton.onClick.RemoveAllListeners();  // ê¸°ì¡´ ë¦¬ìŠ¤ë„ˆ ëª¨ë‘ ì œê±°
                 restartButton.onClick.AddListener(OnRestartClicked);
             }
             else
             {
-                Debug.LogError("[VictoryUI] Àç½ÃÀÛ ¹öÆ°ÀÌ nullÀÔ´Ï´Ù!");
+                Debug.LogError("[VictoryUI] ì¬ì‹œì‘ ë²„íŠ¼ì´ nullì…ë‹ˆë‹¤!");
             }
 
             Hide();
@@ -38,9 +38,11 @@ namespace Chess.Presentation
                 victoryPanel.SetActive(true);
             }
 
+            AudioManager.Instance?.PlaySting(winner.playerID == 0 ? "sting_victory" : "sting_defeat");
+
             if (victoryText != null)
             {
-                victoryText.text = $"¡Ú {winner.GetDisplayName()} ½Â¸®! ¡Ú";
+                victoryText.text = $"{winner.GetDisplayName()} ìŠ¹ë¦¬!";
 
                 victoryText.color = winner.playerID == 0
                     ? new Color(1f, 0.86f, 0f)
@@ -55,10 +57,12 @@ namespace Chess.Presentation
                 victoryPanel.SetActive(true);
             }
 
+            AudioManager.Instance?.PlaySting(winnerID == 0 ? "sting_victory" : "sting_defeat");
+
             if (victoryText != null)
             {
-                string playerName = winnerID == 0 ? "ÇÃ·¹ÀÌ¾î" : "AI";
-                victoryText.text = $"¡Ú {playerName} ½Â¸®! ¡Ú";
+                string playerName = winnerID == 0 ? "í”Œë ˆì´ì–´" : "AI";
+                victoryText.text = $"{playerName} ìŠ¹ë¦¬!";
 
                 victoryText.color = winnerID == 0
                     ? new Color(1f, 0.86f, 0f)
@@ -74,13 +78,12 @@ namespace Chess.Presentation
             }
         }
 
-        public void OnRestartClicked()  // ¡ç public!
+        public void OnRestartClicked()  // ê¼­ public!
         {
-            Debug.Log("=============== ¹öÆ° Å¬¸¯µÊ! ===============");
+            Debug.Log("=============== ë²„íŠ¼ í´ë¦­ë¨! ===============");
 
+            AudioManager.Instance?.Play("ui_button_confirm");
             Scene currentScene = SceneManager.GetActiveScene();
-            Debug.Log($"Scene ÀÌ¸§: {currentScene.name}");
-
             SceneManager.LoadScene(currentScene.name);
         }
     }

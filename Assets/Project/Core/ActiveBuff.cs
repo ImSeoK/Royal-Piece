@@ -8,7 +8,9 @@ namespace Chess.Core
     {
         public StatType statType;
         public int amount;
-        public int remainingTurns;
+        public int remainingTurns; // -1 = permanent
+
+        public bool IsPermanent => remainingTurns < 0;
 
         public ActiveBuff(StatType statType, int amount, int remainingTurns)
         {

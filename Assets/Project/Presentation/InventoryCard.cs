@@ -18,13 +18,13 @@ namespace Chess.Presentation
         public TextMeshProUGUI spdText;
         public TextMeshProUGUI defText;
 
-        [Header("��޺� ī�� ��������Ʈ")]
+        [Header("희귀도별 카드 스프라이트")]
         public Sprite cardCommon;
         public Sprite cardRare;
         public Sprite cardEpic;
         public Sprite cardLegendary;
 
-        [Header("��޺� ���� ��������Ʈ")]
+        [Header("희귀도별 뱃지 스프라이트")]
         public Sprite badgeCommon;
         public Sprite badgeRare;
         public Sprite badgeEpic;
@@ -41,13 +41,13 @@ namespace Chess.Presentation
             if (btn != null) btn.onClick.AddListener(() => onClickCallback?.Invoke(this));
         }
 
-        // OwnedUnitInstance ���� ���� (�κ��丮/��Ŀ���� ���)
+        // OwnedUnitInstance 기반 초기화 (인벤토리/피커에서 사용)
         public void Initialize(UnitDefinition unit, OwnedUnitInstance inst, System.Action<InventoryCard> onClick = null)
         {
             ownedInstance = inst;
             Initialize(unit, onClick);
 
-            // ��ȭ ���� ǥ�� (�׻� ǥ��)
+            // 강화 레벨 표시 (항상 표시)
             if (enhanceBadgeText != null && inst != null)
             {
                 enhanceBadgeText.gameObject.SetActive(true);
@@ -59,7 +59,7 @@ namespace Chess.Presentation
                     badgeImage.sprite = GetBadgeSpriteByLevel(inst.enhanceLevel);
             }
 
-            // ��ȭ�� ���� �ݿ�
+            // 강화된 스텟 반영
             if (inst != null)
             {
                 if (hpText != null) hpText.text = $"HP  {unit.GetEnhancedHP(inst.enhanceLevel)}";
@@ -69,7 +69,7 @@ namespace Chess.Presentation
             }
         }
 
-        // UnitDefinition�� �޴� ���� (������ ȣȯ)
+        // UnitDefinition만 받는 초기화 (하위 호환)
         public void Initialize(UnitDefinition unit, System.Action<InventoryCard> onClick = null)
         {
             if (unit == null) return;
@@ -92,7 +92,7 @@ namespace Chess.Presentation
             if (cardBackground == null) cardBackground = GetComponent<Image>();
             if (cardBackground != null) { cardBackground.sprite = GetRaritySprite(unit.rarity); cardBackground.color = Color.white; }
 
-            // ���� �⺻ ��Ȱ��
+            // 뱃지 기본 비활성화
             if (enhanceBadgeText != null) enhanceBadgeText.gameObject.SetActive(false);
         }
 

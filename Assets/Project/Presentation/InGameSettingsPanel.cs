@@ -26,6 +26,7 @@ namespace Chess.Presentation
         public Button mainMenuButton;
 
         private GameManager gameManager;
+        private bool _initializing;
 
         void Awake()
         {
@@ -77,13 +78,15 @@ namespace Chess.Presentation
         void OnSoundClicked()
         {
             if (panel != null) panel.SetActive(false);
-            if (soundPanel != null) soundPanel.SetActive(true);
 
-            if (SettingsManager.Instance != null)
+            _initializing = true;
+            if (soundPanel != null) soundPanel.SetActive(true);
+            if (AudioManager.Instance != null)
             {
-                if (bgmSlider != null) bgmSlider.value = SettingsManager.Instance.BGMVolume;
-                if (sfxSlider != null) sfxSlider.value = SettingsManager.Instance.SFXVolume;
+                if (bgmSlider != null) bgmSlider.value = AudioManager.Instance.bgmVolume;
+                if (sfxSlider != null) sfxSlider.value = AudioManager.Instance.sfxVolume;
             }
+            _initializing = false;
         }
 
         void OnSoundBack()
@@ -104,14 +107,14 @@ namespace Chess.Presentation
 
         void OnBGMChanged(float value)
         {
-            if (SettingsManager.Instance != null)
-                SettingsManager.Instance.SetBGM(value);
+            if (_initializing) return;
+            AudioManager.Instance?.SetBGMVolume(value);
         }
 
         void OnSFXChanged(float value)
         {
-            if (SettingsManager.Instance != null)
-                SettingsManager.Instance.SetSFX(value);
+            if (_initializing) return;
+            AudioManager.Instance?.SetSFXVolume(value);
         }
     }
 }

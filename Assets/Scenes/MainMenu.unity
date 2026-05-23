@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 118836528}
   - component: {fileID: 118836527}
   - component: {fileID: 118836531}
+  - component: {fileID: 118836532}
   m_Layer: 5
   m_Name: StartGameButton
   m_TagString: Untagged
@@ -332,7 +333,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 118836528}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 118836532}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &118836528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,6 +424,19 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &118836532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118836526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &142208467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,6 +1520,7 @@ GameObject:
   - component: {fileID: 635081295}
   - component: {fileID: 635081294}
   - component: {fileID: 635081293}
+  - component: {fileID: 635081296}
   m_Layer: 5
   m_Name: InventoryButton
   m_TagString: Untagged
@@ -1565,7 +1592,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 635081294}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 635081296}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &635081294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1604,6 +1643,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 635081291}
   m_CullTransparentMesh: 1
+--- !u!114 &635081296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635081291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &652172770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,6 +1668,7 @@ GameObject:
   - component: {fileID: 652172773}
   - component: {fileID: 652172772}
   - component: {fileID: 652172774}
+  - component: {fileID: 652172775}
   m_Layer: 5
   m_Name: GatchaButton
   m_TagString: Untagged
@@ -1725,7 +1778,32 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 652172772}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 652172775}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &652172775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652172770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &658110110
 GameObject:
   m_ObjectHideFlags: 0
@@ -2335,6 +2413,7 @@ GameObject:
   - component: {fileID: 1034070029}
   - component: {fileID: 1034070028}
   - component: {fileID: 1034070030}
+  - component: {fileID: 1034070031}
   m_Layer: 5
   m_Name: DeckBuilderButton
   m_TagString: Untagged
@@ -2444,7 +2523,32 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1034070028}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1034070031}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1034070031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034070026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &1057661547
 GameObject:
   m_ObjectHideFlags: 0
@@ -2625,6 +2729,7 @@ GameObject:
   - component: {fileID: 1141667891}
   - component: {fileID: 1141667890}
   - component: {fileID: 1141667889}
+  - component: {fileID: 1141667892}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -2695,7 +2800,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1141667890}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1141667892}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1141667890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2734,6 +2851,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141667887}
   m_CullTransparentMesh: 1
+--- !u!114 &1141667892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141667887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &1148045211
 GameObject:
   m_ObjectHideFlags: 0
@@ -2808,6 +2938,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1148883082}
   - component: {fileID: 1148883081}
+  - component: {fileID: 1148883083}
+  - component: {fileID: 1148883084}
   - component: {fileID: 1148883080}
   m_Layer: 0
   m_Name: AudioManager
@@ -2828,10 +2960,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df917e86a4bd6a48b165d4555408a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmSource: {fileID: 1148883081}
-  lobbyBGM: {fileID: 8300000, guid: 2cfd310d7b79113459e369a6646484ab, type: 3}
+  bgmSourceA: {fileID: 1148883081}
+  bgmSourceB: {fileID: 1148883083}
+  crossfadeDuration: 1
+  lobbyBGM: {fileID: 8300000, guid: 655598d4736aa3b4bb7e0cae247b3bec, type: 3}
   gameBGM: {fileID: 0}
+  database: {fileID: 11400000, guid: 1d6fd7df9d540444cade3fc365670d7d, type: 2}
+  sfxPoolSize: 8
+  uiSource: {fileID: 1148883084}
+  masterVolume: 1
   bgmVolume: 0.7
+  sfxVolume: 1
+  uiVolume: 1
 --- !u!82 &1148883081
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2944,6 +3084,200 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1148883083
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148883079}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &1148883084
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148883079}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1196541786
 GameObject:
   m_ObjectHideFlags: 0

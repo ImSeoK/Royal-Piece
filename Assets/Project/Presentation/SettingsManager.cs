@@ -1,18 +1,17 @@
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace Chess.Presentation
 {
     public class SettingsManager : MonoBehaviour
     {
-        private const string KEY_BGM = "BGMVolume";
-        private const string KEY_SFX = "SFXVolume";
         private const string KEY_VIB = "Vibration";
 
         public static SettingsManager Instance { get; private set; }
 
-        public float BGMVolume { get; private set; } = 1f;
-        public float SFXVolume { get; private set; } = 1f;
+        // Audio volume properties now read directly from AudioManager
+        public float BGMVolume => AudioManager.Instance != null ? AudioManager.Instance.bgmVolume : 1f;
+        public float SFXVolume => AudioManager.Instance != null ? AudioManager.Instance.sfxVolume : 1f;
+        public float UIVolume  => AudioManager.Instance != null ? AudioManager.Instance.uiVolume  : 1f;
         public bool Vibration { get; private set; } = true;
 
         void Awake()
@@ -25,15 +24,17 @@ namespace Chess.Presentation
 
         public void SetBGM(float value)
         {
-            BGMVolume = value;
-            PlayerPrefs.SetFloat(KEY_BGM, value);
-            AudioManager.Instance?.SetVolume(value);
+            AudioManager.Instance?.SetBGMVolume(value);
         }
 
         public void SetSFX(float value)
         {
-            SFXVolume = value;
-            PlayerPrefs.SetFloat(KEY_SFX, value);
+            AudioManager.Instance?.SetSFXVolume(value);
+        }
+
+        public void SetUI(float value)
+        {
+            AudioManager.Instance?.SetUIVolume(value);
         }
 
         public void SetVibration(bool value)
@@ -44,8 +45,7 @@ namespace Chess.Presentation
 
         void Load()
         {
-            BGMVolume = PlayerPrefs.GetFloat(KEY_BGM, 1f);
-            SFXVolume = PlayerPrefs.GetFloat(KEY_SFX, 1f);
+            // Audio volume is loaded by AudioManager on its own Awake
             Vibration = PlayerPrefs.GetInt(KEY_VIB, 1) == 1;
         }
     }

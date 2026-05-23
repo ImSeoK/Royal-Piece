@@ -18,7 +18,7 @@ namespace Chess.Presentation
             this.unitViews = unitViews;
         }
 
-        public IEnumerator PlayAttackEffect(UnitState attacker, UnitState target)
+        public IEnumerator PlayAttackEffect(UnitState attacker, UnitState target, int damage)
         {
             Vector3 attackerPos = unitViews[attacker.id].transform.position;
             Vector3 targetPos = unitViews[target.id].transform.position;
@@ -35,14 +35,33 @@ namespace Chess.Presentation
             if (damagePopupPrefab != null)
             {
                 GameObject popup = Instantiate(damagePopupPrefab, targetPos, Quaternion.identity);
-                popup.GetComponent<DamagePopup>().Initialize(attacker.definition.attackPower, targetPos);
+                popup.GetComponent<DamagePopup>().Initialize(damage, targetPos);
             }
 
             yield return new WaitForSeconds(0.15f);
         }
 
+        public IEnumerator PlayDotEffect(UnitState target, int damage)
+        {
+            if (!unitViews.ContainsKey(target.id)) yield break;
+
+            Vector3 targetPos = unitViews[target.id].transform.position;
+
+            if (unitViews.ContainsKey(target.id))
+                StartCoroutine(unitViews[target.id].PlayHitEffect());
+
+            if (damagePopupPrefab != null)
+            {
+                GameObject popup = Instantiate(damagePopupPrefab, targetPos, Quaternion.identity);
+                popup.GetComponent<DamagePopup>().Initialize(damage, targetPos);
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
         public IEnumerator PlayDeathEffect(UnitView view)
         {
+            AudioManager.Instance?.Play("sfx_unit_death");
             yield return StartCoroutine(view.PlayDeathEffect());
         }
     }

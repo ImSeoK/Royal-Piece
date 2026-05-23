@@ -40,6 +40,7 @@ namespace Chess.Presentation
         private List<Vector2Int> validMoves = new List<Vector2Int>();
 
         private SkillDefinition pendingActiveSkill;
+        private int pendingActiveSkillSlot = -1;
         private bool isSelectingActiveSkillTarget = false;
 
         private SkillDefinition pendingPassiveSkill;
@@ -54,7 +55,7 @@ namespace Chess.Presentation
         private CombatAnimator combatAnimator;
 
         private bool hasMovedThisTurn = false;
-        private Dictionary<SkillDefinition, int> skillRemainingUses = new Dictionary<SkillDefinition, int>();
+        private int[] skillSlotRemainingUses = new int[2];
 
         void Start()
         {
@@ -91,6 +92,7 @@ namespace Chess.Presentation
             enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
 
             SetupSkillSlots();
+            AudioManager.Instance?.Play("sfx_battle_start");
         }
 
         PlayerDeck GenerateAIDeck()
@@ -104,7 +106,7 @@ namespace Chess.Presentation
             var db = PlayerInventory.Instance.allUnitsDatabase;
             var king = db.Find(u => u.isKing);
             var pawn = db.Find(u => u.isPawn);
-            var pool = db.Where(u => !u.isKing && !u.isPawn && u.rarity <= UnitRarity.Rare).ToList();
+            var pool = db.Where(u => !u.isKing && !u.isPawn && u.rarity <= UnitRarity.Epic).ToList();
 
             if (king == null || pawn == null)
             {
@@ -134,40 +136,46 @@ namespace Chess.Presentation
 
             var skills = player0Deck.selectedActiveSkills;
 
-            skillRemainingUses.Clear();
-
             var skill1 = skills != null && skills.Count > 0 ? skills[0] : null;
             var skill2 = skills != null && skills.Count > 1 ? skills[1] : null;
 
-            if (skill1 != null) skillRemainingUses[skill1] = skill1.maxUseCount;
-            if (skill2 != null) skillRemainingUses[skill2] = skill2.maxUseCount;
+            skillSlotRemainingUses[0] = skill1?.maxUseCount ?? 0;
+            skillSlotRemainingUses[1] = skill2?.maxUseCount ?? 0;
 
-            skillSlot1?.SetSkill(skill1, OnSkillUsed);
-            skillSlot2?.SetSkill(skill2, OnSkillUsed);
+            skillSlot1?.SetSkill(skill1, _ => OnSkillUsed(0));
+            skillSlot2?.SetSkill(skill2, _ => OnSkillUsed(1));
         }
 
-        void OnSkillUsed(SkillDefinition skill)
+        void OnSkillUsed(int slotIndex)
         {
             if (turnManager.CurrentPlayer != 0) return;
             if (hasMovedThisTurn) return;
-            if (!skillRemainingUses.TryGetValue(skill, out int remaining) || remaining <= 0) return;
+            if (skillSlotRemainingUses[slotIndex] <= 0) return;
+
+            SkillDefinition skill = slotIndex == 0 ? skillSlot1?.Skill : skillSlot2?.Skill;
+            if (skill == null) return;
 
             if (skill.targetType == SkillTargetType.SingleEnemy ||
                 skill.targetType == SkillTargetType.SingleAlly)
             {
                 // 타게팅 확정 후 차감 — 취소 시 횟수 낭비 방지
                 pendingActiveSkill = skill;
+                pendingActiveSkillSlot = slotIndex;
                 isSelectingActiveSkillTarget = true;
                 ShowActiveSkillTargetHighlights(skill);
             }
             else
             {
-                skillRemainingUses[skill]--;
-                UpdateSkillSlotUI(skill);
+                skillSlotRemainingUses[slotIndex]--;
+                UpdateSkillSlotUI(slotIndex);
+                AudioManager.Instance?.Play("sfx_skill_activate");
                 SkillExecutor.ExecuteActive(skill, board);
 
                 foreach (var view in unitViews.Values)
+                {
+                    view.UpdatePosition();
                     view.UpdateVisuals();
+                }
             }
         }
 
@@ -181,11 +189,11 @@ namespace Chess.Presentation
             boardVisualizer.ShowSkillTargetHighlights(validPositions, targetAlly, 0);
         }
 
-        void UpdateSkillSlotUI(SkillDefinition skill)
+        void UpdateSkillSlotUI(int slotIndex)
         {
-            int remaining = skillRemainingUses.TryGetValue(skill, out int r) ? r : 0;
-            if (skillSlot1 != null && skillSlot1.Skill == skill) skillSlot1.UpdateUses(remaining);
-            if (skillSlot2 != null && skillSlot2.Skill == skill) skillSlot2.UpdateUses(remaining);
+            int remaining = skillSlotRemainingUses[slotIndex];
+            if (slotIndex == 0) skillSlot1?.UpdateUses(remaining);
+            else skillSlot2?.UpdateUses(remaining);
         }
 
         void Update()
@@ -243,12 +251,23 @@ namespace Chess.Presentation
 
                 if (validTarget)
                 {
-                    skillRemainingUses[pendingActiveSkill]--;
-                    UpdateSkillSlotUI(pendingActiveSkill);
-                    SkillExecutor.ExecuteActiveSingle(pendingActiveSkill, target, board);
+                    skillSlotRemainingUses[pendingActiveSkillSlot]--;
+                    UpdateSkillSlotUI(pendingActiveSkillSlot);
+                    AudioManager.Instance?.Play("sfx_skill_activate");
+
+                    // Pull 등 방향 계산이 필요한 스킬을 위해 보드에서 시전자 유닛을 탐색
+                    UnitState activeCaster = null;
+                    foreach (var u in board.GetAllUnits())
+                        if (u.IsAlive && u.ownerID == 0 && u.definition.activeSkill == pendingActiveSkill)
+                        { activeCaster = u; break; }
+
+                    SkillExecutor.ExecuteActiveSingle(pendingActiveSkill, target, board, activeCaster);
 
                     foreach (var view in unitViews.Values)
+                    {
+                        view.UpdatePosition();
                         view.UpdateVisuals();
+                    }
                 }
             }
 
@@ -298,6 +317,7 @@ namespace Chess.Presentation
                     validMoves = MovementResolver.GetValidMoves(unit, board);
                     boardVisualizer.ShowHighlights(unit, validMoves);
                     unitInfoPanel?.Show(unit);
+                    AudioManager.Instance?.Play("sfx_piece_select");
                 }
                 else
                 {
@@ -312,6 +332,7 @@ namespace Chess.Presentation
 
         void ExecuteMove(UnitState unit, Vector2Int targetPos)
         {
+            AudioManager.Instance?.Play("sfx_piece_move");
             board.MoveUnit(unit, targetPos);
             unitViews[unit.id].UpdatePosition();
             hasMovedThisTurn = true;
@@ -322,8 +343,8 @@ namespace Chess.Presentation
 
         IEnumerator PlayMoveAndCombat(UnitState unit)
         {
-            yield return StartCoroutine(TriggerPassiveSkillsAuto(unit, SkillTrigger.OnMove, null));
-            yield return StartCoroutine(TriggerPassiveSkillsAuto(unit, SkillTrigger.OnAdjacent, null));
+            yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnMove, subject: unit));
+            yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnAdjacent, subject: unit));
             yield return StartCoroutine(PlayCombatSequence(unit));
         }
 
@@ -344,7 +365,7 @@ namespace Chess.Presentation
             }
 
             // 전투 전 패시브 체크
-            yield return StartCoroutine(TriggerPassiveSkillsBeforeCombat(movedUnit));
+            yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnAttack, subject: movedUnit));
 
             // 패시브로 죽은 유닛 처리
             var passiveDeadUnits = board.GetAllUnits()
@@ -353,7 +374,7 @@ namespace Chess.Presentation
 
             foreach (var deadUnit in passiveDeadUnits)
             {
-                yield return StartCoroutine(TriggerPassiveSkillsAuto(deadUnit, SkillTrigger.OnDeath, null));
+                yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnDeath, subject: deadUnit));
 
                 if (unitViews.ContainsKey(deadUnit.id))
                     yield return StartCoroutine(combatAnimator.PlayDeathEffect(unitViews[deadUnit.id]));
@@ -395,10 +416,15 @@ namespace Chess.Presentation
                 {
                     if (!target.IsAlive) continue;
 
-                    yield return StartCoroutine(combatAnimator.PlayAttackEffect(attacker, target));
+                    int rawDamage = attacker.GetAttack();
+                    ApplyOneTimePassive(attacker, ref rawDamage);
+                    int finalDamage = target.CalculateFinalDamage(rawDamage);
+                    yield return StartCoroutine(combatAnimator.PlayAttackEffect(attacker, target, finalDamage));
+                    AudioManager.Instance?.Play(GetAttackSoundId(attacker));
 
-                    target.TakeDamage(attacker.GetAttack());
-                    yield return StartCoroutine(TriggerPassiveSkillsAuto(target, SkillTrigger.OnDamaged, attacker));
+                    target.TakeDamage(finalDamage);
+                    AudioManager.Instance?.Play(target.IsAlive ? "sfx_hit_light" : "sfx_hit_heavy");
+                    yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnDamaged, subject: target, contextUnit: attacker));
 
                     if (unitViews.ContainsKey(target.id))
                         unitViews[target.id].UpdateVisuals();
@@ -412,7 +438,7 @@ namespace Chess.Presentation
 
             foreach (var deadUnit in deadUnits)
             {
-                yield return StartCoroutine(TriggerPassiveSkillsAuto(deadUnit, SkillTrigger.OnDeath, null));
+                yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnDeath, subject: deadUnit));
 
                 if (unitViews.ContainsKey(deadUnit.id))
                     yield return StartCoroutine(combatAnimator.PlayDeathEffect(unitViews[deadUnit.id]));
@@ -436,23 +462,100 @@ namespace Chess.Presentation
                 }
             }
 
+            if (movedUnit.ownerID == turnManager.CurrentPlayer)
+                yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnTurnEnd, playerID: movedUnit.ownerID));
+
             foreach (var unit in board.GetAllUnits())
                 unit.TickBuffs();
 
+            // DoT 틱 — 살아있는 유닛에게 지속 데미지 적용
+            var dotDeadUnits = new List<UnitState>();
+            bool anyDotDamage = false;
+            foreach (var unit in board.GetAllUnits().Where(u => u.IsAlive).ToList())
+            {
+                int dotDmg = unit.TickDamageOverTime();
+                if (dotDmg > 0)
+                {
+                    anyDotDamage = true;
+                    yield return StartCoroutine(combatAnimator.PlayDotEffect(unit, dotDmg));
+                    if (!unit.IsAlive)
+                        dotDeadUnits.Add(unit);
+                }
+            }
+
+            if (anyDotDamage)
+                foreach (var view in unitViews.Values)
+                    view.UpdateVisuals();
+
+            foreach (var deadUnit in dotDeadUnits)
+            {
+                yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnDeath, subject: deadUnit));
+
+                if (unitViews.ContainsKey(deadUnit.id))
+                    yield return StartCoroutine(combatAnimator.PlayDeathEffect(unitViews[deadUnit.id]));
+
+                DestroyUnit(deadUnit);
+
+                if (deadUnit.definition.isKing)
+                {
+                    int winnerID = 1 - deadUnit.ownerID;
+                    var winner = turnManager.GetPlayerData(winnerID);
+                    var loser  = turnManager.GetPlayerData(deadUnit.ownerID);
+                    winner.wins++;
+                    loser.losses++;
+
+                    myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
+                    enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
+
+                    victoryUI?.Show(winner);
+                    enabled = false;
+                    yield break;
+                }
+            }
+
+            if (dotDeadUnits.Count > 0)
+                foreach (var view in unitViews.Values)
+                    view.UpdateVisuals();
+
             if (movedUnit.ownerID == turnManager.CurrentPlayer)
             {
+                // 추가 행동 체크 — 현재 플레이어 유닛 중 extra action 보유자가 있으면 턴 전환 스킵
+                UnitState extraActionUnit = null;
+                foreach (var u in board.GetAllUnits())
+                {
+                    if (u.IsAlive && u.ownerID == movedUnit.ownerID && u.HasExtraAction)
+                    {
+                        extraActionUnit = u;
+                        break;
+                    }
+                }
+
+                if (extraActionUnit != null)
+                {
+                    extraActionUnit.ConsumeExtraAction();
+                    hasMovedThisTurn = false;
+
+                    if (turnManager.CurrentPlayer == 0)
+                    {
+                        if (skillSlot1 != null && skillSlotRemainingUses[0] > 0) skillSlot1.SetInteractable(true);
+                        if (skillSlot2 != null && skillSlotRemainingUses[1] > 0) skillSlot2.SetInteractable(true);
+                    }
+
+                    yield break;
+                }
+
                 int prevPlayer = turnManager.CurrentPlayer;
                 turnManager.SwitchTurn();
+
+                yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnTurnStart, playerID: turnManager.CurrentPlayer));
 
                 hasMovedThisTurn = false;
 
                 // 플레이어 턴이 돌아왔을 때만 슬롯 재활성화
                 if (turnManager.CurrentPlayer == 0)
                 {
-                    if (skillSlot1 != null && skillSlot1.Skill != null && skillRemainingUses.TryGetValue(skillSlot1.Skill, out int r1) && r1 > 0)
-                        skillSlot1.SetInteractable(true);
-                    if (skillSlot2 != null && skillSlot2.Skill != null && skillRemainingUses.TryGetValue(skillSlot2.Skill, out int r2) && r2 > 0)
-                        skillSlot2.SetInteractable(true);
+                    if (skillSlot1 != null && skillSlotRemainingUses[0] > 0) skillSlot1.SetInteractable(true);
+                    if (skillSlot2 != null && skillSlotRemainingUses[1] > 0) skillSlot2.SetInteractable(true);
                 }
 
                 if (prevPlayer == 1 && turnManager.UseAI)
@@ -463,29 +566,46 @@ namespace Chess.Presentation
             }
         }
 
-        IEnumerator TriggerPassiveSkillsBeforeCombat(UnitState movedUnit)
+        // subject 또는 playerID 기반으로 패시브 스킬을 트리거하는 단일 진입점
+        // subject != null → 해당 유닛만 / playerID >= 0 → 해당 플레이어 전 유닛
+        IEnumerator TriggerPassiveSkills(SkillTrigger trigger, UnitState subject = null, int playerID = -1, UnitState contextUnit = null)
         {
-            if (movedUnit.definition.passiveSkills == null) yield break;
+            List<UnitState> units;
+            if (subject != null)
+                units = new List<UnitState> { subject };
+            else if (playerID >= 0)
+                units = board.GetAllUnits().Where(u => u.IsAlive && u.ownerID == playerID).ToList();
+            else
+                yield break;
 
-            foreach (var skill in movedUnit.definition.passiveSkills)
+            bool anyFired = false;
+            foreach (var unit in units)
             {
-                if (skill == null) continue;
-                if (skill.skillType != SkillType.Passive) continue;
-                if (skill.trigger != SkillTrigger.OnAttack) continue;
+                if (unit == null || unit.definition?.passiveSkills == null) continue;
+                if (trigger == SkillTrigger.OnAdjacent && !HasAdjacentUnit(unit)) continue;
 
-                if (skill.targetType == SkillTargetType.SingleEnemy ||
-                    skill.targetType == SkillTargetType.SingleAlly)
+                foreach (var skill in unit.definition.passiveSkills)
                 {
-                    yield return StartCoroutine(WaitForPassiveSkillTarget(skill, movedUnit));
-                }
-                else
-                {
-                    SkillExecutor.ExecutePassive(skill, movedUnit, board);
+                    if (skill == null || skill.skillType != SkillType.Passive) continue;
+                    if (skill.trigger != trigger) continue;
 
-                    foreach (var view in unitViews.Values)
-                        view.UpdateVisuals();
+                    if (trigger == SkillTrigger.OnAttack &&
+                        (skill.targetType == SkillTargetType.SingleEnemy || skill.targetType == SkillTargetType.SingleAlly))
+                    {
+                        yield return StartCoroutine(WaitForPassiveSkillTarget(skill, unit));
+                    }
+                    else
+                    {
+                        bool allowDead = trigger == SkillTrigger.OnDeath;
+                        SkillExecutor.ExecutePassive(skill, unit, board, contextUnit, allowDead);
+                    }
+                    anyFired = true;
                 }
             }
+
+            if (anyFired)
+                foreach (var view in unitViews.Values)
+                    view.UpdateVisuals();
         }
 
         IEnumerator WaitForPassiveSkillTarget(SkillDefinition skill, UnitState caster)
@@ -542,29 +662,6 @@ namespace Chess.Presentation
             isSelectingPassiveSkillTarget = false;
         }
 
-        IEnumerator TriggerPassiveSkillsAuto(UnitState unit, SkillTrigger trigger, UnitState other)
-        {
-            if (unit == null || unit.definition.passiveSkills == null) yield break;
-
-            // OnAdjacent: 인접 유닛이 없으면 발동하지 않음
-            if (trigger == SkillTrigger.OnAdjacent && !HasAdjacentUnit(unit))
-                yield break;
-
-            bool anyFired = false;
-            foreach (var skill in unit.definition.passiveSkills)
-            {
-                if (skill == null || skill.skillType != SkillType.Passive) continue;
-                if (skill.trigger != trigger) continue;
-
-                SkillExecutor.ExecutePassive(skill, unit, board);
-                anyFired = true;
-            }
-
-            if (anyFired)
-                foreach (var view in unitViews.Values)
-                    view.UpdateVisuals();
-        }
-
         bool HasAdjacentUnit(UnitState unit)
         {
             for (int dx = -1; dx <= 1; dx++)
@@ -588,20 +685,27 @@ namespace Chess.Presentation
             int mainRow = owner == 0 ? 0 : 7;
             int pawnRow = owner == 0 ? 1 : 6;
 
-            CreateUnit(deck.king, new Vector2Int(3, mainRow), owner);
+            int kingLevel = owner == 0 ? deck.kingEnhanceLevel : 0;
+            CreateUnit(deck.king, new Vector2Int(3, mainRow), owner, kingLevel);
 
             var positions = new List<int> { 0, 1, 2, 4, 5, 6, 7 };
             for (int i = 0; i < deck.customUnits.Count && i < positions.Count; i++)
-                CreateUnit(deck.customUnits[i], new Vector2Int(positions[i], mainRow), owner);
+            {
+                int lvl = owner == 0 && i < deck.customUnitEnhanceLevels.Count
+                    ? deck.customUnitEnhanceLevels[i] : 0;
+                CreateUnit(deck.customUnits[i], new Vector2Int(positions[i], mainRow), owner, lvl);
+            }
 
+            int pawnLevel = owner == 0 ? deck.pawnEnhanceLevel : 0;
             for (int x = 0; x < 8; x++)
-                CreateUnit(deck.pawn, new Vector2Int(x, pawnRow), owner);
+                CreateUnit(deck.pawn, new Vector2Int(x, pawnRow), owner, pawnLevel);
         }
 
-        void CreateUnit(UnitDefinition def, Vector2Int position, int owner)
+        void CreateUnit(UnitDefinition def, Vector2Int position, int owner, int enhanceLevel = 0)
         {
-            UnitState unit = new UnitState(nextUnitID++, def, position, owner);
+            UnitState unit = new UnitState(nextUnitID++, def, position, owner, enhanceLevel);
             board.PlaceUnit(unit, position);
+            unit.SetBoardReference(board);
 
             GameObject viewObj = Instantiate(unitViewPrefab, new Vector3(position.x, position.y, 0), Quaternion.identity);
             viewObj.name = $"{def.unitName}_{unit.id}";
@@ -623,6 +727,34 @@ namespace Chess.Presentation
                 unitViews.Remove(unit.id);
             }
             board.RemoveUnit(unit.position);
+        }
+
+        // 3-2: 게임당 1회 한정 데미지 배율 적용
+        void ApplyOneTimePassive(UnitState attacker, ref int damage)
+        {
+            if (attacker.firstAttackUsed) return;
+            if (attacker.definition.passiveSkills == null) return;
+
+            foreach (var skill in attacker.definition.passiveSkills)
+            {
+                if (skill == null) continue;
+                if (!skill.isOneTimeUse) continue;
+                if (skill.trigger != SkillTrigger.OnAttack) continue;
+
+                damage = Mathf.RoundToInt(damage * skill.damageMultiplier);
+                attacker.firstAttackUsed = true;
+                break;
+            }
+        }
+
+        string GetAttackSoundId(UnitState unit)
+        {
+            var attrs = unit.definition.moveAttributes;
+            if ((attrs & MovementAttribute.Bishop) != 0 || (attrs & MovementAttribute.Enchanter) != 0)
+                return "sfx_attack_magic";
+            if ((attrs & MovementAttribute.Rook) != 0)
+                return "sfx_attack_ranged";
+            return "sfx_attack_melee";
         }
     }
 }

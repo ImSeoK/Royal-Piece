@@ -7,37 +7,37 @@ namespace Chess.Simulation
 {
     public static class AttackResolver
     {
-        // ���� ������ �� ã�� (�����Ÿ� + ��ֹ� üũ)
+        // 공격 대상 유닛 찾기 (이동거리 + 장애물 체크)
         public static List<UnitState> GetAttackTargets(UnitState attacker, BoardState board)
         {
             var targets = new List<UnitState>();
             var def = attacker.definition;
 
-            // Pawn�� �밢�� 1ĭ��
+            // Pawn은 대각선 1칸만
             if (def.moveAttributes.HasFlag(MovementAttribute.Pawn))
             {
                 targets.AddRange(GetPawnAttackTargets(attacker, board));
             }
 
-            // Rook�� ���� (��ֹ� üũ)
+            // Rook은 직선 (장애물 체크)
             if (def.moveAttributes.HasFlag(MovementAttribute.Rook))
             {
                 targets.AddRange(GetLinearAttackTargets(attacker, board));
             }
 
-            // Bishop�� �밢�� (��ֹ� üũ)
+            // Bishop은 대각선 (장애물 체크)
             if (def.moveAttributes.HasFlag(MovementAttribute.Bishop))
             {
                 targets.AddRange(GetDiagonalAttackTargets(attacker, board));
             }
 
-            // Knight�� L��
+            // Knight는 L자
             if (def.moveAttributes.HasFlag(MovementAttribute.Knight))
             {
                 targets.AddRange(GetKnightAttackTargets(attacker, board));
             }
 
-            // King�� 8���� 1ĭ
+            // King은 8방향 1칸
             if (def.moveAttributes.HasFlag(MovementAttribute.King))
             {
                 targets.AddRange(GetKingAttackTargets(attacker, board));
@@ -49,11 +49,11 @@ namespace Chess.Simulation
                 targets.AddRange(GetEnchanterAttackTargets(attacker, board));
             }
 
-            // �ߺ� ���� (Queen ���� ���)
+            // 중복 제거 (Queen 같은 경우)
             return targets.Distinct().ToList();
         }
 
-        // Pawn ���� (�밢�� 1ĭ)
+        // Pawn 공격 (대각선 1칸)
         private static List<UnitState> GetPawnAttackTargets(UnitState unit, BoardState board)
         {
             var targets = new List<UnitState>();
@@ -78,7 +78,7 @@ namespace Chess.Simulation
             return targets;
         }
 
-        // ���� ���� (Rook) - ��ֹ� ����
+        // 직선 공격 (Rook) - 장애물 있음
         private static List<UnitState> GetLinearAttackTargets(UnitState unit, BoardState board)
         {
             var targets = new List<UnitState>();
@@ -98,12 +98,12 @@ namespace Chess.Simulation
 
                     if (board.TryGetUnit(targetPos, out var targetUnit))
                     {
-                        // ���̸� ���� ���
+                        // 적이면 공격 대상
                         if (targetUnit.ownerID != unit.ownerID)
                         {
                             targets.Add(targetUnit);
                         }
-                        // ���� ������ �� �̻� �� �� (��ֹ� ����)
+                        // 유닛 발견하면 더 이상 갈 수 없음 (장애물 있음)
                         break;
                     }
                 }
@@ -112,7 +112,7 @@ namespace Chess.Simulation
             return targets;
         }
 
-        // �밢�� ���� (Bishop) - ��ֹ� ����
+        // 대각선 공격 (Bishop) - 장애물 있음
         private static List<UnitState> GetDiagonalAttackTargets(UnitState unit, BoardState board)
         {
             var targets = new List<UnitState>();
@@ -144,7 +144,7 @@ namespace Chess.Simulation
             return targets;
         }
 
-        // Knight ���� (L��)
+        // Knight 공격 (L자)
         private static List<UnitState> GetKnightAttackTargets(UnitState unit, BoardState board)
         {
             var targets = new List<UnitState>();
@@ -193,7 +193,7 @@ namespace Chess.Simulation
             return targets;
         }
 
-        // King ���� (8���� 1ĭ)
+        // King 공격 (8방향 1칸)
         private static List<UnitState> GetKingAttackTargets(UnitState unit, BoardState board)
         {
             var targets = new List<UnitState>();

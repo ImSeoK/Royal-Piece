@@ -6,42 +6,45 @@ namespace Chess.Simulation
 {
     public static class MovementResolver
     {
-        // ÀÌµ¿ °¡´ÉÇÑ À§Ä¡ °è»ê
+        // ì´ë™ ê°€ëŠ¥í•œ ìœ„ì¹˜ ë°˜í™˜
         public static List<Vector2Int> GetValidMoves(UnitState unit, BoardState board)
         {
             var moves = new List<Vector2Int>();
 
-            // Rook ¼Ó¼º
+            // ì´ë™ ë´‰ì‡„ ìƒíƒœë©´ ë¹ˆ ë¦¬ìŠ¤íŠ¸ ë°˜í™˜
+            if (unit.IsMovementLocked) return moves;
+
+            // Rook ì†ì„±
             if (unit.definition.moveAttributes.HasFlag(MovementAttribute.Rook))
             {
                 moves.AddRange(GetLinearMoves(unit.position, board));
             }
 
-            // Bishop ¼Ó¼º
+            // Bishop ì†ì„±
             if (unit.definition.moveAttributes.HasFlag(MovementAttribute.Bishop))
             {
                 moves.AddRange(GetDiagonalMoves(unit.position, board));
             }
 
-            // Knight ¼Ó¼º
+            // Knight ì†ì„±
             if (unit.definition.moveAttributes.HasFlag(MovementAttribute.Knight))
             {
                 moves.AddRange(GetKnightMoves(unit.position, board));
             }
 
-            // Enchanter ¼Ó¼º
+            // Enchanter ì†ì„±
             if (unit.definition.moveAttributes.HasFlag(MovementAttribute.Enchanter))
             {
                 moves.AddRange(GetEnchanterMoves(unit.position, board));
             }
 
-            // King ¼Ó¼º
+            // King ì†ì„±
             if (unit.definition.moveAttributes.HasFlag(MovementAttribute.King))
             {
                 moves.AddRange(GetKingMoves(unit.position, board));
             }
 
-            // Pawn ¼Ó¼º
+            // Pawn ì†ì„±
             if (unit.definition.moveAttributes.HasFlag(MovementAttribute.Pawn))
             {
                 moves.AddRange(GetPawnMoves(unit, board));
@@ -50,7 +53,7 @@ namespace Chess.Simulation
             return moves;
         }
 
-        // Á÷¼± ÀÌµ¿ (Rook) - À¯´Ö ÀÖÀ¸¸é ¸·Èû
+        // ì§ì„  ì´ë™ (Rook) - ìƒí•˜ì¢Œìš° ìŠ¬ë¼ì´ë”©, ìœ ë‹›ì— ë§‰íˆë©´ ì¤‘ë‹¨
         private static List<Vector2Int> GetLinearMoves(Vector2Int pos, BoardState board)
         {
             var moves = new List<Vector2Int>();
@@ -71,7 +74,7 @@ namespace Chess.Simulation
                     if (!board.IsInBounds(targetPos))
                         break;
 
-                    // À¯´Ö ÀÖÀ¸¸é ¸·Èû (¾Æ±ºÀÌµç ÀûÀÌµç)
+                    // ìœ ë‹›ì— ë§‰íˆë©´ ì¤‘ë‹¨ (ì•„êµ°ì´ë“  ì êµ°ì´ë“ )
                     if (board.TryGetUnit(targetPos, out var targetUnit))
                     {
                         break;
@@ -84,7 +87,7 @@ namespace Chess.Simulation
             return moves;
         }
 
-        // ´ë°¢¼± ÀÌµ¿ (Bishop) - À¯´Ö ÀÖÀ¸¸é ¸·Èû
+        // ëŒ€ê°ì„  ì´ë™ (Bishop) - ëŒ€ê° ìŠ¬ë¼ì´ë”©, ìœ ë‹›ì— ë§‰íˆë©´ ì¤‘ë‹¨
         private static List<Vector2Int> GetDiagonalMoves(Vector2Int pos, BoardState board)
         {
             var moves = new List<Vector2Int>();
@@ -105,7 +108,7 @@ namespace Chess.Simulation
                     if (!board.IsInBounds(targetPos))
                         break;
 
-                    // À¯´Ö ÀÖÀ¸¸é ¸·Èû
+                    // ìœ ë‹›ì— ë§‰íˆë©´ ì¤‘ë‹¨
                     if (board.TryGetUnit(targetPos, out var targetUnit))
                     {
                         break;
@@ -118,7 +121,7 @@ namespace Chess.Simulation
             return moves;
         }
 
-        // Knight ÀÌµ¿ - ºóÄ­¸¸
+        // Knight ì´ë™ - Lì ì í”„, ë¹ˆ ì¹¸ë§Œ ì°©ì§€
         private static List<Vector2Int> GetKnightMoves(Vector2Int pos, BoardState board)
         {
             var moves = new List<Vector2Int>();
@@ -134,7 +137,7 @@ namespace Chess.Simulation
             {
                 var targetPos = pos + offset;
 
-                // ºóÄ­¸¸ ÀÌµ¿ °¡´É
+                // ë¹ˆ ì¹¸ë§Œ ì´ë™ ê°€ëŠ¥
                 if (board.IsInBounds(targetPos) && board.IsEmpty(targetPos))
                 {
                     moves.Add(targetPos);
@@ -144,28 +147,25 @@ namespace Chess.Simulation
             return moves;
         }
 
-        // Enchanter ÀÌµ¿
+        // Enchanter ì´ë™ - ìƒí•˜ì¢Œìš° 2ì¹¸ + ëŒ€ê° 2ì¹¸ ì í”„ (ì¤‘ê°„ ê¸°ë¬¼ ë¬´ì‹œ)
         private static List<Vector2Int> GetEnchanterMoves(Vector2Int pos, BoardState board)
         {
             var moves = new List<Vector2Int>();
 
-            // Distance-2 jump on same-color tiles (8 candidate tiles)
-            // 4 diagonal + 4 straight
             Vector2Int[] offsets = {
-        new Vector2Int(2, 2), new Vector2Int(2, -2),
-        new Vector2Int(-2, 2), new Vector2Int(-2, -2),
-        new Vector2Int(2, 0), new Vector2Int(-2, 0),
-        new Vector2Int(0, 2), new Vector2Int(0, -2)
-    };
+                new Vector2Int(2, 2), new Vector2Int(2, -2),
+                new Vector2Int(-2, 2), new Vector2Int(-2, -2),
+                new Vector2Int(2, 0), new Vector2Int(-2, 0),
+                new Vector2Int(0, 2), new Vector2Int(0, -2)
+            };
 
             foreach (var offset in offsets)
             {
                 var targetPos = pos + offset;
 
-                // Out of bounds check
                 if (!board.IsInBounds(targetPos)) continue;
 
-                // Empty tile check (jumping ignores middle units, but lands on empty only)
+                // ì°©ì§€ ì¹¸ì´ ë¹„ì–´ìˆì–´ì•¼ í•¨ (ì í”„ ì¤‘ê°„ ê¸°ë¬¼ì€ ë¬´ì‹œ)
                 if (!board.IsEmpty(targetPos)) continue;
 
                 moves.Add(targetPos);
@@ -174,7 +174,7 @@ namespace Chess.Simulation
             return moves;
         }
 
-        // King ÀÌµ¿ - ºóÄ­¸¸
+        // King ì´ë™ - 8ë°©í–¥ 1ì¹¸, ë¹ˆ ì¹¸ë§Œ ì°©ì§€
         private static List<Vector2Int> GetKingMoves(Vector2Int pos, BoardState board)
         {
             var moves = new List<Vector2Int>();
@@ -187,7 +187,7 @@ namespace Chess.Simulation
 
                     var targetPos = pos + new Vector2Int(x, y);
 
-                    // ºóÄ­¸¸ ÀÌµ¿ °¡´É
+                    // ë¹ˆ ì¹¸ë§Œ ì´ë™ ê°€ëŠ¥
                     if (board.IsInBounds(targetPos) && board.IsEmpty(targetPos))
                     {
                         moves.Add(targetPos);
@@ -198,14 +198,14 @@ namespace Chess.Simulation
             return moves;
         }
 
-        // Pawn ÀÌµ¿ - ¾ÕÀ¸·Î¸¸ (´ë°¢¼± ÀÌµ¿ X, °ø°İ¸¸ °¡´É)
+        // Pawn ì´ë™ - ì „ì§„ë§Œ ê°€ëŠ¥ (ëŒ€ê° ì´ë™ ì—†ìŒ, ë¹ˆ ì¹¸ë§Œ)
         private static List<Vector2Int> GetPawnMoves(UnitState unit, BoardState board)
         {
             var moves = new List<Vector2Int>();
 
             int forward = unit.ownerID == 0 ? 1 : -1;
 
-            // 1Ä­ ÀüÁø (ºñ¾îÀÖÀ» ¶§¸¸)
+            // 1ì¹¸ ì „ì§„ (ë¹„ì–´ìˆì„ ë•Œë§Œ)
             var frontPos = unit.position + new Vector2Int(0, forward);
             if (board.IsInBounds(frontPos) && board.IsEmpty(frontPos))
             {

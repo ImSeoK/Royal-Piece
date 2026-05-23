@@ -14,28 +14,28 @@ namespace Chess.Core
     [CreateAssetMenu(fileName = "NewUnit", menuName = "Chess/Unit Definition")]
     public class UnitDefinition : ScriptableObject
     {
-        [Header("�⺻ ����")]
+        [Header("프로필")]
         public string unitName;
         public Sprite icon;
         public Sprite enhancedIcon;     
 
-        [Header("�⺻ ����")]
+        [Header("스텟")]
         public int maxHP;
         public int attackPower;
         public int speed;
         public int defense;
 
-        [Header("�̵� �Ӽ�")]
+        [Header("속성")]
         public MovementAttribute moveAttributes;
 
-        [Header("Ư�� �Ӽ�")]
+        [Header("기본말")]
         public bool isKing;
         public bool isPawn;
 
-        [Header("��í ���")]
+        [Header("희귀도")]
         public UnitRarity rarity = UnitRarity.Common;
 
-        [Header("��ų")]
+        [Header("스킬")]
         public SkillDefinition activeSkill;
         public List<SkillDefinition> passiveSkills = new List<SkillDefinition>();
 
@@ -65,13 +65,13 @@ namespace Chess.Core
             }
         }
 
-        // ��ȭ ���� ���� ���� ��� (5% per level)
+        // 강화 레벨당 스텟 증가량 계산
         public int GetEnhancedHP(int level)      => Mathf.FloorToInt(maxHP + hpEnhance * level);
         public int GetEnhancedAttack(int level)  => Mathf.FloorToInt(attackPower + atkEnhance * level);
         public int GetEnhancedSpeed(int level)   => Mathf.FloorToInt(speed + spdEnhance * level);
         public float GetEnhancedDefense(int level) => defense + defEnhance * level;
 
-        // +10 ���� ��ȭ ��������Ʈ
+        // +10 달성 시 강화 아이콘으로 교체
         public Sprite GetIcon(int level) => (level >= 10 && enhancedIcon != null) ? enhancedIcon : icon;
     }
 }

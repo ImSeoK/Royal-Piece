@@ -502,7 +502,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: -720}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &47733031
@@ -652,6 +652,7 @@ GameObject:
   - component: {fileID: 109898183}
   - component: {fileID: 109898182}
   - component: {fileID: 109898181}
+  - component: {fileID: 109898184}
   m_Layer: 5
   m_Name: SoundButton
   m_TagString: Untagged
@@ -722,7 +723,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 109898182}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 109898184}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &109898182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,6 +774,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 109898179}
   m_CullTransparentMesh: 1
+--- !u!114 &109898184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109898179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &134053664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1410,6 +1436,7 @@ GameObject:
   - component: {fileID: 224114659}
   - component: {fileID: 224114658}
   - component: {fileID: 224114661}
+  - component: {fileID: 224114662}
   m_Layer: 5
   m_Name: SkillSlot1
   m_TagString: Untagged
@@ -1481,7 +1508,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 224114659}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 224114662}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &224114659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1535,6 +1574,19 @@ MonoBehaviour:
   skillIcon: {fileID: 136138531}
   cooldownOverlay: {fileID: 584669631}
   button: {fileID: 224114658}
+--- !u!114 &224114662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224114656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &244133822
 GameObject:
   m_ObjectHideFlags: 0
@@ -2558,6 +2610,7 @@ GameObject:
   - component: {fileID: 503779189}
   - component: {fileID: 503779188}
   - component: {fileID: 503779187}
+  - component: {fileID: 503779190}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -2628,7 +2681,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 503779188}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 503779190}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &503779188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2667,6 +2732,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 503779185}
   m_CullTransparentMesh: 1
+--- !u!114 &503779190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503779185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &506395583
 GameObject:
   m_ObjectHideFlags: 0
@@ -3459,6 +3537,7 @@ GameObject:
   - component: {fileID: 700179449}
   - component: {fileID: 700179448}
   - component: {fileID: 700179447}
+  - component: {fileID: 700179450}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -3580,6 +3659,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 700179445}
   m_CullTransparentMesh: 1
+--- !u!114 &700179450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700179445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &706146378
 GameObject:
   m_ObjectHideFlags: 0
@@ -3592,6 +3684,7 @@ GameObject:
   - component: {fileID: 706146382}
   - component: {fileID: 706146381}
   - component: {fileID: 706146380}
+  - component: {fileID: 706146383}
   m_Layer: 5
   m_Name: RematchButton
   m_TagString: Untagged
@@ -3662,7 +3755,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 706146381}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 706146383}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &706146381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3701,6 +3806,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 706146378}
   m_CullTransparentMesh: 1
+--- !u!114 &706146383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706146378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &706848637
 GameObject:
   m_ObjectHideFlags: 0
@@ -6726,6 +6844,7 @@ GameObject:
   - component: {fileID: 1421189638}
   - component: {fileID: 1421189637}
   - component: {fileID: 1421189636}
+  - component: {fileID: 1421189639}
   m_Layer: 5
   m_Name: ForfeitButton
   m_TagString: Untagged
@@ -6796,7 +6915,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1421189637}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1421189639}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1421189637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6835,6 +6966,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421189634}
   m_CullTransparentMesh: 1
+--- !u!114 &1421189639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421189634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &1468201667
 GameObject:
   m_ObjectHideFlags: 0
@@ -7917,6 +8061,7 @@ GameObject:
   - component: {fileID: 1679550240}
   - component: {fileID: 1679550239}
   - component: {fileID: 1679550238}
+  - component: {fileID: 1679550241}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -7987,7 +8132,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1679550239}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1679550241}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1679550239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8026,6 +8183,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1679550236}
   m_CullTransparentMesh: 1
+--- !u!114 &1679550241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679550236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &1712968581
 GameObject:
   m_ObjectHideFlags: 0
@@ -8422,6 +8592,7 @@ GameObject:
   - component: {fileID: 1806603413}
   - component: {fileID: 1806603412}
   - component: {fileID: 1806603415}
+  - component: {fileID: 1806603416}
   m_Layer: 5
   m_Name: SkillSlot2
   m_TagString: Untagged
@@ -8493,7 +8664,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1806603413}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1806603416}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1806603413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8547,6 +8730,19 @@ MonoBehaviour:
   skillIcon: {fileID: 673012209}
   cooldownOverlay: {fileID: 787470377}
   button: {fileID: 1806603412}
+--- !u!114 &1806603416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806603410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &1819235829
 GameObject:
   m_ObjectHideFlags: 0
@@ -9043,6 +9239,7 @@ GameObject:
   - component: {fileID: 1933970161}
   - component: {fileID: 1933970160}
   - component: {fileID: 1933970159}
+  - component: {fileID: 1933970162}
   m_Layer: 5
   m_Name: MenuButton
   m_TagString: Untagged
@@ -9113,7 +9310,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1933970160}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1933970162}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1933970160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9152,6 +9361,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1933970157}
   m_CullTransparentMesh: 1
+--- !u!114 &1933970162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1933970157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &1940361069
 GameObject:
   m_ObjectHideFlags: 0
@@ -9875,6 +10097,7 @@ GameObject:
   - component: {fileID: 2066322255}
   - component: {fileID: 2066322254}
   - component: {fileID: 2066322253}
+  - component: {fileID: 2066322256}
   m_Layer: 5
   m_Name: SoundBackButton
   m_TagString: Untagged
@@ -9945,7 +10168,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2066322254}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2066322256}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2066322254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9984,6 +10219,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066322251}
   m_CullTransparentMesh: 1
+--- !u!114 &2066322256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066322251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &2103230182
 GameObject:
   m_ObjectHideFlags: 0

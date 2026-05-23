@@ -8,17 +8,17 @@ namespace Chess.Presentation
 {
     public class SkillSelectPopup : MonoBehaviour
     {
-        [Header("ÆË¾÷")]
+        [Header("íŒì—…")]
         public GameObject popupRoot;
         public Button closeButton;
         public Button confirmButton;
         public TextMeshProUGUI selectedCountText;
 
-        [Header("½ºÅ³ ¸ñ·Ï")]
+        [Header("ìŠ¤í‚¬ ëª©ë¡")]
         public Transform skillListContent;
         public GameObject skillItemPrefab;
 
-        [Header("½½·Ô (SkillPanel)")]
+        [Header("ìŠ¬ë¡¯ (SkillPanel)")]
         public Image slot1Icon;
         public Image slot2Icon;
 
@@ -34,7 +34,7 @@ namespace Chess.Presentation
             if (confirmButton != null) confirmButton.onClick.AddListener(OnConfirmClicked);
         }
 
-        // ½½·Ô Å¬¸¯ ½Ã ¿ÜºÎ¿¡¼­ È£Ãâ
+        // ìŠ¬ë¡¯ í´ë¦­ í›„ ì™¸ë¶€ì—ì„œ í˜¸ì¶œ
         public void OpenForSlot(int slotIndex, List<SkillDefinition> skills)
         {
             activeSlotIndex = slotIndex;
@@ -59,7 +59,7 @@ namespace Chess.Presentation
                 if (texts.Length > 0) texts[0].text = skill.skillName;
                 if (texts.Length > 1) texts[1].text = skill.description;
 
-                // ÇöÀç ½½·Ô¿¡ ¼±ÅÃµÈ ½ºÅ³ ÇÏÀÌ¶óÀÌÆ®
+                // í˜„ì¬ ìŠ¬ë¡¯ì— ì„ íƒëœ ìŠ¤í‚¬ í•˜ì´ë¼ì´íŠ¸
                 Button btn = item.GetComponent<Button>();
                 Image bg = item.GetComponent<Image>();
                 if (slotSkills[slotIndex] == skill && bg != null)
@@ -75,13 +75,20 @@ namespace Chess.Presentation
         {
             if (activeSlotIndex < 0) return;
 
-            // ´Ù¸¥ ½½·Ô¿¡ ÀÌ¹Ì °°Àº ½ºÅ³ ÀÖÀ¸¸é ¹«½Ã
+            // ë‹¤ë¥¸ ìŠ¬ë¡¯ì— ê°™ì€ ìŠ¤í‚¬ì´ ìˆìœ¼ë©´, ë±ì— í•´ë‹¹ ìŠ¤í‚¬ì´ 2ê°œ ì´ìƒì¼ ë•Œë§Œ í—ˆìš©
             int otherSlot = activeSlotIndex == 0 ? 1 : 0;
-            if (slotSkills[otherSlot] == skill) return;
+            if (slotSkills[otherSlot] == skill)
+            {
+                int count = 0;
+                foreach (var s in availableSkills)
+                    if (s == skill) count++;
+                if (count < 2) return;
+            }
 
+            AudioManager.Instance?.Play("sfx_skill_select");
             slotSkills[activeSlotIndex] = skill;
 
-            // ½½·Ô ¾ÆÀÌÄÜ ¾÷µ¥ÀÌÆ®
+            // ìŠ¬ë¡¯ ì•„ì´ì½˜ ì—…ë°ì´íŠ¸
             Image slotIcon = activeSlotIndex == 0 ? slot1Icon : slot2Icon;
             if (slotIcon != null && skill.icon != null)
             {

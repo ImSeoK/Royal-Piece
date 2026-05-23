@@ -10,20 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9942994e3e8aac64fb150836b1198dc3, type: 3}
-  m_Name: MonoSkill
+  m_Name: Astreo_A
   m_EditorClassIdentifier: 
-  skillName: "\uC6C5\uD06C\uB9AC\uAE30"
-  description: "\uC544\uAD70\uC758 \uBCF4\uD638\uB9C9\uC774 \uB418\uC5B4 \uBC29\uC5B4\uB825\uC744
-    2 \uC0C1\uC2B9\uC2DC\uD0B5\uB2C8\uB2E4."
+  skillName: "\uC6B4\uBA85\uC758 \uBCC4\uBE5B"
+  description: "\uBAA8\uB4E0 \uC544\uAD70\uC774 \uBC1B\uB294 \uB370\uBBF8\uC9C0\uB97C
+    3 \uD134\uAC04 5 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4."
   icon: {fileID: 0}
   skillType: 1
-  trigger: 1
-  targetType: 1
-  effectType: 0
-  power: 4
-  buffStatType: 1
-  buffDuration: 2
-  maxUseCount: 2
+  trigger: 0
+  targetType: 4
+  effectType: 2
+  power: 5
+  buffStatType: 4
+  buffDuration: 3
+  auraRange: 0
+  hpConditionMin: 0
+  hpConditionMax: 100
+  selectRandomTarget: 0
+  maxUseCount: 1
+  isOneTimeUse: 0
+  damageMultiplier: 1
+  requiresHighestSpeed: 0
   castEffectPrefab: {fileID: 0}
   hitEffectPrefab: {fileID: 0}
   castAnimation: {fileID: 0}

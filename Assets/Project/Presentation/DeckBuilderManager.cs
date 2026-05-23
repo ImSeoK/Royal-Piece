@@ -56,18 +56,21 @@ namespace Chess.Presentation
         private readonly Color indicatorLegendary = new Color(0.96f, 0.77f, 0.19f);
 
         private UnitDefinition[] currentDeck;
+        private OwnedUnitInstance[] currentDeckInstances;
         private BoardCell[] rank1Cells = new BoardCell[8];
         private int[] rank1ToFreeSlot = { 0, 1, 2, -1, 3, 4, 5, 6 };
         private List<GameObject> pickerCards = new List<GameObject>();
         private List<string> savedSkillNames = new List<string>();
 
         private UnitDefinition selectedUnit;
+        private OwnedUnitInstance selectedInstance;
         private GameObject selectedPickerCard;
         private InventoryCard selectedCard;
 
         void Start()
         {
             currentDeck = new UnitDefinition[maxFreeSlots];
+            currentDeckInstances = new OwnedUnitInstance[maxFreeSlots];
             RegisterButtons();
             BuildBoard();
             BuildUnitPicker();
@@ -127,28 +130,23 @@ namespace Chess.Presentation
             ClearPicker();
             if (PlayerInventory.Instance == null) return;
 
-            var units = PlayerInventory.Instance.ownedUnits
-                .Where(u => u != null && !u.isKing && !u.isPawn)
-                .OrderByDescending(u => {
-                    switch (u.rarity)
-                    {
-                        case UnitRarity.Legendary: return 3;
-                        case UnitRarity.Epic: return 2;
-                        case UnitRarity.Rare: return 1;
-                        default: return 0;
-                    }
-                }).ToList();
+            var entries = PlayerInventory.Instance.ownedUnitInstances
+                .Select(inst => new { inst, def = PlayerInventory.Instance.GetDefinition(inst.unitName) })
+                .Where(x => x.def != null && !x.def.isKing && !x.def.isPawn)
+                .OrderByDescending(x => GetRarityOrder(x.def.rarity))
+                .ToList();
 
-            foreach (var unit in units)
-                SpawnPickerCard(unit);
+            foreach (var x in entries)
+                SpawnPickerCard(x.def, x.inst);
         }
 
-        void SpawnPickerCard(UnitDefinition unit)
+        void SpawnPickerCard(UnitDefinition unit, OwnedUnitInstance inst)
         {
             if (unitCardPrefab == null || pickerContent == null) return;
             GameObject cardObj = Instantiate(unitCardPrefab, pickerContent);
+
             InventoryCard card = cardObj.GetComponent<InventoryCard>();
-            if (card != null) card.Initialize(unit, OnPickerCardSelected);
+            if (card != null) card.Initialize(unit, inst, OnPickerCardSelected);
             pickerCards.Add(cardObj);
         }
 
@@ -164,7 +162,7 @@ namespace Chess.Presentation
 
             if (selectedUnit != null)
             {
-                PlaceUnitToSlot(cell, selectedUnit, selectedPickerCard);
+                PlaceUnitToSlot(cell, selectedUnit, selectedInstance, selectedPickerCard);
                 ClearSelection();
                 return;
             }
@@ -177,9 +175,11 @@ namespace Chess.Presentation
             if (card.unitDefinition == null) return;
             ClearSelection();
             selectedUnit = card.unitDefinition;
+            selectedInstance = card.ownedInstance;
             selectedPickerCard = card.gameObject;
             selectedCard = card;
             card.SetHighlight(true);
+            AudioManager.Instance?.Play("sfx_unit_pick");
 
             foreach (var cell in rank1Cells)
                 if (cell != null && cell.cellType == BoardCell.CellType.FreeSlot)
@@ -189,6 +189,7 @@ namespace Chess.Presentation
         void ClearSelection()
         {
             selectedUnit = null;
+            selectedInstance = null;
             selectedPickerCard = null;
 
             foreach (var cell in rank1Cells)
@@ -203,15 +204,17 @@ namespace Chess.Presentation
             }
         }
 
-        void PlaceUnitToSlot(BoardCell cell, UnitDefinition unit, GameObject pickerCardObj)
+        void PlaceUnitToSlot(BoardCell cell, UnitDefinition unit, OwnedUnitInstance inst, GameObject pickerCardObj)
         {
             int freeIndex = cell.slotIndex;
             if (freeIndex < 0 || freeIndex >= maxFreeSlots) return;
 
-            if (currentDeck[freeIndex] != null) ReturnUnitToPicker(currentDeck[freeIndex]);
+            if (currentDeck[freeIndex] != null) ReturnUnitToPicker(currentDeck[freeIndex], currentDeckInstances[freeIndex]);
 
             currentDeck[freeIndex] = unit;
+            currentDeckInstances[freeIndex] = inst;
             cell.PlaceUnit(unit);
+            AudioManager.Instance?.Play("sfx_unit_place");
 
             if (pickerCardObj != null)
             {
@@ -226,16 +229,19 @@ namespace Chess.Presentation
             if (cell == null || cell.placedUnit == null) return;
             int freeIndex = cell.slotIndex;
             UnitDefinition unit = currentDeck[freeIndex];
+            OwnedUnitInstance inst = currentDeckInstances[freeIndex];
             currentDeck[freeIndex] = null;
+            currentDeckInstances[freeIndex] = null;
             cell.ClearUnit();
-            ReturnUnitToPicker(unit);
+            AudioManager.Instance?.Play("sfx_unit_unequip");
+            ReturnUnitToPicker(unit, inst);
             UpdateHUD();
         }
 
-        void ReturnUnitToPicker(UnitDefinition unit)
+        void ReturnUnitToPicker(UnitDefinition unit, OwnedUnitInstance inst)
         {
             if (unit == null) return;
-            SpawnPickerCard(unit);
+            SpawnPickerCard(unit, inst);
             SortPickerCards();
         }
 
@@ -272,8 +278,8 @@ namespace Chess.Presentation
             foreach (var unit in currentDeck)
             {
                 if (unit == null || unit.activeSkill == null) continue;
-                if (!skills.Contains(unit.activeSkill))
-                    skills.Add(unit.activeSkill);
+
+                skills.Add(unit.activeSkill);
             }
             return skills;
         }
@@ -332,12 +338,14 @@ namespace Chess.Presentation
                 foreach (var entry in data.slots)
                 {
                     if (entry.slotIndex < 0 || entry.slotIndex >= maxFreeSlots) continue;
-                    UnitDefinition unit = PlayerInventory.Instance.ownedUnits.Find(u => u.unitName == entry.unitName);
+                    UnitDefinition unit = PlayerInventory.Instance.GetDefinition(entry.unitName);
                     if (unit == null) continue;
+                    OwnedUnitInstance inst = FindFreeInstance(entry.unitName);
                     BoardCell targetCell = GetCellByFreeIndex(entry.slotIndex);
                     if (targetCell != null)
                     {
                         currentDeck[entry.slotIndex] = unit;
+                        currentDeckInstances[entry.slotIndex] = inst;
                         targetCell.PlaceUnit(unit);
                         RemoveFromPickerByUnit(unit);
                     }
@@ -349,12 +357,14 @@ namespace Chess.Presentation
                 foreach (string unitName in data.customUnitNames)
                 {
                     if (freeIndex >= maxFreeSlots) break;
-                    UnitDefinition unit = PlayerInventory.Instance.ownedUnits.Find(u => u.unitName == unitName);
+                    UnitDefinition unit = PlayerInventory.Instance.GetDefinition(unitName);
                     if (unit == null) continue;
+                    OwnedUnitInstance inst = FindFreeInstance(unitName);
                     BoardCell targetCell = GetCellByFreeIndex(freeIndex);
                     if (targetCell != null)
                     {
                         currentDeck[freeIndex] = unit;
+                        currentDeckInstances[freeIndex] = inst;
                         targetCell.PlaceUnit(unit);
                         RemoveFromPickerByUnit(unit);
                     }
@@ -370,6 +380,21 @@ namespace Chess.Presentation
             for (int file = 0; file < 8; file++)
                 if (rank1ToFreeSlot[file] == freeIndex) return rank1Cells[file];
             return null;
+        }
+
+        OwnedUnitInstance FindFreeInstance(string unitName)
+        {
+            var usedInstances = new System.Collections.Generic.HashSet<OwnedUnitInstance>();
+            foreach (var inst in currentDeckInstances)
+                if (inst != null) usedInstances.Add(inst);
+
+            OwnedUnitInstance best = null;
+            foreach (var inst in PlayerInventory.Instance.ownedUnitInstances)
+            {
+                if (inst.unitName != unitName || usedInstances.Contains(inst)) continue;
+                if (best == null || inst.enhanceLevel > best.enhanceLevel) best = inst;
+            }
+            return best;
         }
 
         void RemoveFromPickerByUnit(UnitDefinition unit)
@@ -433,12 +458,19 @@ namespace Chess.Presentation
         {
             PlayerDeck playerDeck = ScriptableObject.CreateInstance<PlayerDeck>();
             playerDeck.customUnits = new List<UnitDefinition>();
+            playerDeck.customUnitEnhanceLevels = new List<int>();
 
-            foreach (var unit in currentDeck)
-                if (unit != null) playerDeck.customUnits.Add(unit);
+            for (int i = 0; i < currentDeck.Length; i++)
+            {
+                if (currentDeck[i] == null) continue;
+                playerDeck.customUnits.Add(currentDeck[i]);
+                playerDeck.customUnitEnhanceLevels.Add(currentDeckInstances[i]?.enhanceLevel ?? 0);
+            }
 
             playerDeck.king = defaultKing;
             playerDeck.pawn = defaultPawn;
+            playerDeck.kingEnhanceLevel = FindFreeInstance(defaultKing?.unitName)?.enhanceLevel ?? 0;
+            playerDeck.pawnEnhanceLevel = FindFreeInstance(defaultPawn?.unitName)?.enhanceLevel ?? 0;
 
             // 선택된 스킬을 SkillDefinition으로 변환해서 PlayerDeck에 담기
             if (skillNames != null)
@@ -460,7 +492,11 @@ namespace Chess.Presentation
             SceneManager.LoadScene("SampleScene");
         }
 
-        void OnSaveClicked() => SaveDeck();
+        void OnSaveClicked()
+        {
+            AudioManager.Instance?.Play("sfx_deck_save");
+            SaveDeck();
+        }
         void OnBackClicked() => SceneManager.LoadScene("MainMenu");
     }
 }

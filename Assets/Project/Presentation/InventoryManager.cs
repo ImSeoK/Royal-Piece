@@ -14,49 +14,49 @@ namespace Chess.Presentation
         public Button backButton;
         public TextMeshProUGUI unitCountText;
 
-        [Header("ÇÊÅÍ - µî±Þ")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½")]
         public Button filterAll;
         public Button filterCommon;
         public Button filterRare;
         public Button filterEpic;
         public Button filterLegendary;
 
-        [Header("ÇÊÅÍ - ¼Ó¼º")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ - ï¿½Ó¼ï¿½")]
         public Button filterAllAttr;
         public Button filterRook;
         public Button filterBishop;
         public Button filterKnight;
         public Button filterQueen;
 
-        [Header("ÇÊÅÍ Ä¨ ½ºÇÁ¶óÀÌÆ®")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ Ä¨ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
         public Sprite chipCommon;
         public Sprite chipRare;
         public Sprite chipEpic;
         public Sprite chipLegendary;
 
-        [Header("Ä«µå ±×¸®µå")]
+        [Header("Ä«ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½")]
         public Transform cardContent;
         public GameObject inventoryCardPrefab;
 
-        [Header("ÆÇ¸Å ¹öÆ°")]
+        [Header("ï¿½Ç¸ï¿½ ï¿½ï¿½Æ°")]
         public Button sellButton;
 
-        [Header("´ÙÁß¼±ÅÃ ¸ðµå UI")]
+        [Header("ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ UI")]
         public GameObject sellConfirmBar;
         public TextMeshProUGUI sellCountText;
         public TextMeshProUGUI sellTotalGoldText;
         public Button sellConfirmButton;
         public Button sellCancelButton;
 
-        [Header("ÆË¾÷")]
+        [Header("ï¿½Ë¾ï¿½")]
         public UnitDetailPopup unitDetailPopup;
         public EnhancePopup enhancePopup;
 
-        // ÇÊÅÍ »óÅÂ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         private UnitRarity? selectedRarity = null;
         private MovementAttribute? selectedAttr = null;
 
-        // ¼±ÅÃ »óÅÂ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         private OwnedUnitInstance selectedInstance = null;
         private List<OwnedUnitInstance> multiSelected = new List<OwnedUnitInstance>();
         private bool isMultiSelectMode = false;
@@ -95,7 +95,7 @@ namespace Chess.Presentation
             SceneManager.LoadScene("MainMenu");
         }
 
-        // ¦¡¦¡ ÇÊÅÍ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void SetRarityFilter(UnitRarity? rarity)
         {
@@ -111,7 +111,7 @@ namespace Chess.Presentation
             UpdateFilterVisuals();
         }
 
-        // ¦¡¦¡ Ä«µå ±×¸®µå ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void RefreshGrid()
         {
@@ -187,17 +187,18 @@ namespace Chess.Presentation
             spawnedCards.Add(cardObj);
         }
 
-        // ¦¡¦¡ Ä«µå Å¬¸¯ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void OnCardClicked(OwnedUnitInstance inst, InventoryCard card)
         {
+            AudioManager.Instance?.Play("ui_button_tap");
             if (isMultiSelectMode) { ToggleMultiSelect(inst, card); return; }
             selectedInstance = inst;
             if (unitDetailPopup != null)
                 unitDetailPopup.Open(inst, OnEnhanceRequested);
         }
 
-        // ¦¡¦¡ ÆË¾÷ ¿¬µ¿ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void OnEnhanceRequested(OwnedUnitInstance inst)
         {
@@ -205,7 +206,7 @@ namespace Chess.Presentation
                 enhancePopup.Open(inst, RefreshGrid);
         }
 
-        // ¦¡¦¡ ´ÙÁß¼±ÅÃ ¸ðµå ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void EnterMultiSelectMode()
         {
@@ -238,8 +239,8 @@ namespace Chess.Presentation
                 UnitDefinition def = PlayerInventory.Instance.GetDefinition(inst.unitName);
                 if (def != null) totalGold += GetSellPrice(def.rarity);
             }
-            if (sellCountText != null) sellCountText.text = $"{multiSelected.Count}°³ ¼±ÅÃ";
-            if (sellTotalGoldText != null) sellTotalGoldText.text = $"ÃÑ {totalGold:N0} °ñµå";
+            if (sellCountText != null) sellCountText.text = $"{multiSelected.Count}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½";
+            if (sellTotalGoldText != null) sellTotalGoldText.text = $"ï¿½ï¿½ {totalGold:N0} ï¿½ï¿½ï¿½";
             if (sellConfirmButton != null) sellConfirmButton.interactable = multiSelected.Count > 0;
         }
 
@@ -251,7 +252,7 @@ namespace Chess.Presentation
             RefreshGrid();
         }
 
-        // ¦¡¦¡ ÇÊÅÍ ½Ã°¢È­ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½È­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void UpdateFilterVisuals()
         {
@@ -275,7 +276,7 @@ namespace Chess.Presentation
             img.color = active ? Color.white : new Color(1f, 1f, 1f, 0.4f);
         }
 
-        // ¦¡¦¡ À¯Æ¿ ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¿ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         int GetSellPrice(UnitRarity rarity)
         {

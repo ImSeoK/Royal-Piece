@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 4632427606445482698}
   - component: {fileID: 1780363007503571617}
   - component: {fileID: 8410919305354955236}
+  - component: {fileID: -1243076421891898156}
   m_Layer: 5
   m_Name: PickerCard
   m_TagString: Untagged
@@ -333,7 +334,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4632427606445482698}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -1243076421891898156}
+        m_TargetAssemblyTypeName: Chess.Presentation.UIButtonSound, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8410919305354955236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,6 +366,19 @@ MonoBehaviour:
   badgeRare: {fileID: -7903840253375490594, guid: 1d30af67df179504eb67b2a5b20f3654, type: 3}
   badgeEpic: {fileID: 6635804661313757011, guid: c857cd07c3489e943aca548fcd9a7c1f, type: 3}
   badgeLegendary: {fileID: -7035311254364379549, guid: eaa6819ae8a658e438328a0d4be59dc0, type: 3}
+--- !u!114 &-1243076421891898156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4427879304619924681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7fd573d6a8204e40befd445d82e81e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundId: ui_button_tap
 --- !u!1 &5307979391979503555
 GameObject:
   m_ObjectHideFlags: 0

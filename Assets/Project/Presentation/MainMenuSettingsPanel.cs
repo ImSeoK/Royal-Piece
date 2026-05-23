@@ -13,6 +13,8 @@ namespace Chess.Presentation
         public Toggle vibrationToggle;
         public Button closeButton;
 
+        private bool _initializing;
+
         void Awake()
         {
             if (panel != null) panel.SetActive(false);
@@ -32,12 +34,16 @@ namespace Chess.Presentation
 
         public void Open()
         {
+            _initializing = true;
             if (panel != null) panel.SetActive(true);
-
-            if (SettingsManager.Instance == null) return;
-            if (bgmSlider != null) bgmSlider.value = SettingsManager.Instance.BGMVolume;
-            if (sfxSlider != null) sfxSlider.value = SettingsManager.Instance.SFXVolume;
-            if (vibrationToggle != null) vibrationToggle.isOn = SettingsManager.Instance.Vibration;
+            if (AudioManager.Instance != null)
+            {
+                if (bgmSlider != null) bgmSlider.value = AudioManager.Instance.bgmVolume;
+                if (sfxSlider != null) sfxSlider.value = AudioManager.Instance.sfxVolume;
+            }
+            if (vibrationToggle != null && SettingsManager.Instance != null)
+                vibrationToggle.isOn = SettingsManager.Instance.Vibration;
+            _initializing = false;
         }
 
         public void Close()
@@ -47,20 +53,20 @@ namespace Chess.Presentation
 
         void OnBGMChanged(float value)
         {
-            if (SettingsManager.Instance != null)
-                SettingsManager.Instance.SetBGM(value);
+            if (_initializing) return;
+            AudioManager.Instance?.SetBGMVolume(value);
         }
 
         void OnSFXChanged(float value)
         {
-            if (SettingsManager.Instance != null)
-                SettingsManager.Instance.SetSFX(value);
+            if (_initializing) return;
+            AudioManager.Instance?.SetSFXVolume(value);
         }
 
         void OnVibrationChanged(bool value)
         {
-            if (SettingsManager.Instance != null)
-                SettingsManager.Instance.SetVibration(value);
+            if (_initializing) return;
+            SettingsManager.Instance?.SetVibration(value);
         }
     }
 }

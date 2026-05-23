@@ -18,7 +18,7 @@ namespace Chess.Simulation
             foreach (var target in targets)
             {
                 if (target.IsAlive)
-                    target.TakeDamage(power);
+                    target.TakeDamage(target.CalculateFinalDamage(power));
             }
         }
     }

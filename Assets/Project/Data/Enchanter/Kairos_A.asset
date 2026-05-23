@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9942994e3e8aac64fb150836b1198dc3, type: 3}
+  m_Name: Kairos_A
+  m_EditorClassIdentifier: 
+  skillName: "\uACF5\uD5C8\uB85C\uC758 \uD68C\uADC0"
+  description: "\uBAA8\uB4E0 \uC720\uB2DB\uC758 \uBC84\uD504, \uB514\uBC84\uD504,
+    \uCD9C\uD608 \uD6A8\uACFC\uB97C \uC804\uBD80 \uC81C\uAC70\uD55C\uB2E4."
+  icon: {fileID: 0}
+  skillType: 0
+  trigger: 0
+  targetType: 3
+  effectType: 9
+  power: 0
+  buffStatType: 1
+  buffDuration: 2
+  auraRange: 0
+  hpConditionMin: 0
+  hpConditionMax: 100
+  selectRandomTarget: 0
+  maxUseCount: 1
+  isOneTimeUse: 0
+  damageMultiplier: 1
+  requiresHighestSpeed: 0
+  castEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 0}
+  castAnimation: {fileID: 0}

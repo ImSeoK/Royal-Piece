@@ -13,32 +13,32 @@ namespace Chess.Presentation
         [Header("HUD")]
         public TextMeshProUGUI goldText;
         public TextMeshProUGUI pityText;
-        public RectTransform pityBarFill;   // PityBarFill RectTransform ����
+        public RectTransform pityBarFill;   // PityBarFill RectTransform 참조
         public Button backButton;
 
-        [Header("��� ȭ�� (WaitingPanel)")]
+        [Header("대기 화면 (WaitingPanel)")]
         public GameObject waitingPanel;
         public Button singlePullButton;
         public Button tenPullButton;
 
-        [Header("ī�� ���� ���� (RevealPanel)")]
+        [Header("카드 공개 패널 (RevealPanel)")]
         public GameObject revealPanel;
         public Transform revealGrid;
         public Button skipButton;
 
-        [Header("��� Ȯ�� (ResultPanel)")]
+        [Header("결과 확인 (ResultPanel)")]
         public GameObject resultPanel;
         public Transform resultGrid;
         public Button pullAgainButton;
         public Button closeResultButton;
 
-        [Header("������")]
+        [Header("프리팹")]
         public GameObject gachaCardPrefab;
 
-        [Header("���� ����")]
+        [Header("연출 설정")]
         public float cardRevealInterval = 0.3f;
 
-        [Header("�ý���")]
+        [Header("시스템")]
         public GachaSystem gachaSystem;
 
         private List<UnitDefinition> currentResults = new List<UnitDefinition>();
@@ -87,11 +87,11 @@ namespace Chess.Presentation
 
             if (gachaSystem != null)
             {
-                // õ�� �ؽ�Ʈ
+                // 천장 텍스트
                 if (pityText != null)
                     pityText.text = gachaSystem.PityCounter.ToString();
 
-                // õ�� �� fill (0~1 ���� ������ anchorMax.x ����)
+                // 천장 바 fill (0~1 비율로 anchorMax.x 조절)
                 if (pityBarFill != null)
                 {
                     float fillAmount = (float)gachaSystem.PityCounter / gachaSystem.pityCap;
@@ -132,6 +132,10 @@ namespace Chess.Presentation
             SetPanelActive(resultPanel, true);
             BuildResultPanel();
             UpdateHUD();
+
+            bool hasFanfare = currentResults.Exists(u => u != null && u.rarity >= UnitRarity.Epic);
+            if (hasFanfare)
+                AudioManager.Instance?.Play("sfx_gacha_fanfare");
         }
 
         void SetPanelActive(GameObject panel, bool active)
@@ -147,6 +151,7 @@ namespace Chess.Presentation
             if (gachaSystem.TryPullSingle(out result))
             {
                 if (result != null) currentResults.Add(result);
+                AudioManager.Instance?.Play("sfx_gacha_start");
                 StartReveal();
             }
         }
@@ -159,6 +164,7 @@ namespace Chess.Presentation
             if (gachaSystem.TryPullTen(out results))
             {
                 currentResults = results;
+                AudioManager.Instance?.Play("sfx_gacha_start");
                 StartReveal();
             }
         }
@@ -180,6 +186,7 @@ namespace Chess.Presentation
             {
                 if (!isRevealing) break;
                 SpawnCard(revealGrid, currentResults[i]);
+                AudioManager.Instance?.Play(GetGradeSoundId(currentResults[i]));
                 yield return new WaitForSeconds(cardRevealInterval);
             }
 
@@ -244,6 +251,17 @@ namespace Chess.Presentation
         {
             if (revealCoroutine != null) StopCoroutine(revealCoroutine);
             SceneManager.LoadScene("MainMenu");
+        }
+
+        string GetGradeSoundId(UnitDefinition unit)
+        {
+            switch (unit.rarity)
+            {
+                case UnitRarity.Legendary: return "sfx_gacha_grade_ssr";
+                case UnitRarity.Epic:      return "sfx_gacha_grade_sr";
+                case UnitRarity.Rare:      return "sfx_gacha_grade_r";
+                default:                   return "sfx_gacha_grade_n";
+            }
         }
     }
 }

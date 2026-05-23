@@ -21,7 +21,7 @@ namespace Chess.Simulation
             {
                 if (!target.IsAlive) continue;
 
-                // ĳ���� �ݴ� �������� �о
+                // 캐스터 반대 방향으로 밀어냄
                 Vector2Int direction = target.position - caster.position;
                 if (direction.x != 0) direction.x = direction.x > 0 ? 1 : -1;
                 if (direction.y != 0) direction.y = direction.y > 0 ? 1 : -1;

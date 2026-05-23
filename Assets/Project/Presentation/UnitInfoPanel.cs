@@ -30,9 +30,10 @@ namespace Chess.Presentation
 
             if (nameText != null) nameText.text = unit.definition.unitName;
             if (attrText != null) attrText.text = GetAttrText(unit.definition);
-            if (hpText != null) hpText.text = $"{unit.currentHP}/{unit.definition.maxHP}";
-            if (atkText != null) atkText.text = $"공격 {unit.definition.attackPower}";
-            if (spdText != null) spdText.text = $"속도 {unit.definition.speed}";
+            int maxHP = unit.definition.GetEnhancedHP(unit.enhanceLevel);
+            if (hpText != null) hpText.text = $"{unit.currentHP}/{maxHP}";
+            if (atkText != null) atkText.text = $"공격 {unit.GetAttack()}";
+            if (spdText != null) spdText.text = $"속도 {unit.GetSpeed()}";
             if (defText != null) defText.text = $"방어력 {unit.GetDefense()}";
 
             if (unitIcon != null)
@@ -48,7 +49,7 @@ namespace Chess.Presentation
 
             if (hpBarFill != null)
             {
-                float ratio = (float)unit.currentHP / unit.definition.maxHP;
+                float ratio = (float)unit.currentHP / unit.definition.GetEnhancedHP(unit.enhanceLevel);
                 hpBarFill.anchorMin = new Vector2(0, 0);
                 hpBarFill.anchorMax = new Vector2(ratio, 1);
                 hpBarFill.offsetMin = Vector2.zero;

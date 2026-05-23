@@ -26,9 +26,9 @@ MonoBehaviour:
   activeSkill: {fileID: 0}
   passiveSkills:
   - {fileID: 11400000, guid: 46b1560e2c17ea94ebbfef93e7d99899, type: 2}
-  hpEnhance: 11
-  atkEnhance: 2
-  spdEnhance: 1
-  defEnhance: 0
+  hpEnhance: 16
+  atkEnhance: 1.8
+  spdEnhance: 0.5
+  defEnhance: 1.1
   displayScale: 1
   enhanceGoldCost: 500

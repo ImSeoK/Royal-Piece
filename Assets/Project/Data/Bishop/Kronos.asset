@@ -24,10 +24,11 @@ MonoBehaviour:
   isPawn: 0
   rarity: 2
   activeSkill: {fileID: 0}
-  passiveSkills: []
-  hpEnhance: 11
+  passiveSkills:
+  - {fileID: 11400000, guid: a01debaae4e5c3b4b89f811dd7354a45, type: 2}
+  hpEnhance: 11.2
   atkEnhance: 3
-  spdEnhance: 2
-  defEnhance: 0
+  spdEnhance: 2.1
+  defEnhance: 0.5
   displayScale: 1.15
   enhanceGoldCost: 500

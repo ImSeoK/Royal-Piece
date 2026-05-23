@@ -7,23 +7,28 @@ namespace Chess.Core
     [CreateAssetMenu(fileName = "PlayerDeck", menuName = "Chess/PlayerDeck")]
     public class PlayerDeck : ScriptableObject
     {
-        [Header("µ¦ ±¸¼º")]
-        [Tooltip("Ä¿½ºÅÒ À¯´Ö 7°³ (King Á¦¿Ü)")]
+        [Header("ì»¤ìŠ¤í…€ ìœ ë‹›")]
+        [Tooltip("ì»¤ìŠ¤í…€ ìœ ë‹› ìµœëŒ€ 7ê°œ (King ì œì™¸)")]
         public List<UnitDefinition> customUnits = new List<UnitDefinition>();
 
-        [Header("Å·")]
-        [Tooltip("ÇÊ¼ö: King À¯´Ö")]
+        [Header("í‚¹")]
+        [Tooltip("í•„ìˆ˜: King ìœ ë‹›")]
         public UnitDefinition king;
 
-        [Header("Æù")]
-        [Tooltip("°íÁ¤: 2¹øÂ° ÁÙ¿¡ ¹èÄ¡µÉ Pawn")]
+        [Header("í°")]
+        [Tooltip("ê¸°ë³¸: 2ë²ˆì§¸ ì¤„ì— ë°°ì¹˜ëœ Pawn")]
         public UnitDefinition pawn;
 
-        [Header("¼±ÅÃµÈ ¾×Æ¼ºê ½ºÅ³")]
-        [Tooltip("µ¦ºô´õ¿¡¼­ ¼±ÅÃÇÑ ¾×Æ¼ºê ½ºÅ³ (ÃÖ´ë 2°³)")]
+        [Header("ì„ íƒëœ ì•¡í‹°ë¸Œ ìŠ¤í‚¬")]
+        [Tooltip("ë±ë¹Œë”ì—ì„œ ì„ íƒí•œ ì•¡í‹°ë¸Œ ìŠ¤í‚¬ (ìµœëŒ€ 2ê°œ)")]
         public List<SkillDefinition> selectedActiveSkills = new List<SkillDefinition>();
 
-        [Header("µ¦ ±ÔÄ¢")]
+        [Header("ê°•í™” ë ˆë²¨")]
+        public List<int> customUnitEnhanceLevels = new List<int>();
+        public int kingEnhanceLevel = 0;
+        public int pawnEnhanceLevel = 0;
+
+        [Header("ë± ê·œì¹™")]
         public int maxCustomUnits = 7;
         public int fixedPawns = 8;
 
@@ -31,31 +36,31 @@ namespace Chess.Core
         {
             if (king == null)
             {
-                errorMessage = "KingÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.";
+                errorMessage = "Kingì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.";
                 return false;
             }
 
             if (!king.isKing)
             {
-                errorMessage = "King ½½·Ô¿¡ KingÀÌ ¾Æ´Ñ À¯´ÖÀÌ ¼³Á¤µÇ¾ú½À´Ï´Ù.";
+                errorMessage = "King ìŠ¬ë¡¯ì— Kingì´ ì•„ë‹Œ ìœ ë‹›ì´ ë°°ì¹˜ë˜ì—ˆìŠµë‹ˆë‹¤.";
                 return false;
             }
 
             if (pawn == null)
             {
-                errorMessage = "PawnÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.";
+                errorMessage = "Pawnì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.";
                 return false;
             }
 
             if (customUnits.Count != maxCustomUnits)
             {
-                errorMessage = $"Ä¿½ºÅÒ À¯´Ö °³¼ö°¡ {maxCustomUnits}°³°¡ ¾Æ´Õ´Ï´Ù. (ÇöÀç: {customUnits.Count}°³)";
+                errorMessage = $"ì»¤ìŠ¤í…€ ìœ ë‹› ê°œìˆ˜ê°€ {maxCustomUnits}ê°œê°€ ì•„ë‹™ë‹ˆë‹¤. (í˜„ì¬: {customUnits.Count}ê°œ)";
                 return false;
             }
 
             if (customUnits.Any(u => u == null))
             {
-                errorMessage = "µ¦¿¡ null À¯´ÖÀÌ Æ÷ÇÔµÇ¾î ÀÖ½À´Ï´Ù.";
+                errorMessage = "ì¼ë¶€ null ìœ ë‹›ì´ í¬í•¨ë˜ì–´ ìˆìŠµë‹ˆë‹¤.";
                 return false;
             }
 
@@ -65,7 +70,7 @@ namespace Chess.Core
 
         public string GetDeckInfo()
         {
-            return $"Deck: King + Ä¿½ºÅÒ {customUnits.Count}°³ + Pawn {fixedPawns}°³";
+            return $"Deck: King + ì»¤ìŠ¤í…€ {customUnits.Count}ê°œ + Pawn {fixedPawns}ê°œ";
         }
     }
 }
