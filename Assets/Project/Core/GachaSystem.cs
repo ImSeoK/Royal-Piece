@@ -7,33 +7,33 @@ namespace Chess.Core
     {
         public static GachaSystem Instance { get; private set; }
 
-        [Header("°¡Ã­ Ç® (ÀÚµ¿ »ý¼º)")]
+        [Header("ï¿½ï¿½Ã­ Ç® (ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½)")]
         public List<UnitDefinition> gachaPool = new List<UnitDefinition>();
 
-        [Header("»Ì±â ºñ¿ë")]
+        [Header("ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½")]
         public int singlePullCost = 100;
         public int tenPullCost = 900;
 
-        [Header("È®·ü ¼³Á¤ (ÇÕ°è 100)")]
+        [Header("È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Õ°ï¿½ 100)")]
         [Range(0, 100)] public float commonRate = 60f;
         [Range(0, 100)] public float rareRate = 30f;
         [Range(0, 100)] public float epicRate = 8f;
         [Range(0, 100)] public float legendaryRate = 2f;
 
-        [Header("ÃµÀå ¼³Á¤")]
-        public int pityCap = 100;   // ¸î ¿¬Â÷¿¡ Legendary º¸Àå
+        [Header("Ãµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
+        public int pityCap = 100;   // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Legendary ï¿½ï¿½ï¿½ï¿½
 
-        // ÃµÀå Ä«¿îÅÍ (ÀúÀå Æ÷ÇÔ)
+        // Ãµï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         private int pityCounter = 0;
         private const string PITY_KEY = "GachaPityCounter";
 
-        // ¿ÜºÎ¿¡¼­ ÇöÀç ÃµÀå Ä«¿îÅÍ ÀÐ±â
+        // ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ãµï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½
         public int PityCounter => pityCounter;
         public int PityRemaining => pityCap - pityCounter;
 
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-        // Unity »ý¸íÁÖ±â
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // Unity ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void Awake()
         {
@@ -49,9 +49,9 @@ namespace Chess.Core
             BuildGachaPool();
         }
 
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-        // ÃµÀå ÀúÀå/·Îµå
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // Ãµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½Îµï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void SavePity()
         {
@@ -62,7 +62,7 @@ namespace Chess.Core
         void LoadPity()
         {
             pityCounter = PlayerPrefs.GetInt(PITY_KEY, 0);
-            Debug.Log($"[Gacha] ÃµÀå Ä«¿îÅÍ ·Îµå: {pityCounter} / {pityCap}");
+            Debug.Log($"[Gacha] Ãµï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½: {pityCounter} / {pityCap}");
         }
 
         void ResetPity()
@@ -71,15 +71,15 @@ namespace Chess.Core
             SavePity();
         }
 
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-        // °¡Ã­ Ç® »ý¼º
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½Ã­ Ç® ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         void BuildGachaPool()
         {
             if (PlayerInventory.Instance == null)
             {
-                Debug.LogError("[Gacha] PlayerInventory°¡ ¾ø½À´Ï´Ù!");
+                Debug.LogError("[Gacha] PlayerInventoryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
                 return;
             }
 
@@ -91,21 +91,21 @@ namespace Chess.Core
                     gachaPool.Add(unit);
             }
 
-            Debug.Log($"[Gacha] °¡Ã­ Ç® »ý¼º ¿Ï·á: {gachaPool.Count}°³ À¯´Ö");
+            Debug.Log($"[Gacha] ï¿½ï¿½Ã­ Ç® ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½: {gachaPool.Count}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
 
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-        // »Ì±â ·ÎÁ÷
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         /// <summary>
-        /// ´ÜÀÏ »Ì±â (ÃµÀå Ä«¿îÅÍ Æ÷ÇÔ)
+        /// ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ (Ãµï¿½ï¿½ Ä«ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         /// </summary>
         public UnitDefinition PullSingle()
         {
             if (gachaPool.Count == 0)
             {
-                Debug.LogError("[Gacha] °¡Ã­ Ç®ÀÌ ºñ¾îÀÖ½À´Ï´Ù!");
+                Debug.LogError("[Gacha] ï¿½ï¿½Ã­ Ç®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½Ï´ï¿½!");
                 return null;
             }
 
@@ -113,18 +113,18 @@ namespace Chess.Core
 
             UnitRarity rarity;
 
-            // ÃµÀå µµ´Þ ½Ã Legendary °­Á¦ Áö±Þ
+            // Ãµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Legendary ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (pityCounter >= pityCap)
             {
                 rarity = UnitRarity.Legendary;
-                Debug.Log($"[Gacha] ÃµÀå µµ´Þ! Legendary º¸Àå Áö±Þ ({pityCounter}¿¬Â÷)");
+                Debug.Log($"[Gacha] Ãµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! Legendary ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ({pityCounter}ï¿½ï¿½ï¿½ï¿½)");
                 ResetPity();
             }
             else
             {
                 rarity = RollRarity();
 
-                // Legendary ³ª¿À¸é ÃµÀå ¸®¼Â
+                // Legendary ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ãµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if (rarity == UnitRarity.Legendary)
                     ResetPity();
                 else
@@ -132,13 +132,13 @@ namespace Chess.Core
             }
 
             UnitDefinition result = GetRandomUnitByRarity(rarity);
-            Debug.Log($"[Gacha] ´ÜÀÏ »Ì±â °á°ú: {result?.unitName} ({rarity}) / ÃµÀå: {pityCounter}/{pityCap}");
+            Debug.Log($"[Gacha] ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½: {result?.unitName} ({rarity}) / Ãµï¿½ï¿½: {pityCounter}/{pityCap}");
 
             return result;
         }
 
         /// <summary>
-        /// 10¿¬Â÷ »Ì±â (10¹øÂ° Rare ÀÌ»ó º¸Àå)
+        /// 10ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ (10ï¿½ï¿½Â° Rare ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½)
         /// </summary>
         public List<UnitDefinition> PullTen()
         {
@@ -148,19 +148,28 @@ namespace Chess.Core
             {
                 UnitDefinition unit;
 
-                // 10¹øÂ°: Rare ÀÌ»ó º¸Àå
+                // 10ë²ˆì§¸: Rare ì´ìƒ ë³´ìž¥ (ì²œìž¥ ìš°ì„ )
                 if (i == 9)
                 {
-                    UnitRarity guaranteed = RollRarityGuaranteed();
-                    // ÃµÀå Ä«¿îÅÍµµ Áõ°¡
                     pityCounter++;
-                    if (guaranteed == UnitRarity.Legendary)
+                    UnitRarity guaranteed;
+                    if (pityCounter >= pityCap)
+                    {
+                        guaranteed = UnitRarity.Legendary;
+                        Debug.Log($"[Gacha] ì²œìž¥ ë°œë™! Legendary í™•ì • ({pityCounter}ë²ˆì§¸)");
                         ResetPity();
+                    }
                     else
-                        SavePity();
+                    {
+                        guaranteed = RollRarityGuaranteed();
+                        if (guaranteed == UnitRarity.Legendary)
+                            ResetPity();
+                        else
+                            SavePity();
+                    }
 
                     unit = GetRandomUnitByRarity(guaranteed);
-                    Debug.Log($"[Gacha] 10¿¬Â÷ º¸Àå: {unit?.unitName} ({guaranteed})");
+                    Debug.Log($"[Gacha] 10ë²ˆì§¸ ê²°ê³¼: {unit?.unitName} ({guaranteed})");
                 }
                 else
                 {
@@ -171,13 +180,13 @@ namespace Chess.Core
                     results.Add(unit);
             }
 
-            Debug.Log($"[Gacha] 10¿¬Â÷ ¿Ï·á: {results.Count}°³ È¹µæ / ÃµÀå: {pityCounter}/{pityCap}");
+            Debug.Log($"[Gacha] 10ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½: {results.Count}ï¿½ï¿½ È¹ï¿½ï¿½ / Ãµï¿½ï¿½: {pityCounter}/{pityCap}");
             return results;
         }
 
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-        // È®·ü °è»ê
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // È®ï¿½ï¿½ ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         UnitRarity RollRarity()
         {
@@ -198,14 +207,14 @@ namespace Chess.Core
 
         UnitRarity RollRarityGuaranteed()
         {
-            float totalRate = legendaryRate + epicRate + rareRate;
-            float roll = Random.Range(0f, totalRate);
+            // LegendaryëŠ” ë‹¨ì¼ ë½‘ê¸°ì™€ ë™ì¼ í™•ë¥ , Common í™•ë¥ (60%)ì€ Epicìœ¼ë¡œ í¡ìˆ˜
+            float roll = Random.Range(0f, 100f);
             float cumulative = 0f;
 
             cumulative += legendaryRate;
             if (roll < cumulative) return UnitRarity.Legendary;
 
-            cumulative += epicRate;
+            cumulative += epicRate + commonRate;  // Epicì´ Common í™•ë¥ ê¹Œì§€ í¡ìˆ˜
             if (roll < cumulative) return UnitRarity.Epic;
 
             return UnitRarity.Rare;
@@ -217,22 +226,35 @@ namespace Chess.Core
 
             if (pool.Count == 0)
             {
-                Debug.LogWarning($"[Gacha] {rarity} µî±Þ À¯´ÖÀÌ ¾ø½À´Ï´Ù! CommonÀ¸·Î ´ëÃ¼.");
+                Debug.LogWarning($"[Gacha] {rarity} ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½! Commonï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼.");
                 pool = gachaPool.FindAll(u => u.rarity == UnitRarity.Common);
 
                 if (pool.Count == 0)
                 {
-                    Debug.LogError("[Gacha] °¡Ã­ Ç®ÀÌ ¿ÏÀüÈ÷ ºñ¾îÀÖ½À´Ï´Ù!");
+                    Debug.LogError("[Gacha] ï¿½ï¿½Ã­ Ç®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½Ï´ï¿½!");
                     return null;
                 }
             }
 
-            return pool[Random.Range(0, pool.Count)];
+            float totalWeight = 0f;
+            foreach (var u in pool)
+                totalWeight += Mathf.Max(u.gachaWeight, 0f);
+
+            float roll = Random.Range(0f, totalWeight);
+            float cumulative = 0f;
+            foreach (var u in pool)
+            {
+                cumulative += Mathf.Max(u.gachaWeight, 0f);
+                if (roll < cumulative)
+                    return u;
+            }
+
+            return pool[pool.Count - 1];
         }
 
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
-        // ¿ÜºÎ È£Ãâ¿ë (°ñµå Â÷°¨ Æ÷ÇÔ)
-        // ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ï¿½Üºï¿½ È£ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         public bool TryPullSingle(out UnitDefinition result)
         {

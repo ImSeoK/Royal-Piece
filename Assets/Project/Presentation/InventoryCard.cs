@@ -102,6 +102,13 @@ namespace Chess.Presentation
                 cardBackground.color = highlight ? new Color(0.3f, 0.8f, 0.3f) : Color.white;
         }
 
+        public void SetGrayed(bool grayed)
+        {
+            Color tint = grayed ? new Color(0.4f, 0.4f, 0.4f, 1f) : Color.white;
+            if (cardBackground != null) cardBackground.color = tint;
+            if (unitImage != null) unitImage.color = grayed ? tint : Color.white;
+        }
+
         Sprite GetRaritySprite(UnitRarity rarity)
         {
             switch (rarity)

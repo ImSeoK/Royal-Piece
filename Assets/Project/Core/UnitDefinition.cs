@@ -31,9 +31,14 @@ namespace Chess.Core
         [Header("기본말")]
         public bool isKing;
         public bool isPawn;
+        public bool isQueen;
 
         [Header("희귀도")]
         public UnitRarity rarity = UnitRarity.Common;
+
+        [Header("가챠 가중치")]
+        [Tooltip("같은 희귀도 내 상대적 출현 확률. 1.0이 기본, 낮을수록 희귀하게 뽑힘 (예: 퀸 = 0.6)")]
+        public float gachaWeight = 1.0f;
 
         [Header("스킬")]
         public SkillDefinition activeSkill;

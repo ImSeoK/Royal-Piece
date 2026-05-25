@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Chess.Core;
@@ -48,6 +49,9 @@ namespace Chess.Presentation
 
         [Header("설정")]
         public int maxFreeSlots = 7;
+
+        [Header("토스트 메시지")]
+        public TextMeshProUGUI toastText;
 
         private readonly Color indicatorEmpty = new Color(0.16f, 0.19f, 0.31f);
         private readonly Color indicatorCommon = new Color(0.54f, 0.61f, 0.71f);
@@ -133,11 +137,12 @@ namespace Chess.Presentation
             var entries = PlayerInventory.Instance.ownedUnitInstances
                 .Select(inst => new { inst, def = PlayerInventory.Instance.GetDefinition(inst.unitName) })
                 .Where(x => x.def != null && !x.def.isKing && !x.def.isPawn)
-                .OrderByDescending(x => GetRarityOrder(x.def.rarity))
                 .ToList();
 
             foreach (var x in entries)
                 SpawnPickerCard(x.def, x.inst);
+
+            UnitSortUtility.SortPickerCards(pickerCards);
         }
 
         void SpawnPickerCard(UnitDefinition unit, OwnedUnitInstance inst)
@@ -170,9 +175,48 @@ namespace Chess.Presentation
             if (cell.placedUnit != null) RemoveUnitFromBoard(cell);
         }
 
+        bool IsQueenAlreadyInDeck()
+        {
+            foreach (var unit in currentDeck)
+                if (unit != null && unit.isQueen) return true;
+            return false;
+        }
+
+        void RefreshQueenCardStates()
+        {
+            bool queenInDeck = IsQueenAlreadyInDeck();
+            foreach (var cardObj in pickerCards)
+            {
+                if (cardObj == null) continue;
+                InventoryCard c = cardObj.GetComponent<InventoryCard>();
+                if (c != null && c.unitDefinition != null && c.unitDefinition.isQueen)
+                    c.SetGrayed(queenInDeck);
+            }
+        }
+
+        void ShowToast(string message)
+        {
+            if (toastText == null) return;
+            StopCoroutine("ToastCoroutine");
+            StartCoroutine(ToastCoroutine(message));
+        }
+
+        IEnumerator ToastCoroutine(string message)
+        {
+            toastText.text = message;
+            toastText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            toastText.gameObject.SetActive(false);
+        }
+
         void OnPickerCardSelected(InventoryCard card)
         {
             if (card.unitDefinition == null) return;
+            if (card.unitDefinition.isQueen && IsQueenAlreadyInDeck())
+            {
+                ShowToast("퀸은 최대 1명 편성 가능합니다");
+                return;
+            }
             ClearSelection();
             selectedUnit = card.unitDefinition;
             selectedInstance = card.ownedInstance;
@@ -208,6 +252,7 @@ namespace Chess.Presentation
         {
             int freeIndex = cell.slotIndex;
             if (freeIndex < 0 || freeIndex >= maxFreeSlots) return;
+            if (unit.isQueen && IsQueenAlreadyInDeck()) return;
 
             if (currentDeck[freeIndex] != null) ReturnUnitToPicker(currentDeck[freeIndex], currentDeckInstances[freeIndex]);
 
@@ -221,6 +266,7 @@ namespace Chess.Presentation
                 pickerCards.Remove(pickerCardObj);
                 Destroy(pickerCardObj);
             }
+            RefreshQueenCardStates();
             UpdateHUD();
         }
 
@@ -235,6 +281,7 @@ namespace Chess.Presentation
             cell.ClearUnit();
             AudioManager.Instance?.Play("sfx_unit_unequip");
             ReturnUnitToPicker(unit, inst);
+            RefreshQueenCardStates();
             UpdateHUD();
         }
 
@@ -247,27 +294,7 @@ namespace Chess.Presentation
 
         void SortPickerCards()
         {
-            pickerCards.Sort((a, b) =>
-            {
-                InventoryCard ca = a != null ? a.GetComponent<InventoryCard>() : null;
-                InventoryCard cb = b != null ? b.GetComponent<InventoryCard>() : null;
-                int ra = ca?.unitDefinition != null ? GetRarityOrder(ca.unitDefinition.rarity) : 0;
-                int rb = cb?.unitDefinition != null ? GetRarityOrder(cb.unitDefinition.rarity) : 0;
-                return rb.CompareTo(ra);
-            });
-            for (int i = 0; i < pickerCards.Count; i++)
-                if (pickerCards[i] != null) pickerCards[i].transform.SetSiblingIndex(i);
-        }
-
-        int GetRarityOrder(UnitRarity rarity)
-        {
-            switch (rarity)
-            {
-                case UnitRarity.Legendary: return 3;
-                case UnitRarity.Epic: return 2;
-                case UnitRarity.Rare: return 1;
-                default: return 0;
-            }
+            UnitSortUtility.SortPickerCards(pickerCards);
         }
 
         // ── 스킬 선택 ────────────────────────────
@@ -340,6 +367,7 @@ namespace Chess.Presentation
                     if (entry.slotIndex < 0 || entry.slotIndex >= maxFreeSlots) continue;
                     UnitDefinition unit = PlayerInventory.Instance.GetDefinition(entry.unitName);
                     if (unit == null) continue;
+                    if (unit.isQueen && IsQueenAlreadyInDeck()) continue;
                     OwnedUnitInstance inst = FindFreeInstance(entry.unitName);
                     BoardCell targetCell = GetCellByFreeIndex(entry.slotIndex);
                     if (targetCell != null)
@@ -372,6 +400,7 @@ namespace Chess.Presentation
                 }
             }
 
+            RefreshQueenCardStates();
             UpdateHUD();
         }
 

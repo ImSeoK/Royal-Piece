@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: Lysse
+  m_EditorClassIdentifier: 
+  unitName: "\uB9AC\uC138"
+  icon: {fileID: -2571375108564887913, guid: efb44e1879c35f84ea7d9a15f38fc381, type: 3}
+  enhancedIcon: {fileID: 0}
+  maxHP: 131
+  attackPower: 48
+  speed: 18
+  defense: 5
+  moveAttributes: 6
+  isKing: 0
+  isPawn: 0
+  isQueen: 1
+  rarity: 1
+  gachaWeight: 1
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 9
+  atkEnhance: 5
+  spdEnhance: 2
+  defEnhance: 1
+  displayScale: 1
+  enhanceGoldCost: 500

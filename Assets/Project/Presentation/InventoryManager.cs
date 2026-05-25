@@ -152,17 +152,7 @@ namespace Chess.Presentation
                 return true;
             }).ToList();
 
-            var sorted = filtered.OrderByDescending(inst => {
-                UnitDefinition u = PlayerInventory.Instance.GetDefinition(inst.unitName);
-                if (u == null) return 0;
-                switch (u.rarity)
-                {
-                    case UnitRarity.Legendary: return 3;
-                    case UnitRarity.Epic: return 2;
-                    case UnitRarity.Rare: return 1;
-                    default: return 0;
-                }
-            }).ToList();
+            var sorted = UnitSortUtility.SortInstances(filtered);
 
             foreach (var inst in sorted)
                 SpawnCard(inst);
