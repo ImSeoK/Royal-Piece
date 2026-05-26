@@ -29,6 +29,7 @@ namespace Chess.Core
         // Always 패시브 캐시 (dirty flag 방식)
         private Dictionary<StatType, int> _alwaysCache = new Dictionary<StatType, int>();
         private bool _isDirty = true;
+        private bool _isRebuildingCache = false;
         public void InvalidateCache() { _isDirty = true; }
 
         public UnitState(int id, UnitDefinition def, Vector2Int pos, int owner, int enhanceLevel = 0)
@@ -61,6 +62,7 @@ namespace Chess.Core
         private int GetAlwaysModifier(StatType statType)
         {
             if (board == null) return 0;
+            if (_isRebuildingCache) return 0; // 재귀 방지
             if (_isDirty) RebuildAlwaysCache();
             return _alwaysCache.TryGetValue(statType, out int val) ? val : 0;
         }
@@ -68,6 +70,7 @@ namespace Chess.Core
         // 보드 전체를 순회해 모든 StatType의 Always 보정값을 한 번에 계산
         private void RebuildAlwaysCache()
         {
+            _isRebuildingCache = true;
             _alwaysCache.Clear();
             foreach (var other in board.GetAllUnits())
             {
@@ -100,6 +103,7 @@ namespace Chess.Core
                 }
             }
             _isDirty = false;
+            _isRebuildingCache = false;
         }
 
         private bool IsInAuraRange(UnitState caster, SkillDefinition skill)

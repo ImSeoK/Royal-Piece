@@ -635,6 +635,25 @@ namespace Chess.Presentation
                 yield break;
             }
 
+            // AI는 자동으로 랜덤 타겟 선정
+            if (caster.ownerID == 1)
+            {
+                var validTargets = pendingPassiveValidMoves
+                    .Where(pos => board.TryGetUnit(pos, out var u) && u.IsAlive && (u.ownerID == caster.ownerID) == targetAlly)
+                    .Select(pos => { board.TryGetUnit(pos, out var u); return u; })
+                    .ToList();
+
+                if (validTargets.Count > 0)
+                {
+                    var target = validTargets[UnityEngine.Random.Range(0, validTargets.Count)];
+                    SkillExecutor.ExecuteActiveSingle(skill, target, board);
+                    foreach (var view in unitViews.Values)
+                        view.UpdateVisuals();
+                }
+                ClearPassiveSkillState();
+                yield break;
+            }
+
             isSelectingPassiveSkillTarget = true;
             boardVisualizer.ShowSkillTargetHighlights(pendingPassiveValidMoves, targetAlly, caster.ownerID);
 
