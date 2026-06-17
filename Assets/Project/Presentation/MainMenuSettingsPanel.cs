@@ -1,54 +1,66 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace Chess.Presentation
 {
     public class MainMenuSettingsPanel : MonoBehaviour
     {
-        [Header("UI")]
+        [Header("메인 패널")]
         public GameObject panel;
+        public Button closeButton;
+        public Button soundButton;
+
+        [Header("사운드 서브패널")]
+        public GameObject soundPanel;
         public Slider bgmSlider;
         public Slider sfxSlider;
-        public Toggle vibrationToggle;
-        public Button closeButton;
+        public Button soundBackButton;
 
         private bool _initializing;
 
         void Awake()
         {
             if (panel != null) panel.SetActive(false);
+            if (soundPanel != null) soundPanel.SetActive(false);
 
-            if (closeButton != null)
-                closeButton.onClick.AddListener(Close);
+            if (closeButton != null) closeButton.onClick.AddListener(Close);
+            if (soundButton != null) soundButton.onClick.AddListener(OnSoundClicked);
+            if (soundBackButton != null) soundBackButton.onClick.AddListener(OnSoundBack);
 
-            if (bgmSlider != null)
-                bgmSlider.onValueChanged.AddListener(OnBGMChanged);
-
-            if (sfxSlider != null)
-                sfxSlider.onValueChanged.AddListener(OnSFXChanged);
-
-            if (vibrationToggle != null)
-                vibrationToggle.onValueChanged.AddListener(OnVibrationChanged);
+            if (bgmSlider != null) bgmSlider.onValueChanged.AddListener(OnBGMChanged);
+            if (sfxSlider != null) sfxSlider.onValueChanged.AddListener(OnSFXChanged);
         }
 
         public void Open()
         {
-            _initializing = true;
             if (panel != null) panel.SetActive(true);
-            if (AudioManager.Instance != null)
-            {
-                if (bgmSlider != null) bgmSlider.value = AudioManager.Instance.bgmVolume;
-                if (sfxSlider != null) sfxSlider.value = AudioManager.Instance.sfxVolume;
-            }
-            if (vibrationToggle != null && SettingsManager.Instance != null)
-                vibrationToggle.isOn = SettingsManager.Instance.Vibration;
-            _initializing = false;
+            if (soundPanel != null) soundPanel.SetActive(false);
         }
 
         public void Close()
         {
             if (panel != null) panel.SetActive(false);
+            if (soundPanel != null) soundPanel.SetActive(false);
+        }
+
+        void OnSoundClicked()
+        {
+            if (panel != null) panel.SetActive(false);
+
+            _initializing = true;
+            if (soundPanel != null) soundPanel.SetActive(true);
+            if (AudioManager.Instance != null)
+            {
+                if (bgmSlider != null) bgmSlider.value = AudioManager.Instance.bgmVolume;
+                if (sfxSlider != null) sfxSlider.value = AudioManager.Instance.sfxVolume;
+            }
+            _initializing = false;
+        }
+
+        void OnSoundBack()
+        {
+            if (soundPanel != null) soundPanel.SetActive(false);
+            if (panel != null) panel.SetActive(true);
         }
 
         void OnBGMChanged(float value)
@@ -61,12 +73,6 @@ namespace Chess.Presentation
         {
             if (_initializing) return;
             AudioManager.Instance?.SetSFXVolume(value);
-        }
-
-        void OnVibrationChanged(bool value)
-        {
-            if (_initializing) return;
-            SettingsManager.Instance?.SetVibration(value);
         }
     }
 }

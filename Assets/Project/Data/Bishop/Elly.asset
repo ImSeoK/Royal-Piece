@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: Elly
+  m_EditorClassIdentifier: 
+  unitName: "\uC5D8\uB9AC"
+  icon: {fileID: 7796648917220637078, guid: 2bf3bd94b62b11c4f8488d9563df89e3, type: 3}
+  enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: 0}
+  maxHP: 85
+  attackPower: 18
+  speed: 14
+  defense: 7
+  moveAttributes: 4
+  isKing: 0
+  isPawn: 0
+  isQueen: 0
+  rarity: 0
+  gachaWeight: 1
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 0
+  atkEnhance: 0
+  spdEnhance: 0
+  defEnhance: 0
+  displayScale: 0.85
+  enhanceGoldCost: 500

@@ -48,7 +48,7 @@ namespace Chess.Presentation
                 img.raycastTarget = false;
 
                 RectTransform rt  = rayObj.GetComponent<RectTransform>();
-                rt.pivot            = new Vector2(0.5f, 0f);   // 하단 중앙 = 화면 중심에 고정
+                rt.pivot            = new Vector2(0.5f, -15f / raySize.y);   // 하단이 중심에서 15px 떨어진 지점부터 시작
                 rt.anchorMin        = new Vector2(0.5f, 0.5f);
                 rt.anchorMax        = new Vector2(0.5f, 0.5f);
                 rt.anchoredPosition = Vector2.zero;

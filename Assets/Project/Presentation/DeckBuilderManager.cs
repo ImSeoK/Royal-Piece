@@ -116,13 +116,21 @@ namespace Chess.Presentation
                     if (rank == 1)
                     {
                         if (file == 3)
+                        {
                             cell.Setup(BoardCell.CellType.KingSlot, -1, OnBoardCellClicked, isDark);
+                            if (defaultKing?.typeSymbol != null)
+                                cell.SetSymbolSprite(defaultKing.typeSymbol);
+                        }
                         else
                             cell.Setup(BoardCell.CellType.FreeSlot, rank1ToFreeSlot[file], OnBoardCellClicked, isDark);
                         rank1Cells[file] = cell;
                     }
                     else if (rank == 2)
+                    {
                         cell.Setup(BoardCell.CellType.PawnSlot, -1, OnBoardCellClicked, isDark);
+                        if (defaultPawn?.typeSymbol != null)
+                            cell.SetSymbolSprite(defaultPawn.typeSymbol);
+                    }
                     else
                         cell.Setup(BoardCell.CellType.Normal, -1, OnBoardCellClicked, isDark);
                 }

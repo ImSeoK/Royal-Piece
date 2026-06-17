@@ -145,6 +145,17 @@ namespace Chess.Presentation
                 backgroundImage.color = c;
         }
 
+        public void SetSymbolSprite(Sprite sprite)
+        {
+            if (sprite != null)
+            {
+                if (enhanceText != null) enhanceText.text = "";
+                SetUnitIcon(sprite);
+                if (unitIconImage != null)
+                    unitIconImage.rectTransform.localScale = new Vector3(0.5f, 0.5f, 1f);
+            }
+        }
+
         void SetUnitIcon(Sprite sprite, bool showChessSymbol = false, string symbol = "")
         {
             if (unitIconImage == null) return;
@@ -154,6 +165,7 @@ namespace Chess.Presentation
                 unitIconImage.sprite = sprite;
                 unitIconImage.color = Color.white;
                 unitIconImage.enabled = true;
+                unitIconImage.rectTransform.localScale = Vector3.one;
             }
             else if (showChessSymbol && enhanceText != null)
             {

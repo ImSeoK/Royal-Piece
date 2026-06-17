@@ -20,7 +20,7 @@ MonoBehaviour:
   trigger: 8
   targetType: 0
   effectType: 1
-  power: 10
+  power: 5
   buffStatType: 1
   buffDuration: 2
   auraRange: 3
@@ -31,6 +31,13 @@ MonoBehaviour:
   isOneTimeUse: 0
   damageMultiplier: 1
   requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
   hitEffectPrefab: {fileID: 0}
   castAnimation: {fileID: 0}
+  castSoundId: 
+  hitSoundId: 

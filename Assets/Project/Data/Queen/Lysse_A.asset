@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9942994e3e8aac64fb150836b1198dc3, type: 3}
+  m_Name: Lysse_A
+  m_EditorClassIdentifier: 
+  skillName: "\uBB34\uB3C4\uC758 \uB09C"
+  description: "\uC801\uAD70 \uC804\uCCB4\uC5D0 20 \uC758 \uD53C\uD574\uB97C \uC785\uD788\uBA70
+    2 \uD134\uAC04 SPD\uB97C 8 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4."
+  icon: {fileID: 0}
+  skillType: 0
+  trigger: 0
+  targetType: 3
+  effectType: 0
+  power: 20
+  buffStatType: 0
+  buffDuration: 2
+  auraRange: 0
+  hpConditionMin: 0
+  hpConditionMax: 100
+  selectRandomTarget: 0
+  maxUseCount: 1
+  isOneTimeUse: 0
+  damageMultiplier: 1
+  requiresHighestSpeed: 0
+  hasSecondaryEffect: 1
+  secondaryEffectType: 3
+  secondaryPower: 8
+  secondaryBuffStatType: 2
+  secondaryBuffDuration: 2
+  castEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 0}
+  castAnimation: {fileID: 0}

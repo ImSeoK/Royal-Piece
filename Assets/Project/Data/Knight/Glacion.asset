@@ -15,6 +15,7 @@ MonoBehaviour:
   unitName: "\uAE00\uB798\uC2DC\uC628"
   icon: {fileID: 1075751240714056431, guid: 1c8f735ac5751714a8eb5999fdbe9eb2, type: 3}
   enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: -8558165415832902529, guid: dda7e5dda9e9ff3409389dd4357806bd, type: 3}
   maxHP: 195
   attackPower: 50
   speed: 18
@@ -22,7 +23,9 @@ MonoBehaviour:
   moveAttributes: 8
   isKing: 0
   isPawn: 0
+  isQueen: 0
   rarity: 3
+  gachaWeight: 1
   activeSkill: {fileID: 11400000, guid: bb36f0488e9f6cc469e9fcc1aae5c0bf, type: 2}
   passiveSkills:
   - {fileID: 11400000, guid: f1d8d34f6ed86d94fac4fc89995551f8, type: 2}

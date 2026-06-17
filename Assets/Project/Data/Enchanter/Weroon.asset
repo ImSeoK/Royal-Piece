@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: Weroon
+  m_EditorClassIdentifier: 
+  unitName: "\uC704\uB8EC"
+  icon: {fileID: -5239207198471642730, guid: 7679e9e1f898eeb4fbd4648c17e30b05, type: 3}
+  enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: 0}
+  maxHP: 75
+  attackPower: 18
+  speed: 20
+  defense: 6
+  moveAttributes: 32
+  isKing: 0
+  isPawn: 0
+  isQueen: 0
+  rarity: 0
+  gachaWeight: 1
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 0
+  atkEnhance: 0
+  spdEnhance: 0
+  defEnhance: 0
+  displayScale: 0.85
+  enhanceGoldCost: 500

@@ -178,8 +178,8 @@ namespace Chess.Simulation
             Vector2Int[] offsets = {
                 new Vector2Int(2, 2),  new Vector2Int(2, -2),
                 new Vector2Int(-2, 2), new Vector2Int(-2, -2),
-                new Vector2Int(2, 0),  new Vector2Int(-2, 0),
-                new Vector2Int(0, 2),  new Vector2Int(0, -2)
+                new Vector2Int(1, 0),  new Vector2Int(-1, 0),
+                new Vector2Int(0, 1),  new Vector2Int(0, -1)
             };
 
             foreach (var offset in offsets)

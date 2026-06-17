@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be616d8f8d32844a9b3aae41f10f1db, type: 3}
+  m_Name: Holy3
+  m_EditorClassIdentifier: 
+  id: Holy3
+  type: 0
+  clip: {fileID: 8300000, guid: 86f05095bb0f7be4e9fa1b963fd396b9, type: 3}
+  volumeScale: 0.8
+  pitchVariance: 0
+  loop: 1

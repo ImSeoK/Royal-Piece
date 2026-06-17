@@ -55,6 +55,7 @@ namespace Chess.Core
         ClearBuffs,    // 3-5: 광역 버프 제거
         FixedBuff,     // 3-4: 스탯 고정값 설정
         ClearTargetBuffs, // 3-6: 단일 대상 버프 제거
+        FixedDamage,   // 방어력 무시 고정 피해
     }
 
     [CreateAssetMenu(fileName = "NewSkill", menuName = "Chess/Skill Definition")]
@@ -94,9 +95,20 @@ namespace Chess.Core
         [Header("SPD 비교 조건 (3-3)")]
         public bool requiresHighestSpeed = false;
 
-        [Header("이펙트 (추후 연동)")]
+        [Header("보조 효과 (선택)")]
+        public bool hasSecondaryEffect = false;
+        public SkillEffectType secondaryEffectType;
+        public int secondaryPower;
+        public StatType secondaryBuffStatType = StatType.ATK;
+        public int secondaryBuffDuration = 1;
+
+        [Header("이펙트")]
         public GameObject castEffectPrefab;
         public GameObject hitEffectPrefab;
         public AnimationClip castAnimation;
+
+        [Header("사운드")]
+        public string castSoundId;   // 시전 시 재생할 AudioManager 사운드 ID
+        public string hitSoundId;    // 피격 시 재생할 AudioManager 사운드 ID
     }
 }

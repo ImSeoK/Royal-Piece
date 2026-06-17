@@ -17,6 +17,7 @@ namespace Chess.Presentation
 
         [Header("AI 설정")]
         public bool useAI = true;
+        public bool spectatorMode = false;
         public float aiDelaySeconds = 1f;
 
         [Header("UI")]
@@ -29,15 +30,28 @@ namespace Chess.Presentation
         public bool UseAI => useAI;
 
         private SimpleAI ai;
+        private SimpleAI ai0;
         private System.Action<UnitState, Vector2Int> onExecuteMove;
+
+        public bool IsSpectatorMode => spectatorMode;
 
         public void Initialize(BoardState board, System.Action<UnitState, Vector2Int> executeMove)
         {
             Player0Data = new PlayerData(0, player0Name, false, player0Wins, player0Losses);
             Player1Data = new PlayerData(1, player1Name, useAI, player1Wins, player1Losses);
             ai = new SimpleAI(board, 1);
+            if (spectatorMode) ai0 = new SimpleAI(board, 0);
             onExecuteMove = executeMove;
 
+            turnUI?.UpdateTurn(GetCurrentPlayerData());
+        }
+
+        public void ReinitializeForMatch(BoardState board)
+        {
+            ai = new SimpleAI(board, 1);
+            if (spectatorMode) ai0 = new SimpleAI(board, 0);
+            CurrentPlayer = 0;
+            IsAIThinking = false;
             turnUI?.UpdateTurn(GetCurrentPlayerData());
         }
 
@@ -67,7 +81,8 @@ namespace Chess.Presentation
 
             yield return new WaitForSeconds(aiDelaySeconds);
 
-            var (unit, targetPos) = ai.DecideMove();
+            var currentAI = (spectatorMode && CurrentPlayer == 0) ? ai0 : ai;
+            var (unit, targetPos) = currentAI.DecideMove();
 
             if (unit != null)
             {

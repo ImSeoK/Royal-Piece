@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: Paladium
+  m_EditorClassIdentifier: 
+  unitName: "\uD314\uB77C\uB514\uC6C0"
+  icon: {fileID: 2851352819002663342, guid: 19582cd0add1cfe44a48c5e09159f0ea, type: 3}
+  enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: 0}
+  maxHP: 235
+  attackPower: 30
+  speed: 7
+  defense: 20
+  moveAttributes: 2
+  isKing: 0
+  isPawn: 0
+  isQueen: 0
+  rarity: 3
+  gachaWeight: 1
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 18.8
+  atkEnhance: 2.4
+  spdEnhance: 0.6
+  defEnhance: 1.6
+  displayScale: 1.3
+  enhanceGoldCost: 500

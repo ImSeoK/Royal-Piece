@@ -15,6 +15,7 @@ MonoBehaviour:
   unitName: "\uBCA8"
   icon: {fileID: 4169699516828642862, guid: eb708e2d07e9dde48aed5b30e18a631a, type: 3}
   enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: -4667458647447538721, guid: 441edccd4af18f44c8684488f594e41c, type: 3}
   maxHP: 135
   attackPower: 32
   speed: 22
@@ -22,7 +23,9 @@ MonoBehaviour:
   moveAttributes: 32
   isKing: 0
   isPawn: 0
+  isQueen: 0
   rarity: 2
+  gachaWeight: 1
   activeSkill: {fileID: 11400000, guid: 3effadc3f49731941b881bb3bb8f03e4, type: 2}
   passiveSkills:
   - {fileID: 11400000, guid: 7e1ad5a6edeb6cb4897e03e0c5e094ed, type: 2}

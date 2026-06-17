@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using Chess.Core;
@@ -10,6 +11,9 @@ namespace Chess.Presentation
         [Header("프리팹")]
         public GameObject attackLinePrefab;
         public GameObject damagePopupPrefab;
+
+        [Header("스킬 이펙트 Canvas (UI 기반 이펙트용)")]
+        public Canvas skillEffectCanvas;
 
         private Dictionary<int, UnitView> unitViews;
 
@@ -38,7 +42,7 @@ namespace Chess.Presentation
                 popup.GetComponent<DamagePopup>().Initialize(damage, targetPos);
             }
 
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.35f);
         }
 
         public IEnumerator PlayDotEffect(UnitState target, int damage)
@@ -56,13 +60,44 @@ namespace Chess.Presentation
                 popup.GetComponent<DamagePopup>().Initialize(damage, targetPos);
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.25f);
         }
 
         public IEnumerator PlayDeathEffect(UnitView view)
         {
             AudioManager.Instance?.Play("sfx_unit_death");
             yield return StartCoroutine(view.PlayDeathEffect());
+        }
+
+        public void SpawnDamagePopup(int amount, Vector3 position)
+        {
+            if (damagePopupPrefab == null || amount == 0) return;
+            GameObject popup = Instantiate(damagePopupPrefab, position, Quaternion.identity);
+            popup.GetComponent<DamagePopup>()?.Initialize(amount, position);
+        }
+
+        public IEnumerator PlaySkillEffect(GameObject prefab, Vector3 position)
+        {
+            if (prefab == null) yield break;
+
+            // RectTransform 기반 UI 프리팹이면 Canvas 자식으로 생성 후 위치 변환
+            if (prefab.GetComponent<RectTransform>() != null && skillEffectCanvas != null)
+            {
+                GameObject obj = Instantiate(prefab, skillEffectCanvas.transform);
+                RectTransform rt = obj.GetComponent<RectTransform>();
+                Camera cam = skillEffectCanvas.renderMode == RenderMode.ScreenSpaceOverlay
+                    ? null : skillEffectCanvas.worldCamera;
+                Vector2 screenPos = Camera.main.WorldToScreenPoint(position);
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    skillEffectCanvas.GetComponent<RectTransform>(), screenPos, cam, out Vector2 localPos))
+                    rt.anchoredPosition = localPos;
+            }
+            else
+            {
+                Instantiate(prefab, position, Quaternion.identity);
+            }
+
+            yield return new WaitForSeconds(0.4f);
         }
     }
 }

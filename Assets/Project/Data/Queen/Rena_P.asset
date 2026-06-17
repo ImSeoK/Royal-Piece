@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9942994e3e8aac64fb150836b1198dc3, type: 3}
+  m_Name: Rena_P
+  m_EditorClassIdentifier: 
+  skillName: "\uAE43\uBC1C\uC758 \uB9F9\uC138"
+  description: "\uACF5\uACA9 \uC2DC \uC120\uBD09\uB300\uC758 \uD22C\uC9C0\uAC00 \uBD88\uD0C0\uC62C\uB77C
+    1 \uD134\uAC04 ATK\uAC00 10 \uC0C1\uC2B9\uD569\uB2C8\uB2E4."
+  icon: {fileID: 0}
+  skillType: 1
+  trigger: 1
+  targetType: 0
+  effectType: 2
+  power: 5
+  buffStatType: 1
+  buffDuration: 1
+  auraRange: 0
+  hpConditionMin: 0
+  hpConditionMax: 100
+  selectRandomTarget: 0
+  maxUseCount: 2
+  isOneTimeUse: 0
+  damageMultiplier: 1
+  requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
+  castEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 0}
+  castAnimation: {fileID: 0}
+  castSoundId: 
+  hitSoundId: 

@@ -19,7 +19,7 @@ MonoBehaviour:
   skillType: 1
   trigger: 4
   targetType: 0
-  effectType: 0
+  effectType: 12
   power: 20
   buffStatType: 1
   buffDuration: 2
@@ -31,6 +31,13 @@ MonoBehaviour:
   isOneTimeUse: 0
   damageMultiplier: 1
   requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
-  castAnimation: {fileID: 0}
+  hitEffectPrefab: {fileID: 4306167161924932604, guid: e7d65df30c4a0d84596ac70c3b0ba454, type: 3}
+  castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
+  castSoundId: 
+  hitSoundId: Fire1

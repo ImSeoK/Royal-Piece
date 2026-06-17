@@ -25,6 +25,12 @@ namespace Chess.Simulation
 
             List<UnitState> targets = SelectActiveTargets(skill, board);
             effect.Execute(null, targets, board);
+
+            if (skill.hasSecondaryEffect)
+            {
+                SkillEffect secondary = CreateSecondaryEffect(skill);
+                secondary?.Execute(null, targets, board);
+            }
         }
 
         // Active skill - Single type, player selects target directly
@@ -37,32 +43,40 @@ namespace Chess.Simulation
             if (effect == null) return;
 
             effect.Execute(caster, new List<UnitState> { target }, board);
+
+            if (skill.hasSecondaryEffect)
+            {
+                SkillEffect secondary = CreateSecondaryEffect(skill);
+                secondary?.Execute(caster, new List<UnitState> { target }, board);
+            }
         }
 
         // 패시브 스킬 — auraRange 기반 타겟 선택 후 효과 실행 (모든 패시브 트리거 공통)
         // contextUnit: OnDamaged 시전자 등 트리거 컨텍스트 유닛 (Attacker 범위 타겟팅용)
         // allowDeadCaster: OnDeath 트리거처럼 사망 유닛이 스킬을 발동해야 하는 경우 true
-        public static void ExecutePassive(SkillDefinition skill, UnitState caster, BoardState board, UnitState contextUnit = null, bool allowDeadCaster = false)
+        // 반환값: 실제 효과가 적용된 타겟 목록 (VFX 위치 계산용). 발동 안 되면 빈 리스트.
+        public static List<UnitState> ExecutePassive(SkillDefinition skill, UnitState caster, BoardState board, UnitState contextUnit = null, bool allowDeadCaster = false)
         {
-            if (skill == null || caster == null) return;
-            if (!allowDeadCaster && !caster.IsAlive) return;
+            if (skill == null || caster == null) return new List<UnitState>();
+            if (!allowDeadCaster && !caster.IsAlive) return new List<UnitState>();
 
-            if (!caster.IsHPInRange(skill.hpConditionMin / 100f, skill.hpConditionMax / 100f)) return;
+            if (!caster.IsHPInRange(skill.hpConditionMin / 100f, skill.hpConditionMax / 100f)) return new List<UnitState>();
 
             List<UnitState> targets = GetAuraTargets(skill, caster, board, contextUnit);
-            if (targets.Count == 0) return;
+            if (targets.Count == 0) return new List<UnitState>();
 
             if (skill.selectRandomTarget)
             {
                 var pool = targets.Where(u => !u.definition.isKing && !u.definition.isPawn).ToList();
-                if (pool.Count == 0) return;
+                if (pool.Count == 0) return new List<UnitState>();
                 targets = new List<UnitState> { pool[UnityEngine.Random.Range(0, pool.Count)] };
             }
 
             SkillEffect effect = CreateEffect(skill);
-            if (effect == null) return;
+            if (effect == null) return new List<UnitState>();
 
             effect.Execute(caster, targets, board);
+            return targets;
         }
 
         // auraRange 기반 타겟 목록 반환
@@ -115,6 +129,27 @@ namespace Chess.Simulation
             }
         }
 
+        private static SkillEffect CreateSecondaryEffect(SkillDefinition skill)
+        {
+            switch (skill.secondaryEffectType)
+            {
+                case SkillEffectType.Damage:
+                    return new DamageEffect(skill.secondaryPower);
+                case SkillEffectType.Heal:
+                    return new HealEffect(skill.secondaryPower);
+                case SkillEffectType.Buff:
+                    return new BuffEffect(skill.secondaryBuffStatType, skill.secondaryPower, skill.secondaryBuffDuration);
+                case SkillEffectType.Debuff:
+                    return new BuffEffect(skill.secondaryBuffStatType, -skill.secondaryPower, skill.secondaryBuffDuration);
+                case SkillEffectType.LockMovement:
+                    return new BuffEffect(StatType.MovementLock, 0, skill.secondaryBuffDuration);
+                case SkillEffectType.DamageOverTime:
+                    return new DamageOverTimeEffect(skill.secondaryPower, skill.secondaryBuffDuration);
+                default:
+                    return null;
+            }
+        }
+
         private static SkillEffect CreateEffect(SkillDefinition skill)
         {
             switch (skill.effectType)
@@ -154,6 +189,9 @@ namespace Chess.Simulation
 
                 case SkillEffectType.ClearTargetBuffs:
                     return new ClearTargetBuffsEffect();
+
+                case SkillEffectType.FixedDamage:
+                    return new FixedDamageEffect(skill.power);
 
                 default:
                     return null;

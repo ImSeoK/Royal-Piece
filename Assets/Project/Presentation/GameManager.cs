@@ -32,6 +32,10 @@ namespace Chess.Presentation
         public PlayerDeck player0Deck;
         public PlayerDeck player1Deck;
 
+        [Header("관전 모드")]
+        public int spectatorMatchCount = 5;
+        public TMPro.TextMeshProUGUI matchInfoText;
+
         private BoardState board;
         private Dictionary<int, UnitView> unitViews = new Dictionary<int, UnitView>();
         private int nextUnitID = 0;
@@ -57,6 +61,13 @@ namespace Chess.Presentation
         private bool hasMovedThisTurn = false;
         private int[] skillSlotRemainingUses = new int[2];
 
+        [Header("랭크 패널")]
+        public RankPanelUI rankPanelUI;
+
+        private int completedMatches = 0;
+        private List<int> matchWinners = new List<int>();
+        private bool isRankedMode = false;
+
         void Start()
         {
             inGameSettingsPanel?.Initialize(this);
@@ -68,6 +79,9 @@ namespace Chess.Presentation
 
             if (DeckTransfer.Instance?.Player0Deck != null)
                 player0Deck = DeckTransfer.Instance.Player0Deck;
+
+            isRankedMode = DeckTransfer.Instance?.CurrentMode == GameMode.Ranked;
+            rankPanelUI?.Initialize(isRankedMode);
 
             player1Deck = GenerateAIDeck();
 
@@ -93,6 +107,7 @@ namespace Chess.Presentation
 
             SetupSkillSlots();
             AudioManager.Instance?.Play("sfx_battle_start");
+            UpdateMatchCountText();
         }
 
         PlayerDeck GenerateAIDeck()
@@ -168,8 +183,32 @@ namespace Chess.Presentation
             {
                 skillSlotRemainingUses[slotIndex]--;
                 UpdateSkillSlotUI(slotIndex);
-                AudioManager.Instance?.Play("sfx_skill_activate");
+
+                // 시전 사운드
+                string castSfx = !string.IsNullOrEmpty(skill.castSoundId) ? skill.castSoundId : "sfx_skill_activate";
+                AudioManager.Instance?.Play(castSfx);
+
+                // 시전자 위치 이펙트
+                UnitState rangeCaster = board.GetAllUnits().FirstOrDefault(u => u.IsAlive && u.ownerID == 0 && u.definition.activeSkill == skill);
+                if (skill.castEffectPrefab != null && rangeCaster != null && unitViews.ContainsKey(rangeCaster.id))
+                    StartCoroutine(combatAnimator.PlaySkillEffect(skill.castEffectPrefab, unitViews[rangeCaster.id].transform.position));
+
+                // 영향받는 타겟 계산 (hitEffect / hitSound 재생용)
+                bool targetEnemy = skill.targetType == SkillTargetType.RangeEnemy;
+                var rangeTargets = board.GetAllUnits()
+                    .Where(u => u.IsAlive && (targetEnemy ? u.ownerID != 0 : u.ownerID == 0))
+                    .ToList();
+
                 SkillExecutor.ExecuteActive(skill, board);
+
+                foreach (var t in rangeTargets)
+                {
+                    if (!unitViews.ContainsKey(t.id)) continue;
+                    if (!string.IsNullOrEmpty(skill.hitSoundId))
+                        AudioManager.Instance?.Play(skill.hitSoundId);
+                    if (skill.hitEffectPrefab != null)
+                        StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[t.id].transform.position));
+                }
 
                 foreach (var view in unitViews.Values)
                 {
@@ -200,7 +239,9 @@ namespace Chess.Presentation
         {
             if (turnManager.IsAIThinking) return;
 
-            if (turnManager.CurrentPlayer == 0)
+            if (turnManager.IsSpectatorMode)
+                turnManager.StartAITurn();
+            else if (turnManager.CurrentPlayer == 0)
                 HandleInput();
             else if (turnManager.UseAI)
                 turnManager.StartAITurn();
@@ -253,13 +294,21 @@ namespace Chess.Presentation
                 {
                     skillSlotRemainingUses[pendingActiveSkillSlot]--;
                     UpdateSkillSlotUI(pendingActiveSkillSlot);
-                    AudioManager.Instance?.Play("sfx_skill_activate");
+                    string singleCastSfx = !string.IsNullOrEmpty(pendingActiveSkill.castSoundId) ? pendingActiveSkill.castSoundId : "sfx_skill_activate";
+                    AudioManager.Instance?.Play(singleCastSfx);
+                    if (!string.IsNullOrEmpty(pendingActiveSkill.hitSoundId))
+                        AudioManager.Instance?.Play(pendingActiveSkill.hitSoundId);
 
                     // Pull 등 방향 계산이 필요한 스킬을 위해 보드에서 시전자 유닛을 탐색
                     UnitState activeCaster = null;
                     foreach (var u in board.GetAllUnits())
                         if (u.IsAlive && u.ownerID == 0 && u.definition.activeSkill == pendingActiveSkill)
                         { activeCaster = u; break; }
+
+                    if (pendingActiveSkill.castEffectPrefab != null && activeCaster != null && unitViews.ContainsKey(activeCaster.id))
+                        StartCoroutine(combatAnimator.PlaySkillEffect(pendingActiveSkill.castEffectPrefab, unitViews[activeCaster.id].transform.position));
+                    if (pendingActiveSkill.hitEffectPrefab != null && unitViews.ContainsKey(target.id))
+                        StartCoroutine(combatAnimator.PlaySkillEffect(pendingActiveSkill.hitEffectPrefab, unitViews[target.id].transform.position));
 
                     SkillExecutor.ExecuteActiveSingle(pendingActiveSkill, target, board, activeCaster);
 
@@ -345,6 +394,7 @@ namespace Chess.Presentation
         {
             yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnMove, subject: unit));
             yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnAdjacent, subject: unit));
+            yield return new WaitForSeconds(0.3f);
             yield return StartCoroutine(PlayCombatSequence(unit));
         }
 
@@ -366,6 +416,7 @@ namespace Chess.Presentation
 
             // 전투 전 패시브 체크
             yield return StartCoroutine(TriggerPassiveSkills(SkillTrigger.OnAttack, subject: movedUnit));
+            yield return new WaitForSeconds(0.2f);
 
             // 패시브로 죽은 유닛 처리
             var passiveDeadUnits = board.GetAllUnits()
@@ -383,17 +434,7 @@ namespace Chess.Presentation
 
                 if (deadUnit.definition.isKing)
                 {
-                    int winnerID = 1 - deadUnit.ownerID;
-                    var winner = turnManager.GetPlayerData(winnerID);
-                    var loser = turnManager.GetPlayerData(deadUnit.ownerID);
-                    winner.wins++;
-                    loser.losses++;
-
-                    myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
-                    enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
-
-                    victoryUI?.Show(winner);
-                    enabled = false;
+                    yield return StartCoroutine(HandleKingDeath(deadUnit));
                     yield break;
                 }
             }
@@ -432,7 +473,7 @@ namespace Chess.Presentation
                     if (!target.IsAlive)
                         deadUnits.Add(target);
 
-                    yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.4f);
                 }
             }
 
@@ -447,17 +488,7 @@ namespace Chess.Presentation
 
                 if (deadUnit.definition.isKing)
                 {
-                    int winnerID = 1 - deadUnit.ownerID;
-                    var winner = turnManager.GetPlayerData(winnerID);
-                    var loser = turnManager.GetPlayerData(deadUnit.ownerID);
-                    winner.wins++;
-                    loser.losses++;
-
-                    myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
-                    enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
-
-                    victoryUI?.Show(winner);
-                    enabled = false;
+                    yield return StartCoroutine(HandleKingDeath(deadUnit));
                     yield break;
                 }
             }
@@ -498,17 +529,7 @@ namespace Chess.Presentation
 
                 if (deadUnit.definition.isKing)
                 {
-                    int winnerID = 1 - deadUnit.ownerID;
-                    var winner = turnManager.GetPlayerData(winnerID);
-                    var loser  = turnManager.GetPlayerData(deadUnit.ownerID);
-                    winner.wins++;
-                    loser.losses++;
-
-                    myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
-                    enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
-
-                    victoryUI?.Show(winner);
-                    enabled = false;
+                    yield return StartCoroutine(HandleKingDeath(deadUnit));
                     yield break;
                 }
             }
@@ -558,7 +579,7 @@ namespace Chess.Presentation
                     if (skillSlot2 != null && skillSlotRemainingUses[1] > 0) skillSlot2.SetInteractable(true);
                 }
 
-                if (prevPlayer == 1 && turnManager.UseAI)
+                if (turnManager.IsSpectatorMode || (prevPlayer == 1 && turnManager.UseAI))
                     turnManager.SetAIThinking(false);
 
                 if (turnManager.CurrentPlayer == 1 && turnManager.UseAI)
@@ -597,7 +618,35 @@ namespace Chess.Presentation
                     else
                     {
                         bool allowDead = trigger == SkillTrigger.OnDeath;
-                        SkillExecutor.ExecutePassive(skill, unit, board, contextUnit, allowDead);
+                        if (!string.IsNullOrEmpty(skill.castSoundId))
+                            AudioManager.Instance?.Play(skill.castSoundId);
+                        if (skill.castEffectPrefab != null && unitViews.ContainsKey(unit.id))
+                            yield return StartCoroutine(combatAnimator.PlaySkillEffect(skill.castEffectPrefab, unitViews[unit.id].transform.position));
+
+                        // 실행 전 HP 스냅샷
+                        var hpBefore = new Dictionary<int, int>();
+                        foreach (var u in board.GetAllUnits())
+                            hpBefore[u.id] = u.currentHP;
+
+                        var hitTargets = SkillExecutor.ExecutePassive(skill, unit, board, contextUnit, allowDead);
+
+                        // 타겟별 HP 변화 → 데미지 팝업
+                        foreach (var t in hitTargets)
+                        {
+                            if (!hpBefore.ContainsKey(t.id) || !unitViews.ContainsKey(t.id)) continue;
+                            int delta = hpBefore[t.id] - t.currentHP;
+                            if (delta != 0)
+                                combatAnimator.SpawnDamagePopup(Mathf.Abs(delta), unitViews[t.id].transform.position);
+                        }
+
+                        if (skill.hitEffectPrefab != null || !string.IsNullOrEmpty(skill.hitSoundId))
+                            foreach (var t in hitTargets)
+                            {
+                                if (!string.IsNullOrEmpty(skill.hitSoundId))
+                                    AudioManager.Instance?.Play(skill.hitSoundId);
+                                if (skill.hitEffectPrefab != null && unitViews.ContainsKey(t.id))
+                                    StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[t.id].transform.position));
+                            }
                     }
                     anyFired = true;
                 }
@@ -774,6 +823,111 @@ namespace Chess.Presentation
             if ((attrs & MovementAttribute.Rook) != 0)
                 return "sfx_attack_ranged";
             return "sfx_attack_melee";
+        }
+
+        IEnumerator HandleKingDeath(UnitState deadKing)
+        {
+            int winnerID = 1 - deadKing.ownerID;
+            var winner = turnManager.GetPlayerData(winnerID);
+            var loser = turnManager.GetPlayerData(deadKing.ownerID);
+            winner.wins++;
+            loser.losses++;
+            myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
+            enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
+
+            matchWinners.Add(winnerID);
+            completedMatches++;
+
+            // 골드 보상 및 랭크 포인트
+            int baseGold     = winnerID == 0 ? 40 : 15;
+            int missionBonus = 0;
+            int rankDelta    = 0;
+
+            // 전적 누적 저장 (관전 모드 제외)
+            if (!turnManager.IsSpectatorMode)
+            {
+                int savedWins   = PlayerPrefs.GetInt("stat_wins",   0);
+                int savedLosses = PlayerPrefs.GetInt("stat_losses", 0);
+                int savedTotal  = PlayerPrefs.GetInt("stat_total",  0);
+
+                if (winnerID == 0) savedWins++;
+                else savedLosses++;
+                savedTotal++;
+
+                PlayerPrefs.SetInt("stat_wins",   savedWins);
+                PlayerPrefs.SetInt("stat_losses", savedLosses);
+                PlayerPrefs.SetInt("stat_total",  savedTotal);
+                PlayerPrefs.Save();
+
+                PlayerInventory.Instance?.AddCurrency(baseGold);
+
+                if (winnerID == 0)
+                {
+                    missionBonus = DailySystem.Instance?.RecordWin() ?? 0;
+                    if (isRankedMode) { Chess.Core.RankSystem.AddWin(); rankDelta = 15; }
+                }
+                else
+                {
+                    if (isRankedMode) { Chess.Core.RankSystem.AddLoss(); rankDelta = -8; }
+                }
+            }
+
+            if (turnManager.IsSpectatorMode && completedMatches < spectatorMatchCount)
+            {
+                Debug.Log($"[관전] 매치 {completedMatches}/{spectatorMatchCount} 종료 — 승자: Player {winnerID}");
+                enabled = false;
+                yield return new WaitForSeconds(1.5f);
+                RestartMatch();
+            }
+            else
+            {
+                if (turnManager.IsSpectatorMode)
+                {
+                    int p0wins = matchWinners.Count(w => w == 0);
+                    int p1wins = matchWinners.Count(w => w == 1);
+                    Debug.Log($"[관전] 전체 종료 ({spectatorMatchCount}판) — Player0: {p0wins}승 / Player1: {p1wins}승");
+                }
+                victoryUI?.Show(winnerID, baseGold, missionBonus, rankDelta, isRankedMode);
+                enabled = false;
+            }
+        }
+
+        void RestartMatch()
+        {
+            foreach (var kvp in new Dictionary<int, UnitView>(unitViews))
+                Destroy(kvp.Value.gameObject);
+            unitViews.Clear();
+
+            board = new BoardState();
+            nextUnitID = 0;
+            hasMovedThisTurn = false;
+            selectedUnit = null;
+            validMoves.Clear();
+            ClearPassiveSkillState();
+
+            boardVisualizer.Initialize(board);
+            combatAnimator.Initialize(unitViews);
+
+            player1Deck = GenerateAIDeck();
+            SetupUnitsFromDeck(player0Deck, 0);
+            SetupUnitsFromDeck(player1Deck, 1);
+
+            turnManager.ReinitializeForMatch(board);
+
+            myPlayerInfoUI?.UpdateInfo(turnManager.Player0Data);
+            enemyPlayerInfoUI?.UpdateInfo(turnManager.Player1Data);
+
+            UpdateMatchCountText();
+            enabled = true;
+        }
+
+        void UpdateMatchCountText()
+        {
+            if (matchInfoText == null) return;
+            if (turnManager != null && turnManager.IsSpectatorMode)
+                matchInfoText.text = $"매치 {completedMatches + 1} / {spectatorMatchCount}";
+            else
+                matchInfoText.text = string.Empty;
         }
     }
 }

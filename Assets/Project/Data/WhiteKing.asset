@@ -15,14 +15,17 @@ MonoBehaviour:
   unitName: King
   icon: {fileID: -9021012034253912271, guid: e5a512bdc50ddfc47a161834454331a2, type: 3}
   enhancedIcon: {fileID: 0}
-  maxHP: 3
-  attackPower: 1
-  speed: 5
-  defense: 0
+  typeSymbol: {fileID: 8928270269709087950, guid: a46b20d3d3cfe274fabe1b2553c1ad61, type: 3}
+  maxHP: 200
+  attackPower: 40
+  speed: 10
+  defense: 10
   moveAttributes: 16
   isKing: 1
   isPawn: 0
+  isQueen: 0
   rarity: 0
+  gachaWeight: 1
   activeSkill: {fileID: 0}
   passiveSkills: []
   hpEnhance: 0

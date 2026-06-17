@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: Rok
+  m_EditorClassIdentifier: 
+  unitName: "\uB85D"
+  icon: {fileID: 4138172421983356087, guid: 9f0a1fdb82e325c40afbc6767727588b, type: 3}
+  enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: 0}
+  maxHP: 90
+  attackPower: 22
+  speed: 8
+  defense: 10
+  moveAttributes: 2
+  isKing: 0
+  isPawn: 0
+  isQueen: 0
+  rarity: 0
+  gachaWeight: 1
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 0
+  atkEnhance: 0
+  spdEnhance: 0
+  defEnhance: 0
+  displayScale: 0.85
+  enhanceGoldCost: 500

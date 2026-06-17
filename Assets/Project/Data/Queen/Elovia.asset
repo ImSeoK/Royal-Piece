@@ -15,6 +15,7 @@ MonoBehaviour:
   unitName: "\uC5D8\uB85C\uBE44\uC544"
   icon: {fileID: 827489912201815761, guid: a06bce2f0151ea14b9b469b0193c5485, type: 3}
   enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: -8050667968044726354, guid: b369ff6919a1bca40befdc7a13537422, type: 3}
   maxHP: 158
   attackPower: 40
   speed: 10
@@ -26,7 +27,8 @@ MonoBehaviour:
   rarity: 1
   gachaWeight: 1
   activeSkill: {fileID: 0}
-  passiveSkills: []
+  passiveSkills:
+  - {fileID: 11400000, guid: 746945cab5f6ad049ae9d973e84a2e93, type: 2}
   hpEnhance: 14
   atkEnhance: 3
   spdEnhance: 1

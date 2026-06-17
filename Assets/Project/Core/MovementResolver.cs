@@ -147,7 +147,7 @@ namespace Chess.Simulation
             return moves;
         }
 
-        // Enchanter 이동 - 상하좌우 2칸 + 대각 2칸 점프 (중간 기물 무시)
+        // Enchanter 이동 - 상하좌우 1칸 + 대각 2칸 점프 (중간 기물 무시)
         private static List<Vector2Int> GetEnchanterMoves(Vector2Int pos, BoardState board)
         {
             var moves = new List<Vector2Int>();
@@ -155,8 +155,8 @@ namespace Chess.Simulation
             Vector2Int[] offsets = {
                 new Vector2Int(2, 2), new Vector2Int(2, -2),
                 new Vector2Int(-2, 2), new Vector2Int(-2, -2),
-                new Vector2Int(2, 0), new Vector2Int(-2, 0),
-                new Vector2Int(0, 2), new Vector2Int(0, -2)
+                new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                new Vector2Int(0, 1), new Vector2Int(0, -1)
             };
 
             foreach (var offset in offsets)

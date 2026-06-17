@@ -77,7 +77,7 @@ namespace Chess.Presentation
             unitDefinition = unit;
 
             if (unitNameText != null) unitNameText.text = unit.unitName;
-            if (attrText != null) attrText.text = GetAttrText(unit);
+            if (attrText != null) attrText.text = unit.GetTypeText();
             if (hpText != null) hpText.text = $"HP  {unit.maxHP}";
             if (atkText != null) atkText.text = $"공격  {unit.attackPower}";
             if (spdText != null) spdText.text = $"속도  {unit.speed}";
@@ -136,18 +136,5 @@ namespace Chess.Presentation
             return badgeLegendary;
         }
 
-        string GetAttrText(UnitDefinition unit)
-        {
-            if (unit.isKing) return "킹";
-            if (unit.isPawn) return "폰";
-            bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
-            bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
-            bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
-            if (hasRook && hasBishop) return "퀸";
-            if (hasRook) return "룩";
-            if (hasBishop) return "비숍";
-            if (hasKnight) return "나이트";
-            return "";
-        }
     }
 }

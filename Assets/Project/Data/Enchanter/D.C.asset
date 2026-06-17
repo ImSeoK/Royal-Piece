@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: D.C
+  m_EditorClassIdentifier: 
+  unitName: D.C
+  icon: {fileID: -4305028461450562941, guid: 318a70c8c2abdcb4e9d90e97bc57c0f5, type: 3}
+  enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: 0}
+  maxHP: 105
+  attackPower: 26
+  speed: 20
+  defense: 7
+  moveAttributes: 32
+  isKing: 0
+  isPawn: 0
+  isQueen: 0
+  rarity: 1
+  gachaWeight: 1
+  activeSkill: {fileID: 0}
+  passiveSkills: []
+  hpEnhance: 0
+  atkEnhance: 0
+  spdEnhance: 0
+  defEnhance: 0
+  displayScale: 0.85
+  enhanceGoldCost: 500

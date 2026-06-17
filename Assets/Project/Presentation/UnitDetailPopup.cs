@@ -97,7 +97,7 @@ namespace Chess.Presentation
             // 이름
             if (nameText != null) nameText.text = def.unitName;
             if (rarityText != null) rarityText.text = GetRarityText(def.rarity);
-            if (attrText != null) attrText.text = GetAttrText(def);
+            if (attrText != null) attrText.text = def.GetTypeText();
 
             // 스텟
             int lv = inst.enhanceLevel;
@@ -220,18 +220,5 @@ namespace Chess.Presentation
             switch (r) { case UnitRarity.Common: return "커먼"; case UnitRarity.Rare: return "레어"; case UnitRarity.Epic: return "에픽"; case UnitRarity.Legendary: return "레전더리"; default: return ""; }
         }
 
-        string GetAttrText(UnitDefinition unit)
-        {
-            if (unit.isKing) return "킹";
-            if (unit.isPawn) return "폰";
-            bool hasRook = (unit.moveAttributes & MovementAttribute.Rook) != 0;
-            bool hasBishop = (unit.moveAttributes & MovementAttribute.Bishop) != 0;
-            bool hasKnight = (unit.moveAttributes & MovementAttribute.Knight) != 0;
-            if (hasRook && hasBishop) return "퀸";
-            if (hasRook) return "룩";
-            if (hasBishop) return "비숍";
-            if (hasKnight) return "나이트";
-            return "";
-        }
     }
 }

@@ -17,7 +17,8 @@ namespace Chess.Core
         [Header("프로필")]
         public string unitName;
         public Sprite icon;
-        public Sprite enhancedIcon;     
+        public Sprite enhancedIcon;
+        public Sprite typeSymbol;       // 기물 타입 대표 심볼 (가챠 뒷면, 인벤토리 등 공용)
 
         [Header("스텟")]
         public int maxHP;
@@ -78,5 +79,21 @@ namespace Chess.Core
 
         // +10 달성 시 강화 아이콘으로 교체
         public Sprite GetIcon(int level) => (level >= 10 && enhancedIcon != null) ? enhancedIcon : icon;
+
+        /// <summary>
+        /// 기물 타입명 반환. InventoryCard / UnitDetailPopup / CardUI 등 전체 공용.
+        /// </summary>
+        public string GetTypeText()
+        {
+            if (isKing) return "킹";
+            if (isPawn) return "폰";
+            if ((moveAttributes & MovementAttribute.Enchanter) != 0) return "인챈터";
+            if ((moveAttributes & MovementAttribute.Rook)   != 0 &&
+                (moveAttributes & MovementAttribute.Bishop) != 0)   return "퀸";
+            if ((moveAttributes & MovementAttribute.Knight)  != 0) return "나이트";
+            if ((moveAttributes & MovementAttribute.Bishop)  != 0) return "비숍";
+            if ((moveAttributes & MovementAttribute.Rook)    != 0) return "룩";
+            return "";
+        }
     }
 }

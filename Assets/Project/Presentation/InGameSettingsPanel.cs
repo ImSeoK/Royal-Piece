@@ -73,6 +73,15 @@ namespace Chess.Presentation
 
             if (gameManager != null)
                 gameManager.enabled = false;
+
+            // 항복 = 패배 전적 저장
+            PlayerPrefs.SetInt("stat_losses", PlayerPrefs.GetInt("stat_losses", 0) + 1);
+            PlayerPrefs.SetInt("stat_total",  PlayerPrefs.GetInt("stat_total",  0) + 1);
+            PlayerPrefs.Save();
+
+            // 골드 보상 및 랭크 포인트 (패배)
+            Chess.Core.PlayerInventory.Instance?.AddCurrency(15);
+            Chess.Core.RankSystem.AddLoss();
         }
 
         void OnSoundClicked()

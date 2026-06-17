@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9942994e3e8aac64fb150836b1198dc3, type: 3}
+  m_Name: Rena_A
+  m_EditorClassIdentifier: 
+  skillName: "\uC9C4\uAD70\uC758 \uBD09\uD654"
+  description: "\uC0AC\uAE30\uB97C \uB04C\uC5B4\uC62C\uB824 2 \uD134\uAC04 \uC544\uAD70
+    \uC804\uCCB4\uC758 ATK\uB97C 15 \uC99D\uAC00\uC2DC\uD0B5\uB2C8\uB2E4."
+  icon: {fileID: 0}
+  skillType: 0
+  trigger: 0
+  targetType: 4
+  effectType: 2
+  power: 15
+  buffStatType: 1
+  buffDuration: 2
+  auraRange: 0
+  hpConditionMin: 0
+  hpConditionMax: 100
+  selectRandomTarget: 0
+  maxUseCount: 1
+  isOneTimeUse: 0
+  damageMultiplier: 1
+  requiresHighestSpeed: 0
+  castEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 0}
+  castAnimation: {fileID: 0}
