@@ -48,6 +48,9 @@ namespace Chess.Presentation
         [Header("Deck Preview")]
         public Transform deckPreviewRoot;
 
+        [Header("모드 선택 패널")]
+        public ModeSelectPanel modeSelectPanel;
+
         [Header("희귀도별 슬롯 프레임 스프라이트")]
         public Sprite frameCommon;
         public Sprite frameRare;
@@ -248,13 +251,18 @@ namespace Chess.Presentation
                 return;
             }
 
-            if (LoadAndTransferDeck())
-                SceneManager.LoadScene("SampleScene");
-            else
+            if (!LoadAndTransferDeck())
             {
                 Debug.LogWarning("[MainMenu] 덱 로드 실패! 덱 빌더로 이동합니다.");
                 SceneManager.LoadScene("DeckBuilder");
+                return;
             }
+
+            // 덱 전달 완료 후 모드 선택
+            if (modeSelectPanel != null)
+                modeSelectPanel.Open(_ => SceneManager.LoadScene("SampleScene"));
+            else
+                SceneManager.LoadScene("SampleScene");
         }
 
         bool LoadAndTransferDeck()

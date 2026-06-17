@@ -50,6 +50,9 @@ namespace Chess.Presentation
         [Header("설정")]
         public int maxFreeSlots = 7;
 
+        [Header("모드 선택 패널")]
+        public ModeSelectPanel modeSelectPanel;
+
         [Header("토스트 메시지")]
         public TextMeshProUGUI toastText;
 
@@ -488,7 +491,12 @@ namespace Chess.Presentation
             if (GetCurrentDeckCount() < maxFreeSlots) return;
             var skillNames = skillSelectPopup != null ? skillSelectPopup.GetSelectedSkillNames() : new List<string>();
             SaveDeck(skillNames);
-            GoToGame(skillNames);
+
+            // 모드 선택 후 게임 시작
+            if (modeSelectPanel != null)
+                modeSelectPanel.Open(_ => GoToGame(skillNames));
+            else
+                GoToGame(skillNames);
         }
 
         void GoToGame(List<string> skillNames = null)
