@@ -70,3 +70,15 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# External SDKs (재설치 필요: Firebase, Photon)
+/[Aa]ssets/Firebase/
+/[Aa]ssets/Firebase.meta
+/[Aa]ssets/Photon/
+/[Aa]ssets/Photon.meta
+/[Aa]ssets/ExternalDependencyManager/
+/[Aa]ssets/ExternalDependencyManager.meta
+/[Aa]ssets/Plugins/iOS/
+/[Aa]ssets/Plugins/iOS.meta
+/[Aa]ssets/Plugins/tvOS/
+/[Aa]ssets/Plugins/tvOS.meta

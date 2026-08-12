@@ -36,6 +36,24 @@ namespace Chess.Presentation
         public int spectatorMatchCount = 5;
         public TMPro.TextMeshProUGUI matchInfoText;
 
+        // 온라인 모드
+        private bool _isOnlineMode;
+        private int  _localPlayerID;          // Host=0, Client=1
+        private bool _waitingForOnlineSetup;
+
+        // 이동 로그 (Phase 5 Cloud Function 검증용)
+        [System.Serializable]
+        struct MoveLog
+        {
+            public int    turn;
+            public int    playerID;
+            public string unitName;
+            public int    fromX, fromY;
+            public int    toX,   toY;
+        }
+        private List<MoveLog> _moveLogs = new List<MoveLog>();
+        private int _turnCount;
+
         private BoardState board;
         private Dictionary<int, UnitView> unitViews = new Dictionary<int, UnitView>();
         private int nextUnitID = 0;
@@ -62,7 +80,6 @@ namespace Chess.Presentation
         private int[] skillSlotRemainingUses = new int[2];
 
         [Header("랭크 패널")]
-        public RankPanelUI rankPanelUI;
 
         private int completedMatches = 0;
         private List<int> matchWinners = new List<int>();
@@ -70,7 +87,6 @@ namespace Chess.Presentation
 
         void Start()
         {
-            inGameSettingsPanel?.Initialize(this);
             menuButton?.onClick.AddListener(() => inGameSettingsPanel?.Open());
 
             turnManager = GetComponent<TurnManager>();
@@ -80,13 +96,52 @@ namespace Chess.Presentation
             if (DeckTransfer.Instance?.Player0Deck != null)
                 player0Deck = DeckTransfer.Instance.Player0Deck;
 
-            isRankedMode = DeckTransfer.Instance?.CurrentMode == GameMode.Ranked;
-            rankPanelUI?.Initialize(isRankedMode);
+            isRankedMode  = DeckTransfer.Instance?.CurrentMode == GameMode.Ranked;
+            _isOnlineMode = DeckTransfer.Instance?.CurrentMode != GameMode.AI;
+            inGameSettingsPanel?.Initialize(this, isRankedMode);
 
-            player1Deck = GenerateAIDeck();
+            if (_isOnlineMode)
+            {
+                _waitingForOnlineSetup = true;
+                turnManager.useAI = false;
+                // NetworkGameBridge.Spawned() 이후 OnDecksReady() 호출까지 대기
+            }
+            else
+            {
+                player1Deck = GenerateAIDeck();
+                InitializeGame();
+            }
+        }
 
+        /// <summary>온라인 모드: NetworkGameBridge에서 양쪽 덱 준비 완료 시 호출.</summary>
+        public void OnDecksReady(PlayerDeck p0Deck, PlayerDeck p1Deck, int localPlayerID)
+        {
+            _localPlayerID         = localPlayerID;
+            _waitingForOnlineSetup = false;
+            player0Deck            = p0Deck;
+            player1Deck            = p1Deck;
+            Debug.Log($"[GameManager] 온라인 덱 준비 완료 LocalPlayer={localPlayerID}");
+            InitializeGame();
+        }
+
+        /// <summary>온라인 모드: 상대방 이동 RPC 수신 시 호출.</summary>
+        public void ExecuteRemoteMove(int unitId, Vector2Int targetPos)
+        {
+            UnitState unit = null;
+            foreach (var u in board.GetAllUnits())
+                if (u.id == unitId) { unit = u; break; }
+
+            if (unit == null)
+            {
+                Debug.LogWarning($"[GameManager] ExecuteRemoteMove: unitId={unitId} 없음");
+                return;
+            }
+            ExecuteMove(unit, targetPos);
+        }
+
+        void InitializeGame()
+        {
             board = new BoardState();
-
             boardVisualizer.Initialize(board);
             boardVisualizer.CreateBoard();
             combatAnimator.Initialize(unitViews);
@@ -237,14 +292,16 @@ namespace Chess.Presentation
 
         void Update()
         {
+            if (_waitingForOnlineSetup) return;
             if (turnManager.IsAIThinking) return;
 
             if (turnManager.IsSpectatorMode)
                 turnManager.StartAITurn();
-            else if (turnManager.CurrentPlayer == 0)
+            else if (turnManager.CurrentPlayer == _localPlayerID)
                 HandleInput();
             else if (turnManager.UseAI)
                 turnManager.StartAITurn();
+            // else: 온라인 상대 턴 → RPC 수신 대기
         }
 
         void HandleInput()
@@ -381,6 +438,22 @@ namespace Chess.Presentation
 
         void ExecuteMove(UnitState unit, Vector2Int targetPos)
         {
+            // 이동 로그 기록 (Phase 5 Cloud Function 검증용)
+            _moveLogs.Add(new MoveLog
+            {
+                turn     = _turnCount++,
+                playerID = turnManager.CurrentPlayer,
+                unitName = unit.definition.unitName,
+                fromX    = unit.position.x,
+                fromY    = unit.position.y,
+                toX      = targetPos.x,
+                toY      = targetPos.y,
+            });
+
+            // 온라인 모드 + 내 턴이면 상대에게 RPC 전송
+            if (_isOnlineMode && turnManager.CurrentPlayer == _localPlayerID)
+                NetworkGameBridge.Instance?.RPC_SendMove(_localPlayerID, unit.id, targetPos.x, targetPos.y);
+
             AudioManager.Instance?.Play("sfx_piece_move");
             board.MoveUnit(unit, targetPos);
             unitViews[unit.id].UpdatePosition();
@@ -460,6 +533,7 @@ namespace Chess.Presentation
                     int rawDamage = attacker.GetAttack();
                     ApplyOneTimePassive(attacker, ref rawDamage);
                     int finalDamage = target.CalculateFinalDamage(rawDamage);
+                    ApplySpeedPassiveReduction(attacker, target, ref finalDamage);
                     yield return StartCoroutine(combatAnimator.PlayAttackEffect(attacker, target, finalDamage));
                     AudioManager.Instance?.Play(GetAttackSoundId(attacker));
 
@@ -812,6 +886,23 @@ namespace Chess.Presentation
                 damage = Mathf.RoundToInt(damage * skill.damageMultiplier);
                 attacker.firstAttackUsed = true;
                 break;
+            }
+        }
+
+        // requiresHighestSpeed 패시브: 방어자 SPD > 공격자 SPD이면 데미지 감소 + VFX
+        void ApplySpeedPassiveReduction(UnitState attacker, UnitState defender, ref int damage)
+        {
+            if (defender.definition.passiveSkills == null) return;
+            foreach (var skill in defender.definition.passiveSkills)
+            {
+                if (skill == null || !skill.requiresHighestSpeed) continue;
+                if (defender.GetSpeed() <= attacker.GetSpeed()) continue;
+                if (skill.effectType == SkillEffectType.Debuff && skill.buffStatType == StatType.DamageReceived)
+                {
+                    damage = Mathf.Max(0, damage - skill.power);
+                    if (skill.hitEffectPrefab != null && unitViews.ContainsKey(defender.id))
+                        StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[defender.id].transform.position));
+                }
             }
         }
 

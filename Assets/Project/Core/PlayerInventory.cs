@@ -14,13 +14,13 @@ namespace Chess.Core
     {
         public static PlayerInventory Instance { get; private set; }
 
-        [Header("º¸À¯ À¯´Ö ÀÎ½ºÅÏ½º")]
+        [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½")]
         public List<OwnedUnitInstance> ownedUnitInstances = new List<OwnedUnitInstance>();
 
-        [Header("°ñµå")]
+        [Header("ï¿½ï¿½ï¿½")]
         public int currency = 1000;
 
-        [Header("ÀüÃ¼ À¯´Ö µ¥ÀÌÅÍº£ÀÌ½º")]
+        [Header("ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½Ì½ï¿½")]
         public List<UnitDefinition> allUnitsDatabase = new List<UnitDefinition>();
 
         public List<UnitDefinition> ownedUnits
@@ -45,10 +45,38 @@ namespace Chess.Core
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                ResetInventory(); //LoadInventory(); //
+                LoadInventory(); // ë¹ ë¥¸ ë¡œì»¬ ë¡œë“œ (ì˜¤í”„ë¼ì¸ ì•ˆì „)
             }
             else
                 Destroy(gameObject);
+        }
+
+        void Start()
+        {
+            // Awakeê°€ ëª¨ë‘ ëë‚œ í›„ êµ¬ë… â†’ FirebaseManager ì´ˆê¸°í™” ìˆœì„œì™€ ë¬´ê´€
+            if (Instance != this) return;
+            FirebaseManager.Instance?.SubscribeDataReady(ApplyFromFirestore);
+        }
+
+        /// <summary>Firestoreì—ì„œ ë¡œë“œí•œ ë°ì´í„°ë¡œ ë¡œì»¬ ìƒíƒœ ë®ì–´ì“°ê¸°.</summary>
+        void ApplyFromFirestore(FirestorePlayerData data)
+        {
+            if (data == null) return; // ì‹ ê·œ ìœ ì € â€” ë¡œì»¬ ë°ì´í„° ìœ ì§€
+
+            currency = data.currency;
+            ownedUnitInstances.Clear();
+            foreach (var entry in data.ownedUnits)
+            {
+                ownedUnitInstances.Add(new OwnedUnitInstance(entry.unitName)
+                {
+                    instanceId   = entry.instanceId,
+                    enhanceLevel = entry.enhanceLevel,
+                });
+            }
+
+            // ë¡œì»¬ ìºì‹œë„ ê°±ì‹ 
+            SaveInventoryLocal();
+            Debug.Log($"[Inventory] Firestore ë™ê¸°í™” ì™„ë£Œ: {ownedUnitInstances.Count}ê°œ ìœ ë‹›, {currency} ê³¨ë“œ");
         }
 
         public void AddUnit(UnitDefinition unit)
@@ -56,23 +84,23 @@ namespace Chess.Core
             if (unit == null) return;
             ownedUnitInstances.Add(new OwnedUnitInstance(unit.unitName));
             SaveInventory();
-            Debug.Log("[Inventory] " + unit.unitName + " È¹µæ!");
+            Debug.Log("[Inventory] " + unit.unitName + " È¹ï¿½ï¿½!");
         }
 
         public bool TryEnhance(OwnedUnitInstance target)
         {
             if (target == null) return false;
-            if (target.enhanceLevel >= 10) { Debug.LogWarning("[Enhance] ÃÖ´ë ·¹º§!"); return false; }
+            if (target.enhanceLevel >= 10) { Debug.LogWarning("[Enhance] ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½!"); return false; }
 
             UnitDefinition def = GetDefinition(target.unitName);
             if (def == null) return false;
 
-            if (currency < def.enhanceGoldCost) { Debug.LogWarning("[Enhance] °ñµå ºÎÁ·!"); return false; }
+            if (currency < def.enhanceGoldCost) { Debug.LogWarning("[Enhance] ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!"); return false; }
 
             int materialCount = CountMaterials(target);
             if (materialCount < def.enhanceMaterialCount)
             {
-                Debug.LogWarning("[Enhance] Àç·á ºÎÁ·! ÇÊ¿ä: " + def.enhanceMaterialCount + ", º¸À¯: " + materialCount);
+                Debug.LogWarning("[Enhance] ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½! ï¿½Ê¿ï¿½: " + def.enhanceMaterialCount + ", ï¿½ï¿½ï¿½ï¿½: " + materialCount);
                 return false;
             }
 
@@ -80,7 +108,7 @@ namespace Chess.Core
             SpendCurrency(def.enhanceGoldCost);
             target.enhanceLevel++;
             SaveInventory();
-            Debug.Log("[Enhance] " + target.unitName + " +" + target.enhanceLevel + " ¼º°ø!");
+            Debug.Log("[Enhance] " + target.unitName + " +" + target.enhanceLevel + " ï¿½ï¿½ï¿½ï¿½!");
             return true;
         }
 
@@ -115,7 +143,7 @@ namespace Chess.Core
             ownedUnitInstances.Remove(target);
             AddCurrency(sellPrice);
             SaveInventory();
-            Debug.Log("[Sell] " + target.unitName + " ÆÇ¸Å -> +" + sellPrice + " °ñµå");
+            Debug.Log("[Sell] " + target.unitName + " ï¿½Ç¸ï¿½ -> +" + sellPrice + " ï¿½ï¿½ï¿½");
         }
 
         int GetSellPrice(UnitRarity rarity)
@@ -132,7 +160,7 @@ namespace Chess.Core
 
         public bool SpendCurrency(int amount)
         {
-            if (currency < amount) { Debug.LogWarning("[Inventory] °ñµå ºÎÁ·!"); return false; }
+            if (currency < amount) { Debug.LogWarning("[Inventory] ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!"); return false; }
             currency -= amount;
             SaveInventory();
             return true;
@@ -146,12 +174,49 @@ namespace Chess.Core
 
         public void SaveInventory()
         {
-            PlayerInventoryData data = new PlayerInventoryData();
-            data.currency = currency;
-            data.ownedUnits = new List<OwnedUnitInstance>(ownedUnitInstances);
-            string json = JsonUtility.ToJson(data);
-            PlayerPrefs.SetString(SAVE_KEY, json);
+            SaveInventoryLocal();
+            SaveInventoryFirestore();
+        }
+
+        void SaveInventoryLocal()
+        {
+            var data = new PlayerInventoryData
+            {
+                currency   = currency,
+                ownedUnits = new List<OwnedUnitInstance>(ownedUnitInstances),
+            };
+            PlayerPrefs.SetString(SAVE_KEY, JsonUtility.ToJson(data));
             PlayerPrefs.Save();
+        }
+
+        void SaveInventoryFirestore()
+        {
+            var fm = FirebaseManager.Instance;
+            if (fm == null || !fm.IsLoggedIn) return;
+
+            var fsData = BuildFirestoreData();
+            fm.SavePlayerData(fsData);
+        }
+
+        FirestorePlayerData BuildFirestoreData()
+        {
+            var fsData = new FirestorePlayerData
+            {
+                currency    = currency,
+                rankPoints  = RankSystem.GetPoints(),
+                lastDailyBonus    = PlayerPrefs.GetString("daily_bonus_date",      ""),
+                dailyMissionDate  = PlayerPrefs.GetString("daily_mission_date",    ""),
+                dailyMissionWins  = PlayerPrefs.GetInt   ("daily_mission_wins",    0),
+                dailyMissionClaimed = PlayerPrefs.GetInt ("daily_mission_claimed", 0) == 1,
+            };
+            foreach (var inst in ownedUnitInstances)
+                fsData.ownedUnits.Add(new OwnedUnitEntry
+                {
+                    instanceId   = inst.instanceId,
+                    unitName     = inst.unitName,
+                    enhanceLevel = inst.enhanceLevel,
+                });
+            return fsData;
         }
 
         public void LoadInventory()
@@ -161,7 +226,7 @@ namespace Chess.Core
             PlayerInventoryData data = JsonUtility.FromJson<PlayerInventoryData>(json);
             currency = data.currency;
             ownedUnitInstances = data.ownedUnits ?? new List<OwnedUnitInstance>();
-            Debug.Log("[Inventory] ·Îµå ¿Ï·á: " + ownedUnitInstances.Count + "°³, " + currency + " °ñµå");
+            Debug.Log("[Inventory] ï¿½Îµï¿½ ï¿½Ï·ï¿½: " + ownedUnitInstances.Count + "ï¿½ï¿½, " + currency + " ï¿½ï¿½ï¿½");
         }
 
         void GiveStarterUnits()
@@ -177,7 +242,7 @@ namespace Chess.Core
         void AddStarterUnit(string unitName, int count)
         {
             UnitDefinition unit = GetDefinition(unitName);
-            if (unit == null) { Debug.LogWarning("[Inventory] " + unitName + " ¾øÀ½!"); return; }
+            if (unit == null) { Debug.LogWarning("[Inventory] " + unitName + " ï¿½ï¿½ï¿½ï¿½!"); return; }
             for (int i = 0; i < count; i++)
                 ownedUnitInstances.Add(new OwnedUnitInstance(unitName));
         }

@@ -35,8 +35,24 @@ namespace Chess.Presentation
         public TextMeshProUGUI winRateText;
 
         [Header("Rank")]
+        public Image rankBadgeOutline;
+        public Image rankBadgeBg;
         public TextMeshProUGUI rankText;
         public TextMeshProUGUI rankPointsText;
+
+        [Header("랭크 뱃지 스프라이트 (D/C/B/A/S)")]
+        public Sprite rankBadgeSpriteD;
+        public Sprite rankBadgeSpriteC;
+        public Sprite rankBadgeSpriteB;
+        public Sprite rankBadgeSpriteA;
+        public Sprite rankBadgeSpriteS;
+
+        // 티어별 내부 BG 색상
+        static readonly Color BADGE_BG_S = new Color(0.24f, 0.17f, 0.05f, 1f);
+        static readonly Color BADGE_BG_A = new Color(0.16f, 0.10f, 0.30f, 1f);
+        static readonly Color BADGE_BG_B = new Color(0.05f, 0.16f, 0.25f, 1f);
+        static readonly Color BADGE_BG_C = new Color(0.10f, 0.10f, 0.10f, 1f);
+        static readonly Color BADGE_BG_D = new Color(0.08f, 0.08f, 0.08f, 1f);
 
         [Header("Daily Bonus")]
         public Button dailyBonusButton;
@@ -51,6 +67,11 @@ namespace Chess.Presentation
         [Header("모드 선택 패널")]
         public ModeSelectPanel modeSelectPanel;
 
+        [Header("매칭 대기 UI")]
+        public GameObject matchmakingPanel;
+        public TextMeshProUGUI matchmakingStatusText;
+        public Button cancelMatchmakingButton;
+
         [Header("희귀도별 슬롯 프레임 스프라이트")]
         public Sprite frameCommon;
         public Sprite frameRare;
@@ -59,6 +80,18 @@ namespace Chess.Presentation
 
         void Start()
         {
+            // Firebase 로그인 연동
+            if (Chess.Core.FirebaseManager.Instance != null)
+            {
+                if (Chess.Core.FirebaseManager.Instance.IsLoggedIn)
+                    OnFirebaseLogin(Chess.Core.FirebaseManager.Instance.UID);
+                else
+                    Chess.Core.FirebaseManager.Instance.OnLoginSuccess += OnFirebaseLogin;
+
+                // Firestore 데이터 로드 완료 시 랭크 + UI 갱신
+                Chess.Core.FirebaseManager.Instance.SubscribeDataReady(OnFirestoreDataReady);
+            }
+
             if (deckBuilderButton != null)
                 deckBuilderButton.onClick.AddListener(OnDeckBuilderClicked);
 
@@ -201,17 +234,62 @@ namespace Chess.Presentation
 
         void UpdateRank()
         {
-            if (rankText != null)
-                rankText.text = Chess.Core.RankSystem.GetRankName();
-            if (rankPointsText != null)
-                rankPointsText.text = Chess.Core.RankSystem.GetPoints().ToString();
+            string rankName  = Chess.Core.RankSystem.GetRankName();
+            string tier      = Chess.Core.RankSystem.GetTierLetter();
+            Color  tierColor = Chess.Core.RankSystem.GetTierColor();
+            Sprite sprite    = GetRankBadgeSprite(tier);
+            Color  bgColor   = GetRankBadgeBgColor(tier);
+
+            if (rankBadgeOutline != null)
+            {
+                rankBadgeOutline.sprite = sprite;
+                rankBadgeOutline.color  = tierColor;
+            }
+            if (rankBadgeBg != null)
+            {
+                rankBadgeBg.sprite = sprite;
+                rankBadgeBg.color  = bgColor;
+            }
+            if (rankText       != null) rankText.text       = rankName;
+            if (rankPointsText != null) rankPointsText.text = Chess.Core.RankSystem.GetPoints().ToString();
+        }
+
+        Sprite GetRankBadgeSprite(string tier)
+        {
+            return tier switch
+            {
+                "S" => rankBadgeSpriteS,
+                "A" => rankBadgeSpriteA,
+                "B" => rankBadgeSpriteB,
+                "C" => rankBadgeSpriteC,
+                _   => rankBadgeSpriteD,
+            };
+        }
+
+        Color GetRankBadgeBgColor(string tier)
+        {
+            return tier switch
+            {
+                "S" => BADGE_BG_S,
+                "A" => BADGE_BG_A,
+                "B" => BADGE_BG_B,
+                "C" => BADGE_BG_C,
+                _   => BADGE_BG_D,
+            };
         }
 
         void UpdateDailyBonus()
         {
             if (DailySystem.Instance == null) return;
-            if (dailyBonusButton != null)
-                dailyBonusButton.interactable = !DailySystem.Instance.IsDailyBonusClaimed();
+            if (dailyBonusButton == null) return;
+
+            bool claimed = DailySystem.Instance.IsDailyBonusClaimed();
+            dailyBonusButton.interactable = !claimed;
+
+            // 수령 완료 시 버튼을 명확히 회색으로 표시
+            var cb = dailyBonusButton.colors;
+            cb.disabledColor = new Color(0.35f, 0.35f, 0.35f, 0.75f);
+            dailyBonusButton.colors = cb;
         }
 
         void UpdateDailyMission()
@@ -230,6 +308,31 @@ namespace Chess.Presentation
         {
             if (DailySystem.Instance?.ClaimDailyBonus() == true)
                 UpdateDailyBonus();
+        }
+
+        void OnFirebaseLogin(string uid)
+        {
+            Chess.Core.FirebaseManager.Instance.OnLoginSuccess -= OnFirebaseLogin;
+            Debug.Log($"[MainMenu] Firebase 로그인 완료: {uid}");
+            // player_name이 없으면 UID 앞 8자리를 기본 이름으로 사용
+            if (!PlayerPrefs.HasKey("player_name"))
+            {
+                string shortId = uid.Length >= 8 ? uid[..8] : uid;
+                PlayerPrefs.SetString("player_name", shortId);
+                PlayerPrefs.Save();
+                UpdatePlayerCard();
+            }
+        }
+
+        void OnFirestoreDataReady(Chess.Core.FirestorePlayerData data)
+        {
+            if (data == null) return;
+            // 랭크 포인트 서버 값 반영
+            Chess.Core.RankSystem.SetFromServer(data.rankPoints);
+            UpdateRank();
+            UpdateCurrency();
+            UpdateDailyBonus();
+            UpdateDailyMission();
         }
 
         void OnDeckBuilderClicked() => SceneManager.LoadScene("DeckBuilder");
@@ -260,9 +363,9 @@ namespace Chess.Presentation
 
             // 덱 전달 완료 후 모드 선택
             if (modeSelectPanel != null)
-                modeSelectPanel.Open(_ => SceneManager.LoadScene("SampleScene"));
+                modeSelectPanel.Open(OnModeSelected);
             else
-                SceneManager.LoadScene("SampleScene");
+                OnModeSelected(Chess.Core.GameMode.AI);
         }
 
         bool LoadAndTransferDeck()
@@ -348,6 +451,79 @@ namespace Chess.Presentation
                         return passive;
             }
             return null;
+        }
+
+        // ─── 모드 선택 → 씬 전환 / 온라인 매칭 ───────────────────────
+
+        void OnModeSelected(Chess.Core.GameMode mode)
+        {
+            if (mode == Chess.Core.GameMode.AI)
+            {
+                SceneManager.LoadScene("SampleScene");
+                return;
+            }
+
+            // Normal / Ranked → 온라인 매칭
+            StartOnlineMatchmaking(mode);
+        }
+
+        void StartOnlineMatchmaking(Chess.Core.GameMode mode)
+        {
+            ShowMatchmakingUI(true);
+            if (cancelMatchmakingButton != null)
+                cancelMatchmakingButton.onClick.AddListener(CancelMatchmaking);
+
+            var pm = Chess.Core.PhotonManager.Instance;
+            if (pm == null)
+            {
+                Debug.LogError("[MainMenu] PhotonManager 없음 — AI 모드로 대체");
+                SceneManager.LoadScene("SampleScene");
+                return;
+            }
+
+            pm.OnMatchReady  += HandleMatchReady;
+            pm.OnMatchFailed += HandleMatchFailed;
+            pm.StartMatchmaking(mode);
+        }
+
+        void HandleMatchReady()
+        {
+            UnsubscribePhoton();
+            SceneManager.LoadScene("SampleScene");
+        }
+
+        void HandleMatchFailed(string reason)
+        {
+            UnsubscribePhoton();
+            ShowMatchmakingUI(false);
+            Debug.LogError($"[MainMenu] 매칭 실패: {reason}");
+        }
+
+        void CancelMatchmaking()
+        {
+            UnsubscribePhoton();
+            Chess.Core.PhotonManager.Instance?.Disconnect();
+            ShowMatchmakingUI(false);
+            if (cancelMatchmakingButton != null)
+                cancelMatchmakingButton.onClick.RemoveListener(CancelMatchmaking);
+        }
+
+        void UnsubscribePhoton()
+        {
+            var pm = Chess.Core.PhotonManager.Instance;
+            if (pm == null) return;
+            pm.OnMatchReady  -= HandleMatchReady;
+            pm.OnMatchFailed -= HandleMatchFailed;
+        }
+
+        void ShowMatchmakingUI(bool show)
+        {
+            if (matchmakingPanel != null)
+                matchmakingPanel.SetActive(show);
+            if (startGameButton != null)
+                startGameButton.gameObject.SetActive(!show);
+            if (matchmakingStatusText != null && show)
+                matchmakingStatusText.text = "상대를 찾는 중...";
         }
     }
 }

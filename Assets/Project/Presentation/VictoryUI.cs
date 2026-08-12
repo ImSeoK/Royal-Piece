@@ -29,6 +29,7 @@ namespace Chess.Presentation
 
         [Header("랭크 결과 (선택)")]
         public TextMeshProUGUI rankResultText;
+        public RankPanelUI rankPanel;
 
         [Header("버튼")]
         public Button restartButton;
@@ -113,17 +114,22 @@ namespace Chess.Presentation
             // 랭크 포인트
             if (rankResultText != null)
             {
+                int totalPts = Chess.Core.RankSystem.GetPoints();
                 if (isRanked)
                 {
-                    rankResultText.text  = rankPointDelta >= 0 ? $"+{rankPointDelta} RP" : $"{rankPointDelta} RP";
+                    string sign = rankPointDelta >= 0 ? $"+{rankPointDelta}" : $"{rankPointDelta}";
+                    rankResultText.text  = $"{totalPts} ({sign})";
                     rankResultText.color = rankPointDelta >= 0 ? WIN_COLOR : new Color(1f, 0.35f, 0.35f, 1f);
                 }
                 else
                 {
-                    rankResultText.text  = "+0 RP";
+                    rankResultText.text  = $"{totalPts} (+0)";
                     rankResultText.color = new Color(0.6f, 0.6f, 0.6f, 1f);
                 }
             }
+
+            // 랭크 뱃지 갱신
+            rankPanel?.Refresh();
 
             // 사운드
             AudioManager.Instance?.PlaySting(isWin ? "sting_victory" : "sting_defeat");

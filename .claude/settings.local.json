@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -l \"WhiteRook\\\\|WhiteKnight\\\\|WhiteBishop\\\\|WhiteQueen\\\\|WhiteKing\\\\|WhitePawn\" C:/Users/user/전투체스/Assets/Scenes/*)",
+      "Bash(powershell -Command \"Get-Content ''Assets/Project/Data/Knight/Velkros.asset'' -Encoding UTF8 | Select-String -Pattern ''unitName|skillName|description'' | Select-Object -First 10\")",
+      "Bash(powershell -Command \":*)",
+      "Bash(powershell -Command \"Get-Content ''Assets/Project/Data/WardenSkill.asset'' -Encoding UTF8 | Select-Object -First 30\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File fix_korean.ps1)",
+      "Bash(python3 -c \":*)",
+      "Bash(mkdir -p \"Assets/Docs\")",
+      "Bash(mv \"Assets/STAGE_1_CORE_SYSTEMS.md\" \"Assets/Docs/\")",
+      "Bash(mv \"Assets/STAGE_1_CORE_SYSTEMS.md.meta\" \"Assets/Docs/\")",
+      "Bash(mv \"Assets/STAGE_2_AUXILIARY_SYSTEMS.md\" \"Assets/Docs/\")",
+      "Bash(mv \"Assets/STAGE_2_AUXILIARY_SYSTEMS.md.meta\" \"Assets/Docs/\")",
+      "Bash(cd:*)",
+      "Bash(mv \"주인공 도트.png\" \"Character/\")",
+      "Bash(mv \"주인공 도트.png.meta\" \"Character/\")",
+      "Bash(mv \"전투체스_Rook.png\" \"Character/\")",
+      "Bash(mv \"전투체스_Rook.png.meta\" \"Character/\")",
+      "Bash(mv \"전투체스_Rook-removebg-preview.png\" \"Character/\")",
+      "Bash(mv \"Chess_Grid.png\" \"Board/\")",
+      "Bash(mv \"Chess_Grid.png.meta\" \"Board/\")",
+      "Bash(mv \"Ray.png\" \"Effects/\")",
+      "Bash(mv \"Ray.png.meta\" \"Effects/\")",
+      "Bash(mv \"Card_Common.png\" \"Card/\")",
+      "Bash(mv \"Card_Common.png.meta\" \"Card/\")",
+      "Bash(mv \"Card_Rare.png\" \"Card/\")",
+      "Bash(mv \"Card_Rare.png.meta\" \"Card/\")",
+      "Bash(mv \"Card_Epic.png\" \"Card/\")",
+      "Bash(mv \"Gacha_Center.png\" \"Gacha/\")",
+      "Bash(mv \"Gacha_Center.png.meta\" \"Gacha/\")",
+      "Bash(mv \"ProbRow_Common.png\" \"Gacha/\")",
+      "Bash(mv \"ProbRow_Common.png.meta\" \"Gacha/\")",
+      "Bash(mv \"ProbRow_Rare.png\" \"Gacha/\")",
+      "Bash(mv \"Gold.png\" \"Icon/\")",
+      "Bash(mv \"Gold.png.meta\" \"Icon/\")"
+    ]
+  }
+}

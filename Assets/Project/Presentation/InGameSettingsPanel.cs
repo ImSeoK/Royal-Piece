@@ -27,6 +27,7 @@ namespace Chess.Presentation
 
         private GameManager gameManager;
         private bool _initializing;
+        private bool _isRankedMode;
 
         void Awake()
         {
@@ -45,9 +46,10 @@ namespace Chess.Presentation
             if (sfxSlider != null) sfxSlider.onValueChanged.AddListener(OnSFXChanged);
         }
 
-        public void Initialize(GameManager gm)
+        public void Initialize(GameManager gm, bool isRanked = false)
         {
-            gameManager = gm;
+            gameManager   = gm;
+            _isRankedMode = isRanked;
         }
 
         public void Open()
@@ -81,7 +83,7 @@ namespace Chess.Presentation
 
             // 골드 보상 및 랭크 포인트 (패배)
             Chess.Core.PlayerInventory.Instance?.AddCurrency(15);
-            Chess.Core.RankSystem.AddLoss();
+            if (_isRankedMode) Chess.Core.RankSystem.AddLoss();
         }
 
         void OnSoundClicked()

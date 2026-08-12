@@ -93,8 +93,8 @@ namespace Chess.Core
                     // self-targeting debuff(auraRange=Self)은 자기 자신에게 적용 허용 (3-3 제피로스)
                     if (!isBuff && sameTeam && skill.auraRange != SkillAuraRange.Self) continue;
 
-                    // SPD 비교 조건 (3-3): 시전자 SPD가 모든 적보다 높아야 함
-                    if (skill.requiresHighestSpeed && !board.HasHighestSpeedAgainstEnemies(other)) continue;
+                    // requiresHighestSpeed 스킬은 전투 시점에 GameManager에서 처리
+                    if (skill.requiresHighestSpeed) continue;
 
                     int delta = isBuff ? skill.power : -skill.power;
                     if (!_alwaysCache.ContainsKey(skill.buffStatType))

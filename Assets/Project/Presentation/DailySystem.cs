@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using Chess.Core;
 
 namespace Chess.Presentation
@@ -19,6 +20,31 @@ namespace Chess.Presentation
             DontDestroyOnLoad(gameObject);
         }
 
+        void Start()
+        {
+            if (Instance != this) return;
+            FirebaseManager.Instance?.SubscribeDataReady(ApplyFromFirestore);
+        }
+
+        void ApplyFromFirestore(FirestorePlayerData data)
+        {
+            if (data == null) return; // 신규 유저 — 로컬 데이터 유지
+
+            // 서버 daily 데이터로 덮어쓰기
+            if (!string.IsNullOrEmpty(data.lastDailyBonus))
+            {
+                PlayerPrefs.SetString("daily_bonus_date", data.lastDailyBonus);
+            }
+            if (!string.IsNullOrEmpty(data.dailyMissionDate))
+            {
+                PlayerPrefs.SetString("daily_mission_date",    data.dailyMissionDate);
+                PlayerPrefs.SetInt   ("daily_mission_wins",    data.dailyMissionWins);
+                PlayerPrefs.SetInt   ("daily_mission_claimed", data.dailyMissionClaimed ? 1 : 0);
+            }
+            PlayerPrefs.Save();
+            Debug.Log($"[DailySystem] Firestore 동기화 완료");
+        }
+
         // ─── Daily Bonus ───────────────────────────────────────────
 
         public bool IsDailyBonusClaimed()
@@ -28,9 +54,14 @@ namespace Chess.Presentation
         public bool ClaimDailyBonus()
         {
             if (IsDailyBonusClaimed()) return false;
-            PlayerPrefs.SetString("daily_bonus_date", Today());
+            string today = Today();
+            PlayerPrefs.SetString("daily_bonus_date", today);
             PlayerPrefs.Save();
-            PlayerInventory.Instance?.AddCurrency(DAILY_BONUS_GOLD);
+            PlayerInventory.Instance?.AddCurrency(DAILY_BONUS_GOLD); // AddCurrency → SaveInventory → Firestore 저장 포함
+            FirebaseManager.Instance?.UpdateFields(new Dictionary<string, object>
+            {
+                { "lastDailyBonus", today }
+            });
             return true;
         }
 
@@ -61,24 +92,38 @@ namespace Chess.Presentation
             PlayerPrefs.SetInt("daily_mission_wins", wins);
             PlayerPrefs.Save();
 
-            if (wins >= MISSION_WIN_TARGET && PlayerPrefs.GetInt("daily_mission_claimed", 0) == 0)
+            bool missionComplete = wins >= MISSION_WIN_TARGET && PlayerPrefs.GetInt("daily_mission_claimed", 0) == 0;
+            if (missionComplete)
             {
                 PlayerPrefs.SetInt("daily_mission_claimed", 1);
                 PlayerPrefs.Save();
-                PlayerInventory.Instance?.AddCurrency(MISSION_REWARD_GOLD);
-                return MISSION_REWARD_GOLD;
+                PlayerInventory.Instance?.AddCurrency(MISSION_REWARD_GOLD); // AddCurrency → SaveInventory → Firestore 포함
             }
-            return 0;
+
+            // daily mission 진행도 Firestore 부분 업데이트
+            FirebaseManager.Instance?.UpdateFields(new Dictionary<string, object>
+            {
+                { "dailyMissionWins",    wins },
+                { "dailyMissionClaimed", missionComplete || PlayerPrefs.GetInt("daily_mission_claimed", 0) == 1 },
+            });
+
+            return missionComplete ? MISSION_REWARD_GOLD : 0;
         }
 
         void RefreshMissionIfNewDay()
         {
             string today = Today();
             if (PlayerPrefs.GetString("daily_mission_date", "") == today) return;
-            PlayerPrefs.SetString("daily_mission_date", today);
-            PlayerPrefs.SetInt("daily_mission_wins", 0);
-            PlayerPrefs.SetInt("daily_mission_claimed", 0);
+            PlayerPrefs.SetString("daily_mission_date",    today);
+            PlayerPrefs.SetInt   ("daily_mission_wins",    0);
+            PlayerPrefs.SetInt   ("daily_mission_claimed", 0);
             PlayerPrefs.Save();
+            FirebaseManager.Instance?.UpdateFields(new Dictionary<string, object>
+            {
+                { "dailyMissionDate",    today },
+                { "dailyMissionWins",    0 },
+                { "dailyMissionClaimed", false },
+            });
         }
 
         static string Today() => DateTime.Now.ToString("yyyy-MM-dd");

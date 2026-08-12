@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Chess.Core
 {
@@ -7,15 +8,40 @@ namespace Chess.Core
         const int WIN_POINTS  = 15;
         const int LOSS_POINTS = 8;
 
-        public static int GetPoints() => PlayerPrefs.GetInt("rank_points", 0);
+        // 서버에서 받은 값 캐시. -1이면 아직 서버 동기화 전.
+        static int _serverPoints = -1;
+
+        /// <summary>서버 로드 완료 시 호출. 이후 GetPoints()가 서버 값 반환.</summary>
+        public static void SetFromServer(int pts)
+        {
+            _serverPoints = pts;
+            PlayerPrefs.SetInt("rank_points", pts);
+            PlayerPrefs.Save();
+        }
+
+        public static int GetPoints()
+        {
+            if (_serverPoints >= 0) return _serverPoints;
+            return PlayerPrefs.GetInt("rank_points", 0);
+        }
 
         public static void AddWin()  => SetPoints(GetPoints() + WIN_POINTS);
         public static void AddLoss() => SetPoints(Mathf.Max(0, GetPoints() - LOSS_POINTS));
 
         static void SetPoints(int pts)
         {
+            _serverPoints = pts;
             PlayerPrefs.SetInt("rank_points", pts);
             PlayerPrefs.Save();
+            SyncToFirestore(pts);
+        }
+
+        static void SyncToFirestore(int pts)
+        {
+            FirebaseManager.Instance?.UpdateFields(new Dictionary<string, object>
+            {
+                { "rankPoints", pts }
+            });
         }
 
         public static string GetRankName()

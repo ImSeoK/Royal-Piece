@@ -1,0 +1,30 @@
+﻿{
+  "totalGames": 1000,
+  "player0Wins": 517,
+  "player1Wins": 482,
+  "draws": 1,
+  "avgTurnsPerGame": 29.1,
+  "units": [
+    {"name": "레나", "type": "퀸", "rarity": "Epic", "games": 657, "winRate": 0.644, "avgDmgDealt": 533.2, "avgDmgReceived": 98.0, "avgTurnsAlive": 20.4, "avgKills": 2.72, "avgPassives": 2.73, "survivalRate": 0.656},
+    {"name": "벨크라스", "type": "나이트", "rarity": "Epic", "games": 769, "winRate": 0.555, "avgDmgDealt": 226.2, "avgDmgReceived": 56.8, "avgTurnsAlive": 24.2, "avgKills": 1.24, "avgPassives": 1.21, "survivalRate": 0.618},
+    {"name": "글래시온", "type": "나이트", "rarity": "Legendary", "games": 726, "winRate": 0.537, "avgDmgDealt": 225.4, "avgDmgReceived": 70.0, "avgTurnsAlive": 26.1, "avgKills": 1.16, "avgPassives": 1.67, "survivalRate": 0.835},
+    {"name": "카이로스", "type": "인챈터", "rarity": "Legendary", "games": 749, "winRate": 0.515, "avgDmgDealt": 204.3, "avgDmgReceived": 64.8, "avgTurnsAlive": 26.3, "avgKills": 0.74, "avgPassives": 3.55, "survivalRate": 0.806},
+    {"name": "아스트레오", "type": "비숍", "rarity": "Legendary", "games": 724, "winRate": 0.514, "avgDmgDealt": 220.7, "avgDmgReceived": 75.8, "avgTurnsAlive": 24.6, "avgKills": 1.22, "avgPassives": 11.72, "survivalRate": 0.791},
+    {"name": "돔", "type": "나이트", "rarity": "Epic", "games": 777, "winRate": 0.512, "avgDmgDealt": 149.7, "avgDmgReceived": 68.8, "avgTurnsAlive": 24.9, "avgKills": 0.61, "avgPassives": 1.15, "survivalRate": 0.682},
+    {"name": "크로노스", "type": "비숍", "rarity": "Epic", "games": 742, "winRate": 0.511, "avgDmgDealt": 126.5, "avgDmgReceived": 72.2, "avgTurnsAlive": 24.8, "avgKills": 0.61, "avgPassives": 0.00, "survivalRate": 0.674},
+    {"name": "King", "type": "킹", "rarity": "Common", "games": 2000, "winRate": 0.500, "avgDmgDealt": 69.3, "avgDmgReceived": 139.6, "avgTurnsAlive": 29.1, "avgKills": 0.46, "avgPassives": 0.00, "survivalRate": 0.500},
+    {"name": "Pawn", "type": "폰", "rarity": "Common", "games": 16000, "winRate": 0.500, "avgDmgDealt": 0.9, "avgDmgReceived": 61.9, "avgTurnsAlive": 23.9, "avgKills": 0.01, "avgPassives": 0.00, "survivalRate": 0.626},
+    {"name": "시르반", "type": "비숍", "rarity": "Epic", "games": 708, "winRate": 0.499, "avgDmgDealt": 117.4, "avgDmgReceived": 80.7, "avgTurnsAlive": 27.1, "avgKills": 0.46, "avgPassives": 13.02, "survivalRate": 0.725},
+    {"name": "팔라디움", "type": "룩", "rarity": "Legendary", "games": 724, "winRate": 0.496, "avgDmgDealt": 88.0, "avgDmgReceived": 51.5, "avgTurnsAlive": 27.9, "avgKills": 0.53, "avgPassives": 0.00, "survivalRate": 0.945},
+    {"name": "르미엘", "type": "비숍", "rarity": "Epic", "games": 774, "winRate": 0.495, "avgDmgDealt": 157.9, "avgDmgReceived": 114.9, "avgTurnsAlive": 26.8, "avgKills": 0.85, "avgPassives": 4.30, "survivalRate": 0.844},
+    {"name": "모르카", "type": "비숍", "rarity": "Epic", "games": 733, "winRate": 0.494, "avgDmgDealt": 101.7, "avgDmgReceived": 81.1, "avgTurnsAlive": 24.8, "avgKills": 0.46, "avgPassives": 2.34, "survivalRate": 0.674},
+    {"name": "제피로스", "type": "나이트", "rarity": "Epic", "games": 755, "winRate": 0.493, "avgDmgDealt": 125.5, "avgDmgReceived": 62.0, "avgTurnsAlive": 22.8, "avgKills": 0.35, "avgPassives": 0.00, "survivalRate": 0.596},
+    {"name": "아노말리", "type": "인챈터", "rarity": "Epic", "games": 732, "winRate": 0.490, "avgDmgDealt": 121.6, "avgDmgReceived": 68.8, "avgTurnsAlive": 24.9, "avgKills": 0.36, "avgPassives": 11.91, "survivalRate": 0.686},
+    {"name": "워든", "type": "룩", "rarity": "Epic", "games": 762, "winRate": 0.480, "avgDmgDealt": 71.3, "avgDmgReceived": 63.2, "avgTurnsAlive": 27.5, "avgKills": 0.43, "avgPassives": 1.29, "survivalRate": 0.882},
+    {"name": "벨", "type": "인챈터", "rarity": "Epic", "games": 746, "winRate": 0.480, "avgDmgDealt": 106.1, "avgDmgReceived": 68.4, "avgTurnsAlive": 24.3, "avgKills": 0.32, "avgPassives": 1.32, "survivalRate": 0.664},
+    {"name": "연각", "type": "인챈터", "rarity": "Epic", "games": 779, "winRate": 0.475, "avgDmgDealt": 101.2, "avgDmgReceived": 66.7, "avgTurnsAlive": 25.9, "avgKills": 0.32, "avgPassives": 0.30, "survivalRate": 0.696},
+    {"name": "미요", "type": "인챈터", "rarity": "Epic", "games": 731, "winRate": 0.472, "avgDmgDealt": 107.3, "avgDmgReceived": 74.8, "avgTurnsAlive": 24.6, "avgKills": 0.24, "avgPassives": 2.60, "survivalRate": 0.648},
+    {"name": "연무", "type": "인챈터", "rarity": "Epic", "games": 729, "winRate": 0.461, "avgDmgDealt": 72.4, "avgDmgReceived": 70.5, "avgTurnsAlive": 24.7, "avgKills": 0.17, "avgPassives": 0.00, "survivalRate": 0.684},
+    {"name": "모노", "type": "룩", "rarity": "Epic", "games": 683, "winRate": 0.373, "avgDmgDealt": 43.3, "avgDmgReceived": 63.4, "avgTurnsAlive": 25.7, "avgKills": 0.24, "avgPassives": 0.00, "survivalRate": 0.848}
+  ]
+}

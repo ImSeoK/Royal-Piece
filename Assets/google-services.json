@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "148125879047",
+    "project_id": "royalpiece-1e5b7",
+    "storage_bucket": "royalpiece-1e5b7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148125879047:android:c8da08c82685815d1693a2",
+        "android_client_info": {
+          "package_name": "com.jseok.royalpiece"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "148125879047-qad0uiafguvq3prmtirnl3majupk4pej.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdI4Lkq4O0SoClrLiFQAooDv6gT0jIMcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "148125879047-qad0uiafguvq3prmtirnl3majupk4pej.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
