@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Chess.Simulation;
 
 namespace Chess.Core
 {
@@ -122,6 +123,8 @@ namespace Chess.Core
                     return dx <= 1 && dy <= 1 && (dx + dy > 0);
                 case SkillAuraRange.LineOfSight:
                     return board != null && board.GetUnitsInLine(caster.position).Contains(this);
+                case SkillAuraRange.AttackRange:
+                    return board != null && AttackResolver.GetAttackTargets(caster, board).Contains(this);
                 case SkillAuraRange.Attacker:
                     return false; // Always 캐시에서는 미사용 (OnDamaged contextUnit으로만 처리)
                 default:

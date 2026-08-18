@@ -337,6 +337,8 @@ namespace Chess.Presentation
                 return;
             }
 
+            if (hasMovedThisTurn) return;
+
             HandleClick(gridPos);
         }
 
@@ -639,6 +641,7 @@ namespace Chess.Presentation
                     yield break;
                 }
 
+                turnManager.SetAIThinking(true);
                 int prevPlayer = turnManager.CurrentPlayer;
                 turnManager.SwitchTurn();
 
@@ -653,8 +656,7 @@ namespace Chess.Presentation
                     if (skillSlot2 != null && skillSlotRemainingUses[1] > 0) skillSlot2.SetInteractable(true);
                 }
 
-                if (turnManager.IsSpectatorMode || (prevPlayer == 1 && turnManager.UseAI))
-                    turnManager.SetAIThinking(false);
+                turnManager.SetAIThinking(false);
 
                 if (turnManager.CurrentPlayer == 1 && turnManager.UseAI)
                     yield return new WaitForSeconds(0.5f);
@@ -770,6 +772,8 @@ namespace Chess.Presentation
                 {
                     var target = validTargets[UnityEngine.Random.Range(0, validTargets.Count)];
                     SkillExecutor.ExecuteActiveSingle(skill, target, board);
+                    if (skill.hitEffectPrefab != null && unitViews.ContainsKey(target.id))
+                        StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[target.id].transform.position));
                     foreach (var view in unitViews.Values)
                         view.UpdateVisuals();
                 }
@@ -786,6 +790,8 @@ namespace Chess.Presentation
             if (passiveSkillSelectedTarget != null)
             {
                 SkillExecutor.ExecuteActiveSingle(skill, passiveSkillSelectedTarget, board);
+                if (skill.hitEffectPrefab != null && unitViews.ContainsKey(passiveSkillSelectedTarget.id))
+                    StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[passiveSkillSelectedTarget.id].transform.position));
 
                 foreach (var view in unitViews.Values)
                     view.UpdateVisuals();

@@ -30,6 +30,7 @@ namespace Chess.Core
         Adjacent,     // 인접 8방향 1칸
         LineOfSight,  // 직선 8방향 (첫 번째 유닛까지)
         Attacker,     // 나를 공격한 유닛 (OnDamaged contextUnit)
+        AttackRange,  // 이 유닛의 실제 공격 가능 범위
     }
 
     public enum SkillTargetType

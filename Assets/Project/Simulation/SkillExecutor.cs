@@ -100,6 +100,9 @@ namespace Chess.Simulation
                     return board.GetAdjacentUnits(caster.position, targetOwner);
                 case SkillAuraRange.LineOfSight:
                     return board.GetUnitsInLine(caster.position, targetOwner);
+                case SkillAuraRange.AttackRange:
+                    return AttackResolver.GetAttackTargets(caster, board)
+                        .Where(u => u.ownerID == targetOwner).ToList();
                 case SkillAuraRange.Attacker:
                     // OnDamaged에서 나를 공격한 유닛 (contextUnit)을 대상으로 함
                     if (contextUnit != null && contextUnit.IsAlive)
