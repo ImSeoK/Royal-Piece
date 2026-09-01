@@ -76,6 +76,16 @@ namespace Chess.Presentation
             popup.GetComponent<DamagePopup>()?.Initialize(amount, position);
         }
 
+        public void SpawnBuffPopup(SkillDefinition skill, Vector3 position)
+        {
+            if (damagePopupPrefab == null) return;
+            string text;
+            Color color;
+            if (!UIConfig.TryGetBuffPopup(skill, out text, out color)) return;
+            GameObject popup = Instantiate(damagePopupPrefab, position, Quaternion.identity);
+            popup.GetComponent<DamagePopup>()?.Initialize(text, color, position);
+        }
+
         public IEnumerator PlaySkillEffect(GameObject prefab, Vector3 position)
         {
             if (prefab == null) yield break;

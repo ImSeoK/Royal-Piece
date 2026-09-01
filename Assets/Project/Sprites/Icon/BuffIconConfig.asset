@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 677e36730d5eef74dac2014b84002cc7, type: 3}
+  m_Name: BuffIconConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Chess.Presentation.BuffIconConfig
+  atkIcon: {fileID: -7467361549438300848, guid: a6d019b4f937f1b44bde73a1063a4e3e, type: 3}
+  defIcon: {fileID: -1128947775675819744, guid: 8fa138aad9dce9f4f81e29a83802ec03, type: 3}
+  spdIcon: {fileID: 2371641743025836735, guid: 7e0159d16ae165d4c915abf2a1059c62, type: 3}
+  damageReceivedPlusIcon: {fileID: -3828745608889275283, guid: 8a2e34f81df91b64c86234658c16307b, type: 3}
+  damageReceivedMinusIcon: {fileID: -687563144141556624, guid: 92d41f23146634e4b810d8f28346e826, type: 3}
+  hpIcon: {fileID: 0}
+  movementLockIcon: {fileID: 2860044062972993909, guid: 5c1fb6cc31b2e174585f54d48475f01e, type: 3}
+  dotIcon: {fileID: 7389201886638447590, guid: 15c5bbf5a7938964dbabdcfc188ffdf3, type: 3}

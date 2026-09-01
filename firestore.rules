@@ -1,0 +1,34 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── 유저 문서 ──────────────────────────────────────────────
+    match /users/{uid} {
+      // 본인만 읽기 가능
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      // 클라이언트가 쓸 수 있는 필드 제한
+      // rankPoints, currency는 Cloud Function(관리자 SDK)만 변경 가능
+      allow write: if request.auth != null
+                   && request.auth.uid == uid
+                   && !("rankPoints" in request.resource.data.diff(resource.data).affectedKeys())
+                   && !("currency"   in request.resource.data.diff(resource.data).affectedKeys());
+
+      // 신규 유저 문서 생성 (rankPoints/currency 초기값 포함 허용)
+      allow create: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // ─── 게임 로그 ──────────────────────────────────────────────
+    match /gameLogs/{gameId} {
+      // 로그인된 사용자는 쓰기 가능 (제출)
+      // 읽기는 자신이 참여한 게임만 (submittedBy 기준)
+      allow create: if request.auth != null;
+      allow read:   if request.auth != null
+                    && (resource.data.player0uid == request.auth.uid
+                     || resource.data.player1uid == request.auth.uid);
+      // 수정은 Cloud Function만 (클라이언트 차단)
+      allow update, delete: if false;
+    }
+  }
+}

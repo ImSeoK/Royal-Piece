@@ -61,13 +61,13 @@ namespace Chess.Presentation
         /// <param name="missionBonus">미션 보너스 (150 or 0)</param>
         /// <param name="rankPointDelta">랭크 포인트 변화 (+15 / -8 / 0)</param>
         /// <param name="isRanked">랭크 모드 여부</param>
-        public void Show(int winnerID, int baseGold, int missionBonus, int rankPointDelta, bool isRanked)
+        public void Show(int winnerID, int baseGold, int missionBonus, int rankPointDelta, bool isRanked, int localPlayerID = 0, bool canRematch = true)
         {
             if (victoryPanel != null) victoryPanel.SetActive(true);
             if (bgPanel      != null) bgPanel.SetActive(true);
             if (bgDim        != null) bgDim.gameObject.SetActive(true);
 
-            bool isWin = winnerID == 0;
+            bool isWin = winnerID == localPlayerID;
             Color mainColor = isWin ? WIN_COLOR : LOSE_COLOR;
 
             // 타이틀
@@ -131,6 +131,10 @@ namespace Chess.Presentation
             // 랭크 뱃지 갱신
             rankPanel?.Refresh();
 
+            // 재대결 버튼 — AI/사설방만 허용
+            if (restartButton != null)
+                restartButton.gameObject.SetActive(canRematch);
+
             // 사운드
             AudioManager.Instance?.PlaySting(isWin ? "sting_victory" : "sting_defeat");
         }
@@ -145,12 +149,14 @@ namespace Chess.Presentation
         public void OnRestartClicked()
         {
             AudioManager.Instance?.Play("ui_button_confirm");
+            Chess.Core.PhotonManager.Instance?.Disconnect();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         public void OnMainMenuClicked()
         {
             AudioManager.Instance?.Play("ui_button_confirm");
+            Chess.Core.PhotonManager.Instance?.Disconnect();
             SceneManager.LoadScene("MainMenu");
         }
     }

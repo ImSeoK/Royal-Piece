@@ -20,14 +20,15 @@ MonoBehaviour:
   attackPower: 30
   speed: 7
   defense: 20
-  moveAttributes: 2
+  moveAttributes: 34
   isKing: 0
   isPawn: 0
   isQueen: 0
   rarity: 3
   gachaWeight: 1
   activeSkill: {fileID: 0}
-  passiveSkills: []
+  passiveSkills:
+  - {fileID: 11400000, guid: d9442dc2d9816e343841cf1e69a64301, type: 2}
   hpEnhance: 18.8
   atkEnhance: 2.4
   spdEnhance: 0.6

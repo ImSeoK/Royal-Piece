@@ -14,6 +14,7 @@ namespace Chess.Simulation
             foreach (var target in targets)
             {
                 if (!target.IsAlive) continue;
+                if (SkillExecutor.IsPullImmune(target, board)) continue;
                 PullTarget(caster, target, board);
             }
         }

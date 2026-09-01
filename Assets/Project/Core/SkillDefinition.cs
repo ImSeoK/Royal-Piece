@@ -56,7 +56,9 @@ namespace Chess.Core
         ClearBuffs,    // 3-5: 광역 버프 제거
         FixedBuff,     // 3-4: 스탯 고정값 설정
         ClearTargetBuffs, // 3-6: 단일 대상 버프 제거
-        FixedDamage,   // 방어력 무시 고정 피해
+        FixedDamage,      // 방어력 무시 고정 피해
+        DamageShareAura,  // 인접 아군이 받는 피해의 power%를 대신 흡수
+        PullImmunityAura, // 자신과 인접 아군의 강제 이동 면역
     }
 
     [CreateAssetMenu(fileName = "NewSkill", menuName = "Chess/Skill Definition")]

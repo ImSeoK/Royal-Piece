@@ -1,10 +1,16 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Firestore;
+using Google;
+using AppleAuth;
+using AppleAuth.Enums;
+using AppleAuth.Interfaces;
+using AppleAuth.Native;
 
 namespace Chess.Core
 {
@@ -31,29 +37,63 @@ namespace Chess.Core
     {
         public static FirebaseManager Instance { get; private set; }
 
+        [Header("Google Sign-In")]
+        [Tooltip("Firebase Console → Authentication → Google → Web client ID")]
+        public string googleWebClientId;
+
         public bool   IsInitialized { get; private set; }
-        public bool   IsLoggedIn    => _auth?.CurrentUser != null;
-        public string UID           => _auth?.CurrentUser?.UserId;
+        public bool   IsLoggedIn    => _auth?.CurrentUser != null || _cloneTestUID != null;
+        public string UID           => _cloneTestUID ?? _auth?.CurrentUser?.UserId;
+
+        string _cloneTestUID;
 
         /// <summary>로그인 완료 시 (UID 전달)</summary>
         public event Action<string> OnLoginSuccess;
         /// <summary>로그인 실패 시 (에러 메시지 전달)</summary>
         public event Action<string> OnLoginFailed;
+        /// <summary>Firebase 초기화 완료 + 기존 세션 없음 → 로그인 버튼 표시 신호</summary>
+        public event Action OnFirebaseReady;
         /// <summary>Firestore 데이터 로드 완료 시. null이면 신규 유저.</summary>
         public event Action<FirestorePlayerData> OnDataReady;
 
-        /// <summary>가장 최근 로드된 서버 데이터 (null = 아직 로드 전 또는 신규 유저)</summary>
+        /// <summary>가장 최근 로드된 서버 데이터</summary>
         public FirestorePlayerData CachedData { get; private set; }
 
         FirebaseAuth      _auth;
-        FirebaseFirestore  _db;
+        FirebaseFirestore _db;
+        IAppleAuthManager _appleAuthManager;
+
+        bool _firebaseReady;
+        bool _dataLoadAttempted;
 
         void Awake()
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            if (AppleAuthManager.IsCurrentPlatformSupported)
+                _appleAuthManager = new AppleAuthManager(new PayloadDeserializer());
+
+#if UNITY_EDITOR
+            if (ParrelSync.ClonesManager.IsClone())
+            {
+                IsInitialized      = true;
+                _dataLoadAttempted = true;
+                _firebaseReady     = true;
+                _cloneTestUID      = "clone-test-uid-player1";
+                Debug.Log("[Firebase] ParrelSync 클론 — Firebase 초기화 스킵");
+                OnDataReady?.Invoke(null);
+                return;
+            }
+#endif
+
             _ = InitializeAsync();
+        }
+
+        void Update()
+        {
+            _appleAuthManager?.Update();
         }
 
         // ─── 초기화 ────────────────────────────────────────────────
@@ -70,9 +110,17 @@ namespace Chess.Core
 
             _auth = FirebaseAuth.DefaultInstance;
             _db   = FirebaseFirestore.DefaultInstance;
+
+#if UNITY_EDITOR
+            _db.Settings.Host       = "127.0.0.1:8080";
+            _db.Settings.SslEnabled = false;
+            Debug.Log("[Firebase] Firestore 에뮬레이터 연결 (127.0.0.1:8080)");
+#endif
+
             IsInitialized = true;
             Debug.Log("[Firebase] 초기화 완료");
 
+            // 기존 세션 유지 중 → 자동 로그인
             if (_auth.CurrentUser != null)
             {
                 string uid = _auth.CurrentUser.UserId;
@@ -83,10 +131,88 @@ namespace Chess.Core
                 return;
             }
 
-            await SignInAnonymouslyAsync();
+            // 세션 없음 → 로그인 화면에 버튼 표시 신호
+            _firebaseReady = true;
+            OnFirebaseReady?.Invoke();
         }
 
-        async Task SignInAnonymouslyAsync()
+        // ─── 로그인 방법 ───────────────────────────────────────────
+
+        /// <summary>Google 계정으로 로그인</summary>
+        public async Task SignInWithGoogleAsync()
+        {
+            if (string.IsNullOrEmpty(googleWebClientId))
+            {
+                OnLoginFailed?.Invoke("googleWebClientId가 설정되지 않았습니다.");
+                return;
+            }
+
+            GoogleSignIn.Configuration = new GoogleSignInConfiguration
+            {
+                WebClientId    = googleWebClientId,
+                RequestIdToken = true,
+                UseGameSignIn  = false,
+            };
+
+            try
+            {
+                GoogleSignInUser googleUser = await GoogleSignIn.DefaultInstance.SignIn();
+                Credential credential = GoogleAuthProvider.GetCredential(googleUser.IdToken, null);
+                await SignInWithFirebaseCredentialAsync(credential);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Firebase] Google 로그인 실패: {e.Message}");
+                OnLoginFailed?.Invoke(e.Message);
+            }
+        }
+
+        /// <summary>Apple ID로 로그인 (iOS 전용)</summary>
+        public void SignInWithAppleAsync()
+        {
+            if (_appleAuthManager == null)
+            {
+                OnLoginFailed?.Invoke("이 기기에서는 Apple 로그인을 지원하지 않습니다.");
+                return;
+            }
+
+            var loginArgs = new AppleAuthLoginArgs(LoginOptions.IncludeEmail | LoginOptions.IncludeFullName);
+
+            _appleAuthManager.LoginWithAppleId(loginArgs,
+                credential =>
+                {
+                    var appleCredential = credential as IAppleIDCredential;
+                    if (appleCredential == null)
+                    {
+                        OnLoginFailed?.Invoke("Apple 자격증명을 받지 못했습니다.");
+                        return;
+                    }
+                    string identityToken = Encoding.UTF8.GetString(appleCredential.IdentityToken);
+                    _ = SignInWithAppleTokenAsync(identityToken);
+                },
+                error =>
+                {
+                    Debug.LogError($"[Firebase] Apple 로그인 실패: {error}");
+                    OnLoginFailed?.Invoke(error.ToString());
+                });
+        }
+
+        async Task SignInWithAppleTokenAsync(string identityToken)
+        {
+            try
+            {
+                Credential credential = OAuthProvider.GetCredential("apple.com", identityToken, null, null);
+                await SignInWithFirebaseCredentialAsync(credential);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Firebase] Apple Firebase 인증 실패: {e.Message}");
+                OnLoginFailed?.Invoke(e.Message);
+            }
+        }
+
+        /// <summary>게스트(익명)로 로그인</summary>
+        public async Task SignInAnonymouslyAsync()
         {
             try
             {
@@ -99,9 +225,19 @@ namespace Chess.Core
             }
             catch (Exception e)
             {
-                Debug.LogError($"[Firebase] 로그인 실패: {e.Message}");
+                Debug.LogError($"[Firebase] 익명 로그인 실패: {e.Message}");
                 OnLoginFailed?.Invoke(e.Message);
             }
+        }
+
+        async Task SignInWithFirebaseCredentialAsync(Credential credential)
+        {
+            var result = await _auth.SignInWithCredentialAsync(credential);
+            string uid = result.UserId;
+            Debug.Log($"[Firebase] 로그인 완료: {uid}");
+            SaveUID(uid);
+            OnLoginSuccess?.Invoke(uid);
+            await LoadAndBroadcastAsync(uid);
         }
 
         // ─── 데이터 로드 ───────────────────────────────────────────
@@ -114,10 +250,6 @@ namespace Chess.Core
             OnDataReady?.Invoke(data);
         }
 
-        /// <summary>
-        /// Firestore에서 플레이어 데이터 로드.
-        /// 신규 유저(문서 없음)이면 null 반환.
-        /// </summary>
         public async Task<FirestorePlayerData> LoadPlayerDataAsync(string uid = null)
         {
             uid = uid ?? UID;
@@ -150,9 +282,9 @@ namespace Chess.Core
                         {
                             data.ownedUnits.Add(new OwnedUnitEntry
                             {
-                                instanceId   = u.TryGetValue("instanceId",   out var id)  ? id?.ToString()             : Guid.NewGuid().ToString(),
-                                unitName     = u.TryGetValue("unitName",     out var nm)  ? nm?.ToString()             : "",
-                                enhanceLevel = u.TryGetValue("enhanceLevel", out var el)  ? Convert.ToInt32(el)        : 0,
+                                instanceId   = u.TryGetValue("instanceId",   out var id)  ? id?.ToString()      : Guid.NewGuid().ToString(),
+                                unitName     = u.TryGetValue("unitName",     out var nm)  ? nm?.ToString()      : "",
+                                enhanceLevel = u.TryGetValue("enhanceLevel", out var el)  ? Convert.ToInt32(el) : 0,
                             });
                         }
                     }
@@ -170,7 +302,6 @@ namespace Chess.Core
 
         // ─── 데이터 저장 ───────────────────────────────────────────
 
-        /// <summary>플레이어 전체 데이터를 Firestore에 저장 (덮어쓰기).</summary>
         public void SavePlayerData(FirestorePlayerData data)
         {
             if (!IsLoggedIn || data == null) return;
@@ -197,13 +328,12 @@ namespace Chess.Core
 
                 var dict = new Dictionary<string, object>
                 {
-                    { "currency",            data.currency },
                     { "ownedUnits",          unitList },
-                    { "rankPoints",          data.rankPoints },
                     { "lastDailyBonus",      data.lastDailyBonus ?? "" },
                     { "dailyMissionDate",    data.dailyMissionDate ?? "" },
                     { "dailyMissionWins",    data.dailyMissionWins },
                     { "dailyMissionClaimed", data.dailyMissionClaimed },
+                    // rankPoints / currency 는 Cloud Function만 수정
                 };
 
                 await _db.Collection("users").Document(uid).SetAsync(dict);
@@ -215,7 +345,6 @@ namespace Chess.Core
             }
         }
 
-        /// <summary>특정 필드만 부분 업데이트 (문서가 없으면 실패 → SavePlayerData 먼저 호출 필요).</summary>
         public void UpdateFields(Dictionary<string, object> fields)
         {
             if (!IsLoggedIn) return;
@@ -232,17 +361,42 @@ namespace Chess.Core
             }
             catch (Exception e)
             {
-                // 문서 없을 경우 등 실패는 조용히 로그만
                 Debug.LogWarning($"[Firestore] UpdateFields 실패: {e.Message}");
+            }
+        }
+
+        // ─── 게임 로그 제출 ────────────────────────────────────────
+
+        public async Task SubmitGameLogAsync(string gameId, Dictionary<string, object> logData)
+        {
+            if (!IsLoggedIn || string.IsNullOrEmpty(gameId)) return;
+
+            logData["timestamp"]   = FieldValue.ServerTimestamp;
+            logData["submittedBy"] = UID;
+
+            try
+            {
+                await _db.Collection("gameLogs").Document(gameId).SetAsync(logData, SetOptions.MergeAll);
+                Debug.Log($"[Firestore] 게임 로그 제출 완료: {gameId}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Firestore] 게임 로그 제출 실패: {e.Message}");
             }
         }
 
         // ─── 구독 헬퍼 ────────────────────────────────────────────
 
-        /// <summary>
-        /// OnDataReady 구독. 이미 데이터 로드가 완료된 경우 즉시 콜백 호출.
-        /// Start()에서 호출하면 Awake 순서와 무관하게 안전하게 작동.
-        /// </summary>
+        /// <summary>Firebase 준비 완료(신규 유저) 구독. 이미 준비됐으면 즉시 콜백.</summary>
+        public void SubscribeFirebaseReady(Action callback)
+        {
+            if (_firebaseReady)
+                callback();
+            else
+                OnFirebaseReady += callback;
+        }
+
+        /// <summary>Firestore 데이터 로드 완료 구독. 이미 완료됐으면 즉시 콜백.</summary>
         public void SubscribeDataReady(Action<FirestorePlayerData> callback)
         {
             if (CachedData != null || _dataLoadAttempted)
@@ -250,8 +404,6 @@ namespace Chess.Core
             else
                 OnDataReady += callback;
         }
-
-        bool _dataLoadAttempted;
 
         // ─── 유틸 ─────────────────────────────────────────────────
 
@@ -261,7 +413,6 @@ namespace Chess.Core
             PlayerPrefs.Save();
         }
 
-        /// <summary>앱 재시작 전 캐싱된 UID (Firebase 초기화 전에도 사용 가능)</summary>
         public static string GetCachedUID() => PlayerPrefs.GetString("firebase_uid", "");
     }
 }

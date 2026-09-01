@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 namespace Chess.Presentation
 {
@@ -19,12 +18,6 @@ namespace Chess.Presentation
         public Slider sfxSlider;
         public Button soundBackButton;
 
-        [Header("항복 결과 패널")]
-        public GameObject forfeitResultPanel;
-        public TextMeshProUGUI forfeitResultText;
-        public Button rematchButton;
-        public Button mainMenuButton;
-
         private GameManager gameManager;
         private bool _initializing;
         private bool _isRankedMode;
@@ -33,14 +26,11 @@ namespace Chess.Presentation
         {
             if (panel != null) panel.SetActive(false);
             if (soundPanel != null) soundPanel.SetActive(false);
-            if (forfeitResultPanel != null) forfeitResultPanel.SetActive(false);
 
             if (forfeitButton != null) forfeitButton.onClick.AddListener(OnForfeit);
             if (resumeButton != null) resumeButton.onClick.AddListener(Close);
             if (soundButton != null) soundButton.onClick.AddListener(OnSoundClicked);
             if (soundBackButton != null) soundBackButton.onClick.AddListener(OnSoundBack);
-            if (rematchButton != null) rematchButton.onClick.AddListener(OnRematch);
-            if (mainMenuButton != null) mainMenuButton.onClick.AddListener(OnMainMenu);
 
             if (bgmSlider != null) bgmSlider.onValueChanged.AddListener(OnBGMChanged);
             if (sfxSlider != null) sfxSlider.onValueChanged.AddListener(OnSFXChanged);
@@ -56,7 +46,6 @@ namespace Chess.Presentation
         {
             if (panel != null) panel.SetActive(true);
             if (soundPanel != null) soundPanel.SetActive(false);
-            if (forfeitResultPanel != null) forfeitResultPanel.SetActive(false);
         }
 
         public void Close()
@@ -68,22 +57,11 @@ namespace Chess.Presentation
         void OnForfeit()
         {
             if (panel != null) panel.SetActive(false);
-            if (forfeitResultPanel != null) forfeitResultPanel.SetActive(true);
 
-            if (forfeitResultText != null)
-                forfeitResultText.text = "항복하여 패배했습니다.";
-
-            if (gameManager != null)
-                gameManager.enabled = false;
-
-            // 항복 = 패배 전적 저장
-            PlayerPrefs.SetInt("stat_losses", PlayerPrefs.GetInt("stat_losses", 0) + 1);
-            PlayerPrefs.SetInt("stat_total",  PlayerPrefs.GetInt("stat_total",  0) + 1);
-            PlayerPrefs.Save();
-
-            // 골드 보상 및 랭크 포인트 (패배)
-            Chess.Core.PlayerInventory.Instance?.AddCurrency(15);
-            if (_isRankedMode) Chess.Core.RankSystem.AddLoss();
+            // 온라인 모드: 상대에게 항복 RPC 전송
+            gameManager?.NotifyForfeit();
+            // DEFEAT 패널 표시 + 전적/랭크 처리는 GameManager.ShowForfeitDefeat()에서
+            gameManager?.ShowForfeitDefeat(_isRankedMode);
         }
 
         void OnSoundClicked()
@@ -108,11 +86,13 @@ namespace Chess.Presentation
 
         void OnRematch()
         {
+            Chess.Core.PhotonManager.Instance?.Disconnect();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         void OnMainMenu()
         {
+            Chess.Core.PhotonManager.Instance?.Disconnect();
             SceneManager.LoadScene("MainMenu");
         }
 

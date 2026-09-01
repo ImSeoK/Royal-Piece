@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Chess.Core;
 
 namespace Chess.Presentation
@@ -9,9 +10,19 @@ namespace Chess.Presentation
         public UnitState state;
         public SpriteRenderer spriteRenderer;
 
+        public BuffIconConfig buffIconConfig;
+
         private SpriteRenderer hpBarBg;
         private SpriteRenderer hpBarFill;
         private Color originalColor;
+        private Sprite _whiteSprite;
+        private List<GameObject> _indicatorObjects = new List<GameObject>();
+
+        // 인디케이터 월드 크기 상수
+        const float worldIndicatorGap     = 0.04f;
+        const float worldIndicatorSize    = 0.24f;
+        const float worldIndicatorSpacing = 0.24f;
+        const int   maxIndicators         = 4;
 
         private void Awake()
         {
@@ -19,6 +30,7 @@ namespace Chess.Presentation
                 spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
             originalColor = spriteRenderer.color;
+            _whiteSprite = CreateWhiteSprite();
         }
 
         public void Initialize(UnitState unitState)
@@ -47,7 +59,7 @@ namespace Chess.Presentation
         {
             if (spriteRenderer.sprite == null) return;
 
-            Sprite white = CreateWhiteSprite();
+            Sprite white = _whiteSprite;
             float parentScale = transform.localScale.x;
             float halfH = spriteRenderer.sprite.bounds.extents.y;
 
@@ -103,7 +115,7 @@ namespace Chess.Presentation
         public void UpdatePosition()
         {
             if (state == null) return;
-            transform.position = new Vector3(state.position.x, state.position.y, 0);
+            transform.position = BoardVisualizer.GridToWorld(state.position);
         }
 
         public void UpdateVisuals()
@@ -127,6 +139,107 @@ namespace Chess.Presentation
                 else
                     hpBarFill.color = Color.red;
             }
+
+            RebuildBuffIndicators();
+        }
+
+        void RebuildBuffIndicators()
+        {
+            foreach (var go in _indicatorObjects)
+                if (go != null) Destroy(go);
+            _indicatorObjects.Clear();
+
+            if (state == null || spriteRenderer.sprite == null) return;
+
+            // 표시할 항목 수집 (버프 → 상태이상 → DOT 순)
+            var entries = new List<(Sprite sprite, Color color)>();
+
+            foreach (var buff in state.activeBuffs)
+            {
+                Sprite icon;
+                if (buff.statType == StatType.DamageReceived && buffIconConfig != null)
+                    icon = buffIconConfig.GetDamageReceivedIcon(buff.amount > 0);
+                else
+                    icon = buffIconConfig != null ? buffIconConfig.GetIcon(buff.statType) : null;
+                Color color = GetIndicatorColor(buff);
+                entries.Add((icon, color));
+            }
+
+            foreach (var dot in state.damageOverTimes)
+            {
+                Sprite icon = buffIconConfig != null ? buffIconConfig.dotIcon : null;
+                entries.Add((icon, UIConfig.DotColor));
+            }
+
+            if (entries.Count == 0) return;
+
+            int count = Mathf.Min(entries.Count, maxIndicators);
+            float parentScale = transform.localScale.x;
+            float halfH = spriteRenderer.sprite.bounds.extents.y;
+
+
+            const float worldBarOffset = 0.12f;
+            const float worldBarHeight = 0.08f;
+            float barY = -halfH - worldBarOffset / parentScale;
+            float indicatorLocalY = barY - (worldBarHeight * 0.5f + worldIndicatorGap + worldIndicatorSize * 0.5f) / parentScale;
+            float indicatorLocalSize    = worldIndicatorSize    / parentScale;
+            float indicatorLocalSpacing = worldIndicatorSpacing / parentScale;
+            // border는 항상 _whiteSprite(PPU=1, extents=0.5) 기준 → 0.5f * indicatorLocalSize
+            float startX = -(0.9f / 2f) / parentScale + 0.5f * indicatorLocalSize;
+
+            const float symbolFraction = 0.72f;
+
+            for (int i = 0; i < count; i++)
+            {
+                var (sprite, color) = entries[i];
+
+                // 컨테이너
+                GameObject go = new GameObject($"Indicator_{i}");
+                go.transform.SetParent(transform, false);
+                go.transform.localPosition = new Vector3(startX + i * indicatorLocalSpacing, indicatorLocalY, 0f);
+                go.transform.localScale = new Vector3(indicatorLocalSize, indicatorLocalSize, 1f);
+
+                // 테두리 (버프 색)
+                GameObject border = new GameObject("Border");
+                border.transform.SetParent(go.transform, false);
+                border.transform.localScale = Vector3.one;
+                SpriteRenderer borderSr = border.AddComponent<SpriteRenderer>();
+                borderSr.sprite = _whiteSprite;
+                borderSr.color = color;
+                borderSr.sortingOrder = 7;
+
+                // 배경 (어두운 색)
+                GameObject bg = new GameObject("BG");
+                bg.transform.SetParent(go.transform, false);
+                bg.transform.localScale = new Vector3(0.82f, 0.82f, 1f);
+                SpriteRenderer bgSr = bg.AddComponent<SpriteRenderer>();
+                bgSr.sprite = _whiteSprite;
+                bgSr.color = new Color(0.1f, 0.1f, 0.18f, 1f);
+                bgSr.sortingOrder = 8;
+
+                // 심볼
+                if (sprite != null)
+                {
+                    GameObject symbol = new GameObject("Symbol");
+                    symbol.transform.SetParent(go.transform, false);
+                    float symScale = symbolFraction / sprite.bounds.size.x;
+                    symbol.transform.localScale = new Vector3(symScale, symScale, 1f);
+                    SpriteRenderer symSr = symbol.AddComponent<SpriteRenderer>();
+                    symSr.sprite = sprite;
+                    symSr.color = color;
+                    symSr.sortingOrder = 9;
+                }
+
+                _indicatorObjects.Add(go);
+            }
+        }
+
+        Color GetIndicatorColor(ActiveBuff buff)
+        {
+            if (UIConfig.IsStatusEffect(buff.statType)) return UIConfig.StatusColor;
+            if (buff.statType == StatType.DamageReceived)
+                return buff.amount < 0 ? UIConfig.BuffColor : UIConfig.DebuffColor;
+            return buff.amount >= 0 ? UIConfig.BuffColor : UIConfig.DebuffColor;
         }
 
         // 피격 플래시 효과

@@ -17,6 +17,7 @@ namespace Chess.Presentation
         public List<string> customUnitNames        = new List<string>();
         public List<int>    customUnitEnhanceLevels = new List<int>();
         public List<string> activeSkillNames        = new List<string>();
+        public string firebaseUID;
     }
 
     /// <summary>
@@ -31,9 +32,18 @@ namespace Chess.Presentation
         /// <summary>Host=0, Client=1. Spawned() 이후 확정.</summary>
         public int LocalPlayerID { get; private set; }
 
+        /// <summary>세션 이름 (게임 로그 ID로 사용).</summary>
+        public string SessionId => Runner?.SessionInfo.Name;
+
+        /// <summary>플레이어별 Firebase UID. 덱 교환 완료 후 확정.</summary>
+        public string GetPlayerUID(int playerID) => playerID == 0 ? _player0UID : _player1UID;
+
         PlayerDeck _deck0;
         PlayerDeck _deck1;
         bool _gameStarted;
+        string _deck0Json;  // 클라이언트 재전송용 Host 덱 캐시
+        string _player0UID;
+        string _player1UID;
 
         // ─── Fusion 생명주기 ──────────────────────────────────────────
 
@@ -59,6 +69,7 @@ namespace Chess.Presentation
                 customUnitNames        = myDeck.customUnits.Select(u => u.unitName).ToList(),
                 customUnitEnhanceLevels = myDeck.customUnitEnhanceLevels.ToList(),
                 activeSkillNames       = myDeck.selectedActiveSkills.Select(s => s.skillName).ToList(),
+                firebaseUID            = Chess.Core.FirebaseManager.Instance?.UID ?? "",
             };
 
             RPC_SendDeck(LocalPlayerID, JsonUtility.ToJson(data));
@@ -74,8 +85,16 @@ namespace Chess.Presentation
             var data = JsonUtility.FromJson<DeckNetworkData>(deckJson);
             var deck = BuildDeck(data);
 
-            if (playerID == 0) _deck0 = deck;
-            else               _deck1 = deck;
+            if (playerID == 0) { _deck0 = deck; _deck0Json = deckJson; _player0UID = data.firebaseUID; }
+            else               { _deck1 = deck;                        _player1UID = data.firebaseUID; }
+
+            // Host가 클라이언트 덱을 수신했을 때, 자신의 덱을 재전송
+            // (클라이언트가 늦게 접속해서 최초 RPC를 못 받은 경우 대비)
+            if (playerID == 1 && Runner.IsServer && _deck0Json != null)
+            {
+                Debug.Log("[Bridge] Host → 덱0 재전송 (클라이언트 재접속 대비)");
+                RPC_SendDeck(0, _deck0Json);
+            }
 
             TryStartGame();
         }
@@ -88,6 +107,35 @@ namespace Chess.Presentation
 
             Debug.Log($"[Bridge] 원격 이동 수신: Player{senderPlayerID} unitId={unitId} → ({targetX},{targetY})");
             FindObjectOfType<GameManager>()?.ExecuteRemoteMove(unitId, new Vector2Int(targetX, targetY));
+        }
+
+        /// <summary>패시브 스킬 타겟 선택을 전체 브로드캐스트. 자신이 보낸 건 이미 처리했으므로 스킵.</summary>
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        public void RPC_SendPassiveTarget(int senderPlayerID, int targetUnitId)
+        {
+            if (senderPlayerID == LocalPlayerID) return;
+
+            Debug.Log($"[Bridge] 패시브 타겟 수신: Player{senderPlayerID} unitId={targetUnitId}");
+            FindObjectOfType<GameManager>()?.ReceivePassiveTarget(targetUnitId);
+        }
+
+        /// <summary>액티브 스킬 사용을 전체 브로드캐스트. 자신이 보낸 건 이미 로컬 실행되었으므로 스킵.</summary>
+        /// targetUnitId == -1이면 range 스킬 (타겟 없음).
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        public void RPC_SendActiveSkill(int senderPlayerID, string skillName, int targetUnitId)
+        {
+            if (senderPlayerID == LocalPlayerID) return;
+
+            Debug.Log($"[Bridge] 액티브 스킬 수신: Player{senderPlayerID} skill={skillName} target={targetUnitId}");
+            FindObjectOfType<GameManager>()?.ReceiveActiveSkill(senderPlayerID, skillName, targetUnitId);
+        }
+
+        /// <summary>항복을 전체 브로드캐스트. 상대방은 승리 처리.</summary>
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        public void RPC_Surrender(int surrenderingPlayerID)
+        {
+            Debug.Log($"[Bridge] 항복 수신: Player{surrenderingPlayerID}");
+            FindObjectOfType<GameManager>()?.ReceiveSurrender(surrenderingPlayerID);
         }
 
         // ─── 내부 ─────────────────────────────────────────────────────

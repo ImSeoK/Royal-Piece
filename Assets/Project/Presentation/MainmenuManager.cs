@@ -67,10 +67,9 @@ namespace Chess.Presentation
         [Header("모드 선택 패널")]
         public ModeSelectPanel modeSelectPanel;
 
-        [Header("매칭 대기 UI")]
-        public GameObject matchmakingPanel;
-        public TextMeshProUGUI matchmakingStatusText;
-        public Button cancelMatchmakingButton;
+        [Header("매칭 대기 UI 참조")]
+        public GameObject categoryButtonsParent;
+
 
         [Header("희귀도별 슬롯 프레임 스프라이트")]
         public Sprite frameCommon;
@@ -80,6 +79,9 @@ namespace Chess.Presentation
 
         void Start()
         {
+            // MatchmakingOverlay에 씬 참조 등록
+            MatchmakingOverlay.Instance?.RegisterMainMenuRefs(startGameButton, categoryButtonsParent);
+
             // Firebase 로그인 연동
             if (Chess.Core.FirebaseManager.Instance != null)
             {
@@ -123,6 +125,7 @@ namespace Chess.Presentation
         void Update()
         {
             UpdateCurrency();
+
         }
 
         void UpdateCurrency()
@@ -469,61 +472,21 @@ namespace Chess.Presentation
 
         void StartOnlineMatchmaking(Chess.Core.GameMode mode)
         {
-            ShowMatchmakingUI(true);
-            if (cancelMatchmakingButton != null)
-                cancelMatchmakingButton.onClick.AddListener(CancelMatchmaking);
-
-            var pm = Chess.Core.PhotonManager.Instance;
-            if (pm == null)
+            if (Chess.Core.PhotonManager.Instance == null)
             {
                 Debug.LogError("[MainMenu] PhotonManager 없음 — AI 모드로 대체");
                 SceneManager.LoadScene("SampleScene");
                 return;
             }
 
-            pm.OnMatchReady  += HandleMatchReady;
-            pm.OnMatchFailed += HandleMatchFailed;
-            pm.StartMatchmaking(mode);
+            if (MatchmakingOverlay.Instance == null)
+            {
+                Debug.LogError("[MainMenu] MatchmakingOverlay 없음!");
+                return;
+            }
+
+            MatchmakingOverlay.Instance.StartMatchmaking(mode);
         }
 
-        void HandleMatchReady()
-        {
-            UnsubscribePhoton();
-            SceneManager.LoadScene("SampleScene");
-        }
-
-        void HandleMatchFailed(string reason)
-        {
-            UnsubscribePhoton();
-            ShowMatchmakingUI(false);
-            Debug.LogError($"[MainMenu] 매칭 실패: {reason}");
-        }
-
-        void CancelMatchmaking()
-        {
-            UnsubscribePhoton();
-            Chess.Core.PhotonManager.Instance?.Disconnect();
-            ShowMatchmakingUI(false);
-            if (cancelMatchmakingButton != null)
-                cancelMatchmakingButton.onClick.RemoveListener(CancelMatchmaking);
-        }
-
-        void UnsubscribePhoton()
-        {
-            var pm = Chess.Core.PhotonManager.Instance;
-            if (pm == null) return;
-            pm.OnMatchReady  -= HandleMatchReady;
-            pm.OnMatchFailed -= HandleMatchFailed;
-        }
-
-        void ShowMatchmakingUI(bool show)
-        {
-            if (matchmakingPanel != null)
-                matchmakingPanel.SetActive(show);
-            if (startGameButton != null)
-                startGameButton.gameObject.SetActive(!show);
-            if (matchmakingStatusText != null && show)
-                matchmakingStatusText.text = "상대를 찾는 중...";
-        }
     }
 }

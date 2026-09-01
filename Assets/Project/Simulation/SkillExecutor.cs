@@ -8,7 +8,8 @@ namespace Chess.Simulation
     public static class SkillExecutor
     {
         // Active skill - Range type, no caster, targets entire board
-        public static void ExecuteActive(SkillDefinition skill, BoardState board)
+        // casterOwnerID: 시전자의 ownerID (온라인 동기화 시 Player 1이 쓸 때도 올바른 타겟 적용)
+        public static void ExecuteActive(SkillDefinition skill, BoardState board, int casterOwnerID = 0)
         {
             if (skill == null) return;
 
@@ -23,7 +24,7 @@ namespace Chess.Simulation
             SkillEffect effect = CreateEffect(skill);
             if (effect == null) return;
 
-            List<UnitState> targets = SelectActiveTargets(skill, board);
+            List<UnitState> targets = SelectActiveTargets(skill, board, casterOwnerID);
             effect.Execute(null, targets, board);
 
             if (skill.hasSecondaryEffect)
@@ -113,19 +114,71 @@ namespace Chess.Simulation
             }
         }
 
+        // 타겟 인접에 DamageShareAura를 가진 살아있는 아군을 찾아 out으로 반환. 없으면 false.
+        // primary 또는 secondary effectType 모두 체크
+        public static bool TryGetDamageShareProvider(UnitState target, BoardState board,
+            out UnitState provider, out float rate, out SkillDefinition skill)
+        {
+            var adjacent = board.GetAdjacentUnits(target.position, target.ownerID);
+            foreach (var ally in adjacent)
+            {
+                if (!ally.IsAlive) continue;
+                foreach (var s in ally.definition.passiveSkills)
+                {
+                    if (s == null) continue;
+                    if (s.effectType == SkillEffectType.DamageShareAura)
+                    {
+                        provider = ally; rate = s.power / 100f; skill = s;
+                        return true;
+                    }
+                    if (s.hasSecondaryEffect && s.secondaryEffectType == SkillEffectType.DamageShareAura)
+                    {
+                        provider = ally; rate = s.secondaryPower / 100f; skill = s;
+                        return true;
+                    }
+                }
+            }
+            provider = null; rate = 0f; skill = null;
+            return false;
+        }
+
+        // 타겟 자신 또는 인접 아군이 PullImmunityAura를 보유하고 있으면 true
+        // primary 또는 secondary effectType 모두 체크
+        public static bool IsPullImmune(UnitState target, BoardState board)
+        {
+            if (HasPullImmunity(target)) return true;
+
+            var adjacent = board.GetAdjacentUnits(target.position, target.ownerID);
+            foreach (var ally in adjacent)
+                if (HasPullImmunity(ally)) return true;
+
+            return false;
+        }
+
+        private static bool HasPullImmunity(UnitState unit)
+        {
+            foreach (var skill in unit.definition.passiveSkills)
+            {
+                if (skill == null) continue;
+                if (skill.effectType == SkillEffectType.PullImmunityAura) return true;
+                if (skill.hasSecondaryEffect && skill.secondaryEffectType == SkillEffectType.PullImmunityAura) return true;
+            }
+            return false;
+        }
+
         // Active skill target selection - search entire board
-        private static List<UnitState> SelectActiveTargets(SkillDefinition skill, BoardState board)
+        private static List<UnitState> SelectActiveTargets(SkillDefinition skill, BoardState board, int casterOwnerID = 0)
         {
             var allUnits = board.GetAllUnits().Where(u => u.IsAlive).ToList();
 
             switch (skill.targetType)
             {
                 case SkillTargetType.RangeEnemy:
-                    return allUnits.Where(u => u.ownerID == 1).ToList();
+                    return allUnits.Where(u => u.ownerID != casterOwnerID).ToList();
 
                 case SkillTargetType.RangeAlly:
                 case SkillTargetType.Self:
-                    return allUnits.Where(u => u.ownerID == 0).ToList();
+                    return allUnits.Where(u => u.ownerID == casterOwnerID).ToList();
 
                 default:
                     return new List<UnitState>();

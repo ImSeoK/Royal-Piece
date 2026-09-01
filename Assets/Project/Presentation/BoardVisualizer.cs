@@ -23,6 +23,25 @@ namespace Chess.Presentation
         private BoardState board;
         private List<GameObject> activeHighlights = new List<GameObject>();
 
+        /// <summary>Player 2(localPlayerID=1)이면 true — 보드 Y축 반전 표시.</summary>
+        public static bool IsFlipped { get; set; }
+
+        /// <summary>보드 좌표 → 월드 좌표 (flip 적용). Y만 반전 — X 칼럼 순서는 양쪽 동일.</summary>
+        public static Vector3 GridToWorld(Vector2Int pos)
+        {
+            return IsFlipped
+                ? new Vector3(pos.x, 7 - pos.y, 0)
+                : new Vector3(pos.x, pos.y, 0);
+        }
+
+        /// <summary>월드 좌표(클릭 위치) → 보드 좌표 (flip 적용).</summary>
+        public static Vector2Int WorldToGrid(Vector3 worldPos)
+        {
+            int x = Mathf.FloorToInt(worldPos.x + 0.5f);
+            int y = Mathf.FloorToInt(worldPos.y + 0.5f);
+            return IsFlipped ? new Vector2Int(x, 7 - y) : new Vector2Int(x, y);
+        }
+
         public void Initialize(BoardState board)
         {
             this.board = board;
@@ -34,7 +53,8 @@ namespace Chess.Presentation
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    GameObject tile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
+                    var gridPos = new Vector2Int(x, y);
+                    GameObject tile = Instantiate(tilePrefab, GridToWorld(gridPos), Quaternion.identity);
                     tile.name = $"Tile_{x}_{y}";
                     tile.transform.parent = transform;
                     tile.GetComponent<SpriteRenderer>().color = (x + y) % 2 == 0 ? lightTileColor : darkTileColor;
@@ -84,7 +104,7 @@ namespace Chess.Presentation
 
         void SpawnHighlight(Vector2Int pos, Color color, string objName)
         {
-            GameObject h = Instantiate(moveHighlightPrefab, new Vector3(pos.x, pos.y, 0), Quaternion.identity);
+            GameObject h = Instantiate(moveHighlightPrefab, GridToWorld(pos), Quaternion.identity);
             h.name = objName;
             h.transform.parent = transform;
             h.GetComponent<SpriteRenderer>().color = color;
