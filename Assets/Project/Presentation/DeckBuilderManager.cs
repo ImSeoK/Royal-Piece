@@ -30,14 +30,6 @@ namespace Chess.Presentation
         public Transform pickerContent;
         public GameObject unitCardPrefab;
 
-        [Header("이동범위 이미지")]
-        public Sprite rangeSpritePawn;
-        public Sprite rangeSpriteRook;
-        public Sprite rangeSpriteBishop;
-        public Sprite rangeSpriteKnight;
-        public Sprite rangeSpriteQueen;
-        public Sprite rangeSpriteKing;
-
         [Header("킹/폰 고정")]
         public UnitDefinition defaultKing;
         public UnitDefinition defaultPawn;
@@ -53,6 +45,11 @@ namespace Chess.Presentation
         [Header("모드 선택 패널")]
         public ModeSelectPanel modeSelectPanel;
 
+        [Header("필터")]
+        public DeckFilterPanel filterPanel;
+        public Button filterButton;
+        public Image filterButtonImage;
+
         [Header("토스트 메시지")]
         public TextMeshProUGUI toastText;
 
@@ -67,12 +64,9 @@ namespace Chess.Presentation
         private BoardCell[] rank1Cells = new BoardCell[8];
         private int[] rank1ToFreeSlot = { 0, 1, 2, -1, 3, 4, 5, 6 };
         private List<GameObject> pickerCards = new List<GameObject>();
-        private List<string> savedSkillNames = new List<string>();
-
         private UnitDefinition selectedUnit;
         private OwnedUnitInstance selectedInstance;
         private GameObject selectedPickerCard;
-        private InventoryCard selectedCard;
 
         void Start()
         {
@@ -92,6 +86,8 @@ namespace Chess.Presentation
             if (saveButton != null) saveButton.onClick.AddListener(OnSaveClicked);
             if (skillSlot1Button != null) skillSlot1Button.onClick.AddListener(() => OpenSkillPicker(0));
             if (skillSlot2Button != null) skillSlot2Button.onClick.AddListener(() => OpenSkillPicker(1));
+            if (filterPanel != null) { filterPanel.Initialize(); filterPanel.OnApply = ApplyFilter; }
+            if (filterButton != null) filterButton.onClick.AddListener(OnFilterButtonClicked);
         }
 
         void OpenSkillPicker(int slotIndex)
@@ -153,7 +149,7 @@ namespace Chess.Presentation
             foreach (var x in entries)
                 SpawnPickerCard(x.def, x.inst);
 
-            UnitSortUtility.SortPickerCards(pickerCards);
+            ApplyFilter();
         }
 
         void SpawnPickerCard(UnitDefinition unit, OwnedUnitInstance inst)
@@ -232,7 +228,6 @@ namespace Chess.Presentation
             selectedUnit = card.unitDefinition;
             selectedInstance = card.ownedInstance;
             selectedPickerCard = card.gameObject;
-            selectedCard = card;
             card.SetHighlight(true);
             AudioManager.Instance?.Play("sfx_unit_pick");
 
@@ -300,11 +295,34 @@ namespace Chess.Presentation
         {
             if (unit == null) return;
             SpawnPickerCard(unit, inst);
-            SortPickerCards();
+            ApplyFilter();
         }
 
-        void SortPickerCards()
+        void OnFilterButtonClicked()
         {
+            if (filterPanel != null) filterPanel.Open();
+        }
+
+        void ApplyFilter()
+        {
+            var types = filterPanel != null ? filterPanel.GetActiveTypes() : new HashSet<string>();
+            var rarities = filterPanel != null ? filterPanel.GetActiveRarities() : new HashSet<UnitRarity>();
+            bool hasFilter = filterPanel != null && filterPanel.HasActiveFilters();
+
+            foreach (var cardObj in pickerCards)
+            {
+                if (cardObj == null) continue;
+                InventoryCard card = cardObj.GetComponent<InventoryCard>();
+                if (card == null || card.unitDefinition == null) { cardObj.SetActive(true); continue; }
+
+                bool typePass = types.Count == 0 || types.Contains(card.unitDefinition.GetTypeText());
+                bool rarityPass = rarities.Count == 0 || rarities.Contains(card.unitDefinition.rarity);
+                cardObj.SetActive(typePass && rarityPass);
+            }
+
+            if (filterButtonImage != null)
+                filterButtonImage.color = hasFilter ? new Color(0.4f, 0.7f, 1f) : Color.white;
+
             UnitSortUtility.SortPickerCards(pickerCards);
         }
 
@@ -368,8 +386,6 @@ namespace Chess.Presentation
             string json = PlayerPrefs.GetString(SAVE_KEY);
             SavedDeckData data = JsonUtility.FromJson<SavedDeckData>(json);
             if (data == null) return;
-
-            savedSkillNames = data.selectedSkillNames ?? new List<string>();
 
             if (data.slots != null && data.slots.Count > 0)
             {

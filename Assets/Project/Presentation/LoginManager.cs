@@ -17,8 +17,13 @@ namespace Chess.Presentation
         public Button guestButton;
         public TextMeshProUGUI statusText;
         public TextMeshProUGUI touchToStartText;
+        public GameObject divider;
+
+        [Header("전환 효과")]
+        public Image fadeOverlay;
 
         bool _waitingForTouch;
+        bool _buttonFlowStarted;
 
         void Start()
         {
@@ -62,12 +67,16 @@ namespace Chess.Presentation
         void ShowTouchToStart()
         {
             SetStatus("");
+            if (googleButton != null) googleButton.gameObject.SetActive(false);
+            if (appleButton  != null) appleButton.gameObject.SetActive(false);
+            if (guestButton  != null) guestButton.gameObject.SetActive(false);
+            if (divider      != null) divider.SetActive(false);
+            _waitingForTouch = true;
             if (touchToStartText != null)
             {
                 touchToStartText.gameObject.SetActive(true);
                 StartCoroutine(BlinkCoroutine());
             }
-            _waitingForTouch = true;
         }
 
         IEnumerator BlinkCoroutine()
@@ -77,18 +86,18 @@ namespace Chess.Presentation
             {
                 for (float t = 0; t < 1f; t += Time.deltaTime / 1.2f)
                 {
-                    color.a = Mathf.Lerp(1f, 0.1f, t);
+                    color.a = Mathf.Lerp(0.8f, 0.1f, t);
                     touchToStartText.color = color;
                     yield return null;
                 }
                 for (float t = 0; t < 1f; t += Time.deltaTime / 1.2f)
                 {
-                    color.a = Mathf.Lerp(0.1f, 1f, t);
+                    color.a = Mathf.Lerp(0.1f, 0.8f, t);
                     touchToStartText.color = color;
                     yield return null;
                 }
             }
-            color.a = 1f;
+            color.a = 0.8f;
             touchToStartText.color = color;
             touchToStartText.gameObject.SetActive(false);
         }
@@ -103,6 +112,7 @@ namespace Chess.Presentation
 
         void ShowButtons()
         {
+            _buttonFlowStarted = true;
             SetStatus("");
             SetButtonsActive(true);
 
@@ -147,7 +157,17 @@ namespace Chess.Presentation
                 fm.OnLoginSuccess -= OnLoginSuccess;
                 fm.OnLoginFailed  -= OnLoginFailed;
             }
-            ProceedToMain();
+
+            StartCoroutine(OnLoginSuccessMain());
+        }
+
+        IEnumerator OnLoginSuccessMain()
+        {
+            yield return null; // 메인 스레드 다음 프레임 보장
+            if (_buttonFlowStarted)
+                ProceedToMain();
+            else
+                ShowTouchToStart();
         }
 
         void OnLoginFailed(string error)
@@ -161,6 +181,29 @@ namespace Chess.Presentation
 
         void ProceedToMain()
         {
+            _waitingForTouch = false;
+            StartCoroutine(FadeAndLoad());
+        }
+
+        IEnumerator FadeAndLoad()
+        {
+            if (fadeOverlay != null)
+            {
+                fadeOverlay.gameObject.SetActive(true);
+                Color c = fadeOverlay.color;
+                c.a = 0f;
+                fadeOverlay.color = c;
+
+                float duration = 0.6f;
+                for (float t = 0f; t < duration; t += Time.deltaTime)
+                {
+                    c.a = t / duration;
+                    fadeOverlay.color = c;
+                    yield return null;
+                }
+                c.a = 1f;
+                fadeOverlay.color = c;
+            }
             SceneManager.LoadScene("MainMenu");
         }
 

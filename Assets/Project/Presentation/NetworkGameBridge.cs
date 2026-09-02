@@ -106,7 +106,7 @@ namespace Chess.Presentation
             if (senderPlayerID == LocalPlayerID) return;
 
             Debug.Log($"[Bridge] 원격 이동 수신: Player{senderPlayerID} unitId={unitId} → ({targetX},{targetY})");
-            FindObjectOfType<GameManager>()?.ExecuteRemoteMove(unitId, new Vector2Int(targetX, targetY));
+            FindAnyObjectByType<GameManager>()?.ExecuteRemoteMove(unitId, new Vector2Int(targetX, targetY));
         }
 
         /// <summary>패시브 스킬 타겟 선택을 전체 브로드캐스트. 자신이 보낸 건 이미 처리했으므로 스킵.</summary>
@@ -116,7 +116,7 @@ namespace Chess.Presentation
             if (senderPlayerID == LocalPlayerID) return;
 
             Debug.Log($"[Bridge] 패시브 타겟 수신: Player{senderPlayerID} unitId={targetUnitId}");
-            FindObjectOfType<GameManager>()?.ReceivePassiveTarget(targetUnitId);
+            FindAnyObjectByType<GameManager>()?.ReceivePassiveTarget(targetUnitId);
         }
 
         /// <summary>액티브 스킬 사용을 전체 브로드캐스트. 자신이 보낸 건 이미 로컬 실행되었으므로 스킵.</summary>
@@ -127,7 +127,7 @@ namespace Chess.Presentation
             if (senderPlayerID == LocalPlayerID) return;
 
             Debug.Log($"[Bridge] 액티브 스킬 수신: Player{senderPlayerID} skill={skillName} target={targetUnitId}");
-            FindObjectOfType<GameManager>()?.ReceiveActiveSkill(senderPlayerID, skillName, targetUnitId);
+            FindAnyObjectByType<GameManager>()?.ReceiveActiveSkill(senderPlayerID, skillName, targetUnitId);
         }
 
         /// <summary>항복을 전체 브로드캐스트. 상대방은 승리 처리.</summary>
@@ -135,7 +135,7 @@ namespace Chess.Presentation
         public void RPC_Surrender(int surrenderingPlayerID)
         {
             Debug.Log($"[Bridge] 항복 수신: Player{surrenderingPlayerID}");
-            FindObjectOfType<GameManager>()?.ReceiveSurrender(surrenderingPlayerID);
+            FindAnyObjectByType<GameManager>()?.ReceiveSurrender(surrenderingPlayerID);
         }
 
         // ─── 내부 ─────────────────────────────────────────────────────
@@ -146,7 +146,7 @@ namespace Chess.Presentation
             _gameStarted = true;
 
             Debug.Log("[Bridge] 양쪽 덱 준비 완료 → 게임 시작");
-            FindObjectOfType<GameManager>()?.OnDecksReady(_deck0, _deck1, LocalPlayerID);
+            FindAnyObjectByType<GameManager>()?.OnDecksReady(_deck0, _deck1, LocalPlayerID);
         }
 
         PlayerDeck BuildDeck(DeckNetworkData data)
