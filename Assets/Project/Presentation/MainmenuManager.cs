@@ -11,6 +11,7 @@ namespace Chess.Presentation
     {
         [Header("UI - 공통")]
         public TextMeshProUGUI currencyText;
+        public TextMeshProUGUI gemText;
 
         [Header("UI - 버튼")]
         public Button deckBuilderButton;
@@ -70,6 +71,10 @@ namespace Chess.Presentation
         [Header("매칭 대기 UI 참조")]
         public GameObject categoryButtonsParent;
 
+        [Header("샵")]
+        public Button shopButton;
+        public ShopPanel shopPanel;
+
 
         [Header("희귀도별 슬롯 프레임 스프라이트")]
         public Sprite frameCommon;
@@ -109,6 +114,9 @@ namespace Chess.Presentation
             if (settingsButton != null)
                 settingsButton.onClick.AddListener(() => settingsPanel?.Open());
 
+            if (shopButton != null)
+                shopButton.onClick.AddListener(() => shopPanel?.Open());
+
             if (dailyBonusButton != null)
                 dailyBonusButton.onClick.AddListener(OnDailyBonusClicked);
 
@@ -130,8 +138,11 @@ namespace Chess.Presentation
 
         void UpdateCurrency()
         {
-            if (PlayerInventory.Instance != null && currencyText != null)
+            if (PlayerInventory.Instance == null) return;
+            if (currencyText != null)
                 currencyText.text = PlayerInventory.Instance.currency.ToString("N0");
+            if (gemText != null)
+                gemText.text = PlayerInventory.Instance.gems.ToString("N0");
         }
 
         void UpdatePlayerCard()

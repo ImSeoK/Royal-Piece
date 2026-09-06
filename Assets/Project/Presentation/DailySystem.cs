@@ -10,6 +10,7 @@ namespace Chess.Presentation
         public static DailySystem Instance { get; private set; }
 
         public const int DAILY_BONUS_GOLD    = 100;
+        public const int DAILY_BONUS_GEMS    = 5;
         public const int MISSION_REWARD_GOLD = 150;
         public const int MISSION_WIN_TARGET  = 3;
 
@@ -57,7 +58,8 @@ namespace Chess.Presentation
             string today = Today();
             PlayerPrefs.SetString("daily_bonus_date", today);
             PlayerPrefs.Save();
-            PlayerInventory.Instance?.AddCurrency(DAILY_BONUS_GOLD); // AddCurrency → SaveInventory → Firestore 저장 포함
+            PlayerInventory.Instance?.AddCurrency(DAILY_BONUS_GOLD);
+            PlayerInventory.Instance?.AddGems(DAILY_BONUS_GEMS);
             FirebaseManager.Instance?.UpdateFields(new Dictionary<string, object>
             {
                 { "lastDailyBonus", today }

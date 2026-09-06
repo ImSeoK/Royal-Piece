@@ -8,6 +8,7 @@ namespace Chess.Core
     {
         public List<OwnedUnitInstance> ownedUnits = new List<OwnedUnitInstance>();
         public int currency = 1000;
+        public int gems = 0;
     }
 
     public class PlayerInventory : MonoBehaviour
@@ -19,6 +20,7 @@ namespace Chess.Core
 
         [Header("���")]
         public int currency = 1000;
+        public int gems = 0;
 
         [Header("��ü ���� �����ͺ��̽�")]
         public List<UnitDefinition> allUnitsDatabase = new List<UnitDefinition>();
@@ -64,6 +66,7 @@ namespace Chess.Core
             if (data == null) return; // 신규 유저 — 로컬 데이터 유지
 
             currency = data.currency;
+            gems     = data.gems;
             ownedUnitInstances.Clear();
             foreach (var entry in data.ownedUnits)
             {
@@ -172,6 +175,20 @@ namespace Chess.Core
             SaveInventory();
         }
 
+        public bool SpendGems(int amount)
+        {
+            if (gems < amount) { Debug.LogWarning("[Inventory] 로열 젬 부족!"); return false; }
+            gems -= amount;
+            SaveInventory();
+            return true;
+        }
+
+        public void AddGems(int amount)
+        {
+            gems += amount;
+            SaveInventory();
+        }
+
         public void SaveInventory()
         {
             SaveInventoryLocal();
@@ -183,6 +200,7 @@ namespace Chess.Core
             var data = new PlayerInventoryData
             {
                 currency   = currency,
+                gems       = gems,
                 ownedUnits = new List<OwnedUnitInstance>(ownedUnitInstances),
             };
             PlayerPrefs.SetString(SAVE_KEY, JsonUtility.ToJson(data));
@@ -203,6 +221,7 @@ namespace Chess.Core
             var fsData = new FirestorePlayerData
             {
                 currency    = currency,
+                gems        = gems,
                 rankPoints  = RankSystem.GetPoints(),
                 lastDailyBonus    = PlayerPrefs.GetString("daily_bonus_date",      ""),
                 dailyMissionDate  = PlayerPrefs.GetString("daily_mission_date",    ""),
@@ -225,6 +244,7 @@ namespace Chess.Core
             string json = PlayerPrefs.GetString(SAVE_KEY);
             PlayerInventoryData data = JsonUtility.FromJson<PlayerInventoryData>(json);
             currency = data.currency;
+            gems     = data.gems;
             ownedUnitInstances = data.ownedUnits ?? new List<OwnedUnitInstance>();
             Debug.Log("[Inventory] �ε� �Ϸ�: " + ownedUnitInstances.Count + "��, " + currency + " ���");
         }
@@ -236,6 +256,7 @@ namespace Chess.Core
             AddStarterUnit("WBishop", 2);
             AddStarterUnit("WQueen", 1);
             currency = 99999;
+            gems     = 9999;
             SaveInventory();
         }
 

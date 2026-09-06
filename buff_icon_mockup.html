@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Buff Icon 색상 목업</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1a2e; color: #eee; font-family: sans-serif; padding: 30px; }
+  h1 { margin-bottom: 8px; font-size: 18px; color: #aaa; }
+  .section-label { font-size: 13px; color: #666; margin-bottom: 20px; }
+  .scheme-grid { display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 50px; }
+
+  .scheme { background: #12122a; border: 1px solid #333; border-radius: 10px; padding: 20px; width: 320px; }
+  .scheme h2 { font-size: 14px; margin-bottom: 4px; color: #ccc; }
+  .scheme p { font-size: 11px; color: #666; margin-bottom: 16px; }
+
+  /* 유닛 시뮬레이션 */
+  .unit-area { background: #0d0d1a; border-radius: 6px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .unit-sprite { width: 60px; height: 60px; background: #334; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  .hp-bar-wrap { width: 90px; height: 8px; background: #222; border-radius: 2px; overflow: hidden; }
+  .hp-bar-fill { height: 100%; width: 65%; background: #4caf50; border-radius: 2px; }
+  .icon-row { display: flex; gap: 3px; width: 90px; }
+  .buff-icon { width: 22px; height: 22px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; position: relative; overflow: hidden; }
+  .buff-icon svg { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+
+<h1>Buff Icon 색상 목업</h1>
+<p class="section-label">배경 검정 + 흰 심볼 스프라이트에 색상 틴트를 적용한 경우 시뮬레이션</p>
+
+<div class="scheme-grid">
+
+  <!-- A: 현재 (원색 계열) -->
+  <div class="scheme">
+    <h2>A — 현재 (원색 형광)</h2>
+    <p>채도 높은 원색. 눈에 잘 띄지만 배경과 충돌감 있음</p>
+    <div class="unit-area">
+      <div class="unit-sprite">♟</div>
+      <div class="hp-bar-wrap"><div class="hp-bar-fill"></div></div>
+      <div class="icon-row">
+        <!-- buff: 형광 초록 -->
+        <div class="buff-icon" style="background:#1aff1a;">
+          <svg viewBox="0 0 16 16" fill="#000"><path d="M8 2l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 11l-3.7 2.5 1.4-4.3L2 6.5h4.5z"/></svg>
+        </div>
+        <!-- debuff: 형광 빨강 -->
+        <div class="buff-icon" style="background:#ff4d4d;">
+          <svg viewBox="0 0 16 16" fill="#000"><path d="M8 1v14M1 8h14" stroke="#000" stroke-width="2.5"/></svg>
+        </div>
+        <!-- shield: 밝은 파랑 -->
+        <div class="buff-icon" style="background:#4db8ff;">
+          <svg viewBox="0 0 16 16" fill="#000"><path d="M8 1L2 4v5c0 3.5 2.8 6 6 7 3.2-1 6-3.5 6-7V4z"/></svg>
+        </div>
+        <!-- dot: 형광 보라 -->
+        <div class="buff-icon" style="background:#b34dff;">
+          <svg viewBox="0 0 16 16" fill="#000"><circle cx="8" cy="8" r="5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: 파스텔 다크 -->
+  <div class="scheme">
+    <h2>B — 파스텔 다크 (채도 낮춤)</h2>
+    <p>배경 어두운 색 + 부드러운 채도. 인게임 분위기에 자연스럽게 녹아듦</p>
+    <div class="unit-area">
+      <div class="unit-sprite">♟</div>
+      <div class="hp-bar-wrap"><div class="hp-bar-fill"></div></div>
+      <div class="icon-row">
+        <div class="buff-icon" style="background:#2a4a2a;">
+          <svg viewBox="0 0 16 16" fill="#6fcf6f"><path d="M8 2l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 11l-3.7 2.5 1.4-4.3L2 6.5h4.5z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#4a2a2a;">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="#cf6f6f" stroke-width="2.5"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#1e2e42;">
+          <svg viewBox="0 0 16 16" fill="#6aafdf"><path d="M8 1L2 4v5c0 3.5 2.8 6 6 7 3.2-1 6-3.5 6-7V4z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#2e1e42;">
+          <svg viewBox="0 0 16 16" fill="#9f6fd0"><circle cx="8" cy="8" r="5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: 테두리 강조 -->
+  <div class="scheme">
+    <h2>C — 테두리 강조 + 어두운 배경</h2>
+    <p>배경 단일 어두운 색 + 테두리 색으로 구분. 심플하고 정보 전달 명확</p>
+    <div class="unit-area">
+      <div class="unit-sprite">♟</div>
+      <div class="hp-bar-wrap"><div class="hp-bar-fill"></div></div>
+      <div class="icon-row">
+        <div class="buff-icon" style="background:#1a1a2e; border: 2px solid #4caf50;">
+          <svg viewBox="0 0 16 16" fill="#4caf50"><path d="M8 2l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 11l-3.7 2.5 1.4-4.3L2 6.5h4.5z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#1a1a2e; border: 2px solid #e05555;">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="#e05555" stroke-width="2.5"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#1a1a2e; border: 2px solid #4a9ede;">
+          <svg viewBox="0 0 16 16" fill="#4a9ede"><path d="M8 1L2 4v5c0 3.5 2.8 6 6 7 3.2-1 6-3.5 6-7V4z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#1a1a2e; border: 2px solid #9b59d0;">
+          <svg viewBox="0 0 16 16" fill="#9b59d0"><circle cx="8" cy="8" r="5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: 골드/판타지 -->
+  <div class="scheme">
+    <h2>D — 판타지 골드 계열</h2>
+    <p>버프=골드, 디버프=다크레드, 상태이상=퍼플. 체스/판타지 분위기와 어울림</p>
+    <div class="unit-area">
+      <div class="unit-sprite">♟</div>
+      <div class="hp-bar-wrap"><div class="hp-bar-fill"></div></div>
+      <div class="icon-row">
+        <div class="buff-icon" style="background:#3a2a00;">
+          <svg viewBox="0 0 16 16" fill="#d4a017"><path d="M8 2l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 11l-3.7 2.5 1.4-4.3L2 6.5h4.5z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#3a0a0a;">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="#c0392b" stroke-width="2.5"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#0a1a3a;">
+          <svg viewBox="0 0 16 16" fill="#3498db"><path d="M8 1L2 4v5c0 3.5 2.8 6 6 7 3.2-1 6-3.5 6-7V4z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#200a3a;">
+          <svg viewBox="0 0 16 16" fill="#8e44ad"><circle cx="8" cy="8" r="5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E: 모노크롬 + 컬러 포인트 -->
+  <div class="scheme">
+    <h2>E — 모노크롬 + 컬러 포인트</h2>
+    <p>배경 회색 계열 통일, 심볼 색만 구분. 미니멀하고 세련됨</p>
+    <div class="unit-area">
+      <div class="unit-sprite">♟</div>
+      <div class="hp-bar-wrap"><div class="hp-bar-fill"></div></div>
+      <div class="icon-row">
+        <div class="buff-icon" style="background:#2a2a2a;">
+          <svg viewBox="0 0 16 16" fill="#80e080"><path d="M8 2l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 11l-3.7 2.5 1.4-4.3L2 6.5h4.5z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#2a2a2a;">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="#e08080" stroke-width="2.5"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#2a2a2a;">
+          <svg viewBox="0 0 16 16" fill="#80b8e0"><path d="M8 1L2 4v5c0 3.5 2.8 6 6 7 3.2-1 6-3.5 6-7V4z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:#2a2a2a;">
+          <svg viewBox="0 0 16 16" fill="#b080e0"><circle cx="8" cy="8" r="5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- F: 투명 배경 (스프라이트 개선 시) -->
+  <div class="scheme">
+    <h2>F — 투명 배경 (참고용)</h2>
+    <p>배경 없이 심볼만. 스프라이트를 투명 PNG로 교체하면 이렇게 됨</p>
+    <div class="unit-area">
+      <div class="unit-sprite">♟</div>
+      <div class="hp-bar-wrap"><div class="hp-bar-fill"></div></div>
+      <div class="icon-row">
+        <div class="buff-icon" style="background:transparent;">
+          <svg viewBox="0 0 16 16" fill="#4caf50"><path d="M8 2l1.5 4.5H14l-3.7 2.7 1.4 4.3L8 11l-3.7 2.5 1.4-4.3L2 6.5h4.5z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:transparent;">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="#e05555" stroke-width="2.5"/></svg>
+        </div>
+        <div class="buff-icon" style="background:transparent;">
+          <svg viewBox="0 0 16 16" fill="#4a9ede"><path d="M8 1L2 4v5c0 3.5 2.8 6 6 7 3.2-1 6-3.5 6-7V4z"/></svg>
+        </div>
+        <div class="buff-icon" style="background:transparent;">
+          <svg viewBox="0 0 16 16" fill="#9b59d0"><circle cx="8" cy="8" r="5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="font-size:12px; color:#444; margin-top:20px;">
+  아이콘 심볼 범례: ★ ATK 버프 &nbsp;|&nbsp; + DEF 디버프 &nbsp;|&nbsp; ▲ 방어막(Shield) &nbsp;|&nbsp; ● DoT
+</div>
+
+</body>
+</html>

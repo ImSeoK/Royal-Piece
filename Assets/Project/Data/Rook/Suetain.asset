@@ -20,7 +20,7 @@ MonoBehaviour:
   attackPower: 16
   speed: 7
   defense: 13
-  moveAttributes: 34
+  moveAttributes: 2
   isKing: 0
   isPawn: 0
   isQueen: 0

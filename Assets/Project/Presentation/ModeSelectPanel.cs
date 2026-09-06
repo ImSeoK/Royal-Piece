@@ -33,8 +33,6 @@ namespace Chess.Presentation
             if (aiButton       != null) aiButton.onClick.AddListener(()     => OnModeChosen(GameMode.AI));
             if (normalButton   != null) normalButton.onClick.AddListener(() => OnModeChosen(GameMode.Normal));
             if (rankedButton   != null) rankedButton.onClick.AddListener(() => OnModeChosen(GameMode.Ranked));
-
-            gameObject.SetActive(false);
         }
 
         /// <summary>패널 열기. modeCallback은 모드 확정 시 호출.</summary>

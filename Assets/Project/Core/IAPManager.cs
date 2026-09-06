@@ -11,18 +11,32 @@ namespace Chess.Core
         public static IAPManager Instance { get; private set; }
 
         // ─── 상품 ID (App Store Connect / Google Play Console과 정확히 일치해야 함) ───
-        public const string GOLD_SMALL   = "gold_small";
-        public const string GOLD_MEDIUM  = "gold_medium";
-        public const string GOLD_LARGE   = "gold_large";
-        public const string STARTER_PACK = "starter_pack";
+        public const string GEM_SMALL      = "gem_small";
+        public const string GEM_MEDIUM     = "gem_medium";
+        public const string GEM_LARGE      = "gem_large";
+        public const string STARTER_PACK   = "starter_pack";
 
-        public static int GetGoldAmount(string productId) => productId switch
+        public const string CURRENCY_SMALL   = "currency_small";
+        public const string CURRENCY_MEDIUM  = "currency_medium";
+        public const string CURRENCY_LARGE   = "currency_large";
+        public const string CURRENCY_STARTER = "currency_starter";
+
+        public static int GetGemAmount(string productId) => productId switch
         {
-            GOLD_SMALL   => 1000,
-            GOLD_MEDIUM  => 6000,
-            GOLD_LARGE   => 15000,
+            GEM_SMALL    => 1000,
+            GEM_MEDIUM   => 6000,
+            GEM_LARGE    => 15000,
             STARTER_PACK => 3000,
             _            => 0,
+        };
+
+        public static int GetCurrencyAmount(string productId) => productId switch
+        {
+            CURRENCY_SMALL   => 5000,
+            CURRENCY_MEDIUM  => 30000,
+            CURRENCY_LARGE   => 80000,
+            CURRENCY_STARTER => 15000,
+            _                => 0,
         };
 
         public bool IsInitialized { get; private set; }
@@ -58,10 +72,14 @@ namespace Chess.Core
 
             _productService.FetchProducts(new List<ProductDefinition>
             {
-                new ProductDefinition(GOLD_SMALL,   ProductType.Consumable),
-                new ProductDefinition(GOLD_MEDIUM,  ProductType.Consumable),
-                new ProductDefinition(GOLD_LARGE,   ProductType.Consumable),
-                new ProductDefinition(STARTER_PACK, ProductType.Consumable),
+                new ProductDefinition(GEM_SMALL,       ProductType.Consumable),
+                new ProductDefinition(GEM_MEDIUM,      ProductType.Consumable),
+                new ProductDefinition(GEM_LARGE,       ProductType.Consumable),
+                new ProductDefinition(STARTER_PACK,    ProductType.Consumable),
+                new ProductDefinition(CURRENCY_SMALL,   ProductType.Consumable),
+                new ProductDefinition(CURRENCY_MEDIUM,  ProductType.Consumable),
+                new ProductDefinition(CURRENCY_LARGE,   ProductType.Consumable),
+                new ProductDefinition(CURRENCY_STARTER, ProductType.Consumable),
             });
         }
 
@@ -115,9 +133,13 @@ namespace Chess.Core
             Debug.Log($"[IAP] 구매 대기: {productId}");
 
             // TODO: 출시 전 반드시 Cloud Function 영수증 검증으로 교체
-            int gold = GetGoldAmount(productId);
-            if (gold > 0 && PlayerInventory.Instance != null)
-                PlayerInventory.Instance.AddCurrency(gold);
+            int gems = GetGemAmount(productId);
+            if (gems > 0 && PlayerInventory.Instance != null)
+                PlayerInventory.Instance.AddGems(gems);
+
+            int currency = GetCurrencyAmount(productId);
+            if (currency > 0 && PlayerInventory.Instance != null)
+                PlayerInventory.Instance.AddCurrency(currency);
 
             _purchaseService.ConfirmPurchase(pendingOrder);
         }

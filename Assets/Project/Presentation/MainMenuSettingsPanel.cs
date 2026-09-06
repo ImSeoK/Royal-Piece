@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Chess.Presentation
 {
@@ -9,6 +10,7 @@ namespace Chess.Presentation
         public GameObject panel;
         public Button closeButton;
         public Button soundButton;
+        public Button logoutButton;
 
         [Header("사운드 서브패널")]
         public GameObject soundPanel;
@@ -23,9 +25,10 @@ namespace Chess.Presentation
             if (panel != null) panel.SetActive(false);
             if (soundPanel != null) soundPanel.SetActive(false);
 
-            if (closeButton != null) closeButton.onClick.AddListener(Close);
-            if (soundButton != null) soundButton.onClick.AddListener(OnSoundClicked);
+            if (closeButton  != null) closeButton.onClick.AddListener(Close);
+            if (soundButton  != null) soundButton.onClick.AddListener(OnSoundClicked);
             if (soundBackButton != null) soundBackButton.onClick.AddListener(OnSoundBack);
+            if (logoutButton != null) logoutButton.onClick.AddListener(OnLogoutClicked);
 
             if (bgmSlider != null) bgmSlider.onValueChanged.AddListener(OnBGMChanged);
             if (sfxSlider != null) sfxSlider.onValueChanged.AddListener(OnSFXChanged);
@@ -73,6 +76,12 @@ namespace Chess.Presentation
         {
             if (_initializing) return;
             AudioManager.Instance?.SetSFXVolume(value);
+        }
+
+        void OnLogoutClicked()
+        {
+            Chess.Core.FirebaseManager.Instance?.SignOut();
+            SceneManager.LoadScene("Login");
         }
     }
 }

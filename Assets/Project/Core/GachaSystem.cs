@@ -260,7 +260,7 @@ namespace Chess.Core
         {
             result = null;
 
-            if (!PlayerInventory.Instance.SpendCurrency(singlePullCost))
+            if (!PlayerInventory.Instance.SpendGems(singlePullCost))
                 return false;
 
             result = PullSingle();
@@ -275,7 +275,7 @@ namespace Chess.Core
         {
             results = null;
 
-            if (!PlayerInventory.Instance.SpendCurrency(tenPullCost))
+            if (!PlayerInventory.Instance.SpendGems(tenPullCost))
                 return false;
 
             results = PullTen();

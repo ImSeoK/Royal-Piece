@@ -18,6 +18,7 @@ namespace Chess.Core
     public class FirestorePlayerData
     {
         public int currency;
+        public int gems;
         public List<OwnedUnitEntry> ownedUnits = new List<OwnedUnitEntry>();
         public int rankPoints;
         public string lastDailyBonus    = "";
@@ -268,6 +269,7 @@ namespace Chess.Core
                 var dict = snapshot.ToDictionary();
 
                 if (dict.TryGetValue("currency",           out var cur))  data.currency           = Convert.ToInt32(cur);
+                if (dict.TryGetValue("gems",               out var gm))   data.gems               = Convert.ToInt32(gm);
                 if (dict.TryGetValue("rankPoints",         out var rp))   data.rankPoints         = Convert.ToInt32(rp);
                 if (dict.TryGetValue("lastDailyBonus",     out var ldb))  data.lastDailyBonus     = ldb?.ToString() ?? "";
                 if (dict.TryGetValue("dailyMissionDate",   out var dmd))  data.dailyMissionDate   = dmd?.ToString() ?? "";
@@ -329,6 +331,7 @@ namespace Chess.Core
                 var dict = new Dictionary<string, object>
                 {
                     { "ownedUnits",          unitList },
+                    { "gems",                data.gems },
                     { "lastDailyBonus",      data.lastDailyBonus ?? "" },
                     { "dailyMissionDate",    data.dailyMissionDate ?? "" },
                     { "dailyMissionWins",    data.dailyMissionWins },
@@ -414,5 +417,18 @@ namespace Chess.Core
         }
 
         public static string GetCachedUID() => PlayerPrefs.GetString("firebase_uid", "");
+
+        /// <summary>현재 세션 로그아웃. 로컬 캐시도 초기화.</summary>
+        public void SignOut()
+        {
+            _auth?.SignOut();
+            _cloneTestUID      = null;
+            CachedData         = null;
+            _dataLoadAttempted = false;
+            _firebaseReady     = false;
+            PlayerPrefs.DeleteKey("firebase_uid");
+            PlayerPrefs.Save();
+            Debug.Log("[Firebase] 로그아웃 완료");
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Chess.Presentation
     public class GachaManager : MonoBehaviour
     {
         [Header("HUD")]
-        public TextMeshProUGUI goldText;
+        public TextMeshProUGUI gemText;
         public TextMeshProUGUI pityText;
         public RectTransform pityBarFill;
         public Button backButton;
@@ -356,8 +356,8 @@ namespace Chess.Presentation
         {
             if (PlayerInventory.Instance == null) return;
 
-            if (goldText != null)
-                goldText.text = PlayerInventory.Instance.currency.ToString("N0");
+            if (gemText != null)
+                gemText.text = PlayerInventory.Instance.gems.ToString("N0");
 
             if (gachaSystem != null)
             {
@@ -375,10 +375,10 @@ namespace Chess.Presentation
 
                 if (singlePullButton != null)
                     singlePullButton.interactable =
-                        PlayerInventory.Instance.currency >= gachaSystem.singlePullCost;
+                        PlayerInventory.Instance.gems >= gachaSystem.singlePullCost;
                 if (tenPullButton != null)
                     tenPullButton.interactable =
-                        PlayerInventory.Instance.currency >= gachaSystem.tenPullCost;
+                        PlayerInventory.Instance.gems >= gachaSystem.tenPullCost;
             }
         }
 

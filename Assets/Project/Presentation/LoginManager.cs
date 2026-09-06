@@ -57,7 +57,7 @@ namespace Chess.Presentation
         void Update()
         {
             if (!_waitingForTouch) return;
-            if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            if (Input.GetMouseButtonUp(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
             {
                 _waitingForTouch = false;
                 ProceedToMain();
