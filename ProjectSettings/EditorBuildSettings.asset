@@ -18,14 +18,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Gacha.unity
     guid: 60d6d28e953f1284b96eeb7b89c0bc73
   - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
     path: Assets/Scenes/Inventory.unity
     guid: 5739f049065756b4b83fbd9289a8071d
   - enabled: 0
     path: Assets/Scenes/Enhance.unity
     guid: 758b0e6cdaca85147aee100ce2671f06
-  - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Photon/FusionMenu/FusionSampleMenu.unity
     guid: 74c3b330900a03442806ce69f1fe5955

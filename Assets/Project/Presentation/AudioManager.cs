@@ -10,8 +10,6 @@ namespace Chess.Presentation
 
         // BGM
         [Header("BGM")]
-        [SerializeField] private AudioSource bgmSourceA;
-        [SerializeField] private AudioSource bgmSourceB;
         [SerializeField] private float crossfadeDuration = 1f;
 
         public AudioClip lobbyBGM;
@@ -43,6 +41,8 @@ namespace Chess.Presentation
         private const string KEY_SFX    = "volume_sfx";
         private const string KEY_UI     = "volume_ui";
 
+        private AudioSource bgmSourceA;
+        private AudioSource bgmSourceB;
         private AudioSource _activeBGM;
         private Coroutine   _crossfadeRoutine;
 
@@ -56,11 +56,27 @@ namespace Chess.Presentation
             DontDestroyOnLoad(gameObject);
 
             LoadVolumeSettings();
+            InitBGMSources();
             InitSFXPool();
             database?.Initialize();
 
             _activeBGM = bgmSourceA;
             SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void InitBGMSources()
+        {
+            var goA = new GameObject("BGM_A");
+            goA.transform.SetParent(transform);
+            bgmSourceA             = goA.AddComponent<AudioSource>();
+            bgmSourceA.playOnAwake = false;
+            bgmSourceA.loop        = true;
+
+            var goB = new GameObject("BGM_B");
+            goB.transform.SetParent(transform);
+            bgmSourceB             = goB.AddComponent<AudioSource>();
+            bgmSourceB.playOnAwake = false;
+            bgmSourceB.loop        = true;
         }
 
         private void InitSFXPool()

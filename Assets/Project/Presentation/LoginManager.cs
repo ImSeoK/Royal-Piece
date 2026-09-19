@@ -27,10 +27,6 @@ namespace Chess.Presentation
 
         void Start()
         {
-            // Apple 버튼은 iOS에서만 표시
-            if (appleButton != null)
-                appleButton.gameObject.SetActive(AppleAuthManager.IsCurrentPlatformSupported);
-
             SetButtonsActive(false);
             SetStatus("연결 중...");
 
