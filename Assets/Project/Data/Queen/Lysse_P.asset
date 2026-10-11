@@ -22,7 +22,7 @@ MonoBehaviour:
   effectType: 2
   power: 12
   buffStatType: 1
-  buffDuration: 1
+  buffDuration: 2
   auraRange: 0
   hpConditionMin: 0
   hpConditionMax: 100
@@ -31,6 +31,13 @@ MonoBehaviour:
   isOneTimeUse: 0
   damageMultiplier: 1
   requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
-  castAnimation: {fileID: 0}
+  hitEffectPrefab: {fileID: 3610639634387760082, guid: 5cb0c89e6f7ce1542b07452a322be8ec, type: 3}
+  castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
+  castSoundId: 
+  hitSoundId: 

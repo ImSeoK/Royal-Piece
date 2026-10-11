@@ -1,0 +1,471 @@
+fileFormatVersion: 2
+guid: 7dcee8abb591afb47b3e3b5935f9670c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7256551225720150646
+    second: "JS(\uC561\uD2F0\uBE0C)_0"
+  - first:
+      213: -3666928104986089695
+    second: "JS(\uC561\uD2F0\uBE0C)_1"
+  - first:
+      213: 6029325734110397300
+    second: "JS(\uC561\uD2F0\uBE0C)_2"
+  - first:
+      213: -4663027346904673006
+    second: "JS(\uC561\uD2F0\uBE0C)_3"
+  - first:
+      213: -5027219956710386407
+    second: "JS(\uC561\uD2F0\uBE0C)_4"
+  - first:
+      213: 7258811777194933744
+    second: "JS(\uC561\uD2F0\uBE0C)_5"
+  - first:
+      213: -419930482182721355
+    second: "JS(\uC561\uD2F0\uBE0C)_6"
+  - first:
+      213: -1920029050490165686
+    second: "JS(\uC561\uD2F0\uBE0C)_7"
+  - first:
+      213: -7383554422318185062
+    second: "JS(\uC561\uD2F0\uBE0C)_8"
+  - first:
+      213: -4817535234956208687
+    second: "JS(\uC561\uD2F0\uBE0C)_9"
+  - first:
+      213: 7874676417835669635
+    second: "JS(\uC561\uD2F0\uBE0C)_10"
+  - first:
+      213: -2620979945149212998
+    second: "JS(\uC561\uD2F0\uBE0C)_11"
+  - first:
+      213: 8236899535426878159
+    second: "JS(\uC561\uD2F0\uBE0C)_12"
+  - first:
+      213: 1932706139199345669
+    second: "JS(\uC561\uD2F0\uBE0C)_13"
+  - first:
+      213: 6300431445478331778
+    second: "JS(\uC561\uD2F0\uBE0C)_14"
+  - first:
+      213: -8225007198695560436
+    second: "JS(\uC561\uD2F0\uBE0C)_15"
+  - first:
+      213: 3730414708150079612
+    second: "JS(\uC561\uD2F0\uBE0C)_16"
+  - first:
+      213: 877018077866334261
+    second: "JS(\uC561\uD2F0\uBE0C)_17"
+  - first:
+      213: 5102574960427609791
+    second: "JS(\uC561\uD2F0\uBE0C)_18"
+  - first:
+      213: -1418634806984424791
+    second: "JS(\uC561\uD2F0\uBE0C)_19"
+  - first:
+      213: 5721729924436577518
+    second: "JS(\uC561\uD2F0\uBE0C)_20"
+  - first:
+      213: -4213827214644332262
+    second: "JS(\uC561\uD2F0\uBE0C)_21"
+  - first:
+      213: -3934028516028808511
+    second: "JS(\uC561\uD2F0\uBE0C)_22"
+  - first:
+      213: 435031391218192349
+    second: "JS(\uC561\uD2F0\uBE0C)_23"
+  - first:
+      213: -504783450790998649
+    second: "JS(\uC561\uD2F0\uBE0C)_24"
+  - first:
+      213: 3275086519274836039
+    second: "JS(\uC561\uD2F0\uBE0C)_25"
+  - first:
+      213: -7472807405595307701
+    second: "JS(\uC561\uD2F0\uBE0C)_26"
+  - first:
+      213: -7740837108850128625
+    second: "JS(\uC561\uD2F0\uBE0C)_27"
+  - first:
+      213: -493456838053946499
+    second: "JS(\uC561\uD2F0\uBE0C)_28"
+  - first:
+      213: -5334299621635788816
+    second: "JS(\uC561\uD2F0\uBE0C)_29"
+  - first:
+      213: 8843916688650650314
+    second: "JS(\uC561\uD2F0\uBE0C)_30"
+  - first:
+      213: 1256436515519209653
+    second: "JS(\uC561\uD2F0\uBE0C)_31"
+  - first:
+      213: -6978637530491648097
+    second: "JS(\uC561\uD2F0\uBE0C)_32"
+  - first:
+      213: 7838344449331254365
+    second: "JS(\uC561\uD2F0\uBE0C)_33"
+  - first:
+      213: 1805871315910569495
+    second: "JS(\uC561\uD2F0\uBE0C)_34"
+  - first:
+      213: -2937949124056575628
+    second: "JS(\uC561\uD2F0\uBE0C)_35"
+  - first:
+      213: 7658468005761121120
+    second: "JS(\uC561\uD2F0\uBE0C)_36"
+  - first:
+      213: -6587572424233162140
+    second: "JS(\uC561\uD2F0\uBE0C)_37"
+  - first:
+      213: 7510705883108873762
+    second: "JS(\uC561\uD2F0\uBE0C)_38"
+  - first:
+      213: 8838525396197414667
+    second: "JS(\uC561\uD2F0\uBE0C)_39"
+  - first:
+      213: -6050885321302512524
+    second: "JS(\uC561\uD2F0\uBE0C)_40"
+  - first:
+      213: 884951221626903055
+    second: "JS(\uC561\uD2F0\uBE0C)_41"
+  - first:
+      213: 3273943152835222811
+    second: "JS(\uC561\uD2F0\uBE0C)_42"
+  - first:
+      213: 7439376565121968827
+    second: "JS(\uC561\uD2F0\uBE0C)_43"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8566886b1d8b4b90800000000000000
+      internalID: -7256551225720150646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_1"
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 127686511547c1dc0800000000000000
+      internalID: -3666928104986089695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_2"
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47385c87fc77ca350800000000000000
+      internalID: 6029325734110397300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_3"
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21590d17559994fb0800000000000000
+      internalID: -4663027346904673006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_4"
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 915d580b51abb3ab0800000000000000
+      internalID: -5027219956710386407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_5"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fd302f3ada7cb460800000000000000
+      internalID: 7258811777194933744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_6"
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b0f32b837b1c2af0800000000000000
+      internalID: -419930482182721355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_7"
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a466a1750cfaa55e0800000000000000
+      internalID: -1920029050490165686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "JS(\uC561\uD2F0\uBE0C)_8"
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a95c5f56f58588990800000000000000
+      internalID: -7383554422318185062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":100.0,"y":100.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      "JS(\uC561\uD2F0\uBE0C)_0": -7256551225720150646
+      "JS(\uC561\uD2F0\uBE0C)_1": -3666928104986089695
+      "JS(\uC561\uD2F0\uBE0C)_2": 6029325734110397300
+      "JS(\uC561\uD2F0\uBE0C)_3": -4663027346904673006
+      "JS(\uC561\uD2F0\uBE0C)_4": -5027219956710386407
+      "JS(\uC561\uD2F0\uBE0C)_5": 7258811777194933744
+      "JS(\uC561\uD2F0\uBE0C)_6": -419930482182721355
+      "JS(\uC561\uD2F0\uBE0C)_7": -1920029050490165686
+      "JS(\uC561\uD2F0\uBE0C)_8": -7383554422318185062
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

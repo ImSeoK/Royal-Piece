@@ -18,7 +18,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   skillType: 1
   trigger: 1
-  targetType: 0
+  targetType: 1
   effectType: 0
   power: 0
   buffStatType: 1
@@ -31,6 +31,13 @@ MonoBehaviour:
   isOneTimeUse: 1
   damageMultiplier: 2
   requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
-  castAnimation: {fileID: 0}
+  hitEffectPrefab: {fileID: 3610639634387760082, guid: 9ca08fe1218dfff499233b1dd9673034, type: 3}
+  castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
+  castSoundId: 
+  hitSoundId: 

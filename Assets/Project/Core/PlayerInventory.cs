@@ -25,6 +25,9 @@ namespace Chess.Core
         [Header("��ü ���� �����ͺ��̽�")]
         public List<UnitDefinition> allUnitsDatabase = new List<UnitDefinition>();
 
+        [Header("Debug")]
+        public bool ignoreFirestore = false;
+
         public List<UnitDefinition> ownedUnits
         {
             get
@@ -64,6 +67,7 @@ namespace Chess.Core
         void ApplyFromFirestore(FirestorePlayerData data)
         {
             if (data == null) return; // 신규 유저 — 로컬 데이터 유지
+            if (ignoreFirestore) return; // Debug: Firestore 덮어쓰기 무시
 
             currency = data.currency;
             gems     = data.gems;
@@ -255,6 +259,21 @@ namespace Chess.Core
             AddStarterUnit("WKnight", 2);
             AddStarterUnit("WBishop", 2);
             AddStarterUnit("WQueen", 1);
+            AddStarterUnit("다윈", 1);
+            AddStarterUnit("폴", 1);
+            AddStarterUnit("라크", 1);
+            AddStarterUnit("랍", 1);
+            AddStarterUnit("카토", 1);
+            AddStarterUnit("토드라", 1);
+            AddStarterUnit("자르칸", 1);
+            AddStarterUnit("돔", 1);
+            AddStarterUnit("벨크라스", 1);
+            AddStarterUnit("글래시온", 1);
+            AddStarterUnit("제피로스", 1);
+            AddStarterUnit("JS", 1);
+            AddStarterUnit("리세", 1);
+            AddStarterUnit("레나", 1);
+            AddStarterUnit("엘로비아", 1);
             currency = 99999;
             gems     = 9999;
             SaveInventory();

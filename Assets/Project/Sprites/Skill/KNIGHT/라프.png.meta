@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1daba40004a043c4daae1b9799932472
+guid: 3e8cb4ed57600c140abe8956e302e454
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -14,6 +14,75 @@ TextureImporter:
   - first:
       213: 9084441281881986309
     second: "\uB77C\uD504_3"
+  - first:
+      213: 249286170730226246
+    second: "\uB77C\uD504_4"
+  - first:
+      213: -233999984129841640
+    second: "\uB77C\uD504_5"
+  - first:
+      213: 6197034837853120181
+    second: "\uB77C\uD504_6"
+  - first:
+      213: -7376279510455152657
+    second: "\uB77C\uD504_7"
+  - first:
+      213: 8606596609619231523
+    second: "\uB77C\uD504_8"
+  - first:
+      213: 8165144978297948415
+    second: "\uB77C\uD504_9"
+  - first:
+      213: 8506032029159322769
+    second: "\uB77C\uD504_10"
+  - first:
+      213: -3424302965434308914
+    second: "\uB77C\uD504_11"
+  - first:
+      213: 4505631830848789599
+    second: "\uB77C\uD504_12"
+  - first:
+      213: -8274665114199170349
+    second: "\uB77C\uD504_13"
+  - first:
+      213: -4038888189071632126
+    second: "\uB77C\uD504_14"
+  - first:
+      213: -2946708773943282355
+    second: "\uB77C\uD504_15"
+  - first:
+      213: -5779565546578609092
+    second: "\uB77C\uD504_16"
+  - first:
+      213: 613254346600982450
+    second: "\uB77C\uD504_17"
+  - first:
+      213: -3029776707861936751
+    second: "\uB77C\uD504_18"
+  - first:
+      213: -1591072992857919714
+    second: "\uB77C\uD504_19"
+  - first:
+      213: 3120922395900580059
+    second: "\uB77C\uD504_20"
+  - first:
+      213: -4821771531027328772
+    second: "\uB77C\uD504_21"
+  - first:
+      213: -5317504047423979892
+    second: "\uB77C\uD504_22"
+  - first:
+      213: -4434934369547014350
+    second: "\uB77C\uD504_23"
+  - first:
+      213: 2321480038820630081
+    second: "\uB77C\uD504_24"
+  - first:
+      213: 2987347586999119198
+    second: "\uB77C\uD504_25"
+  - first:
+      213: -7593118143557058469
+    second: "\uB77C\uD504_26"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -127,8 +196,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 500
-        height: 500
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,10 +216,10 @@ TextureImporter:
       name: "\uB77C\uD504_1"
       rect:
         serializedVersion: 2
-        x: 500
+        x: 100
         y: 0
-        width: 500
-        height: 500
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,10 +238,10 @@ TextureImporter:
       name: "\uB77C\uD504_2"
       rect:
         serializedVersion: 2
-        x: 1000
+        x: 200
         y: 0
-        width: 500
-        height: 500
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,10 +260,10 @@ TextureImporter:
       name: "\uB77C\uD504_3"
       rect:
         serializedVersion: 2
-        x: 1500
+        x: 300
         y: 0
-        width: 500
-        height: 500
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -209,11 +278,77 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: "\uB77C\uD504_4"
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 642eac59374a57300800000000000000
+      internalID: 249286170730226246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uB77C\uD504_5"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8166e74114aa0ccf0800000000000000
+      internalID: -233999984129841640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uB77C\uD504_6"
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b6a4fa0a5a400650800000000000000
+      internalID: 6197034837853120181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 1212af41a9e5a3248a15ab82984959a4
+    spriteID: aa07979dd22a3654088bebf1bd8dd4ae
     internalID: 0
     vertices: []
     indices: 
@@ -223,12 +358,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":500.0,"y":500.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":100.0,"y":100.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       "\uB77C\uD504_0": 3700454668052055471
       "\uB77C\uD504_1": -296162315224538546
       "\uB77C\uD504_2": -3329236816146935759
       "\uB77C\uD504_3": 9084441281881986309
+      "\uB77C\uD504_4": 249286170730226246
+      "\uB77C\uD504_5": -233999984129841640
+      "\uB77C\uD504_6": 6197034837853120181
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

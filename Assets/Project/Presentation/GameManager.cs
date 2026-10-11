@@ -813,6 +813,22 @@ namespace Chess.Presentation
                 foreach (var skill in unit.definition.passiveSkills)
                 {
                     if (skill == null || skill.skillType != SkillType.Passive) continue;
+
+                    // Always + Buff 스킬: OnTurnStart 시 VFX만 재생 (효과는 stat 계산에서 상시 적용)
+                    if (trigger == SkillTrigger.OnTurnStart && skill.trigger == SkillTrigger.Always
+                        && (skill.effectType == SkillEffectType.Buff || skill.effectType == SkillEffectType.FixedBuff))
+                    {
+                        if (skill.castEffectPrefab != null && unitViews.ContainsKey(unit.id))
+                            yield return StartCoroutine(combatAnimator.PlaySkillEffect(skill.castEffectPrefab, unitViews[unit.id].transform.position));
+                        if (skill.hitEffectPrefab != null && unitViews.ContainsKey(unit.id))
+                        {
+                            StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[unit.id].transform.position));
+                            anyHitEffect = true;
+                        }
+                        anyFired = true;
+                        continue;
+                    }
+
                     if (skill.trigger != trigger) continue;
 
                     // 턴당 1회 제한 (OnTurnStart/OnTurnEnd는 이미 구조상 1회이므로 제외)
@@ -821,6 +837,24 @@ namespace Chess.Presentation
                         var key = (unit.id, skill.skillName);
                         if (_passivesFiredThisTurn.Contains(key)) continue;
                         _passivesFiredThisTurn.Add(key);
+                    }
+
+                    // isOneTimeUse 스킬은 ApplyOneTimePassive에서 처리 — 여기서 중복 실행 방지
+                    if (skill.isOneTimeUse)
+                    {
+                        if (unit.firstAttackUsed) continue; // 이미 발동됨 — VFX 스킵
+                        if (skill.castEffectPrefab != null && unitViews.ContainsKey(unit.id))
+                            yield return StartCoroutine(combatAnimator.PlaySkillEffect(skill.castEffectPrefab, unitViews[unit.id].transform.position));
+                        if (skill.hitEffectPrefab != null)
+                        {
+                            var firstTarget = AttackResolver.GetAttackTargets(unit, board).FirstOrDefault();
+                            if (firstTarget != null && unitViews.ContainsKey(firstTarget.id))
+                            {
+                                StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[firstTarget.id].transform.position));
+                                anyHitEffect = true;
+                            }
+                        }
+                        continue;
                     }
 
                     if (trigger == SkillTrigger.OnAttack &&
@@ -921,6 +955,8 @@ namespace Chess.Presentation
                     var target = validTargets[UnityEngine.Random.Range(0, validTargets.Count)];
                     SkillExecutor.ExecuteActiveSingle(skill, target, board);
                     _moveLogs.Add(new MoveLog { turn = _turnCount++, playerID = caster.ownerID, eventType = "passive_target", skillName = skill.skillName, targetUnitId = target.id });
+                    if (skill.castEffectPrefab != null && unitViews.ContainsKey(caster.id))
+                        StartCoroutine(combatAnimator.PlaySkillEffect(skill.castEffectPrefab, unitViews[caster.id].transform.position));
                     if (skill.hitEffectPrefab != null && unitViews.ContainsKey(target.id))
                         StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[target.id].transform.position));
                     foreach (var view in unitViews.Values)
@@ -942,6 +978,8 @@ namespace Chess.Presentation
                 {
                     SkillExecutor.ExecuteActiveSingle(skill, passiveSkillSelectedTarget, board);
                     _moveLogs.Add(new MoveLog { turn = _turnCount++, playerID = caster.ownerID, eventType = "passive_target", skillName = skill.skillName, targetUnitId = passiveSkillSelectedTarget.id });
+                    if (skill.castEffectPrefab != null && unitViews.ContainsKey(caster.id))
+                        StartCoroutine(combatAnimator.PlaySkillEffect(skill.castEffectPrefab, unitViews[caster.id].transform.position));
                     if (skill.hitEffectPrefab != null && unitViews.ContainsKey(passiveSkillSelectedTarget.id))
                         StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[passiveSkillSelectedTarget.id].transform.position));
                     foreach (var view in unitViews.Values)
@@ -966,6 +1004,8 @@ namespace Chess.Presentation
 
                 SkillExecutor.ExecuteActiveSingle(skill, passiveSkillSelectedTarget, board);
                 _moveLogs.Add(new MoveLog { turn = _turnCount++, playerID = caster.ownerID, eventType = "passive_target", skillName = skill.skillName, targetUnitId = passiveSkillSelectedTarget.id });
+                if (skill.castEffectPrefab != null && unitViews.ContainsKey(caster.id))
+                    StartCoroutine(combatAnimator.PlaySkillEffect(skill.castEffectPrefab, unitViews[caster.id].transform.position));
                 if (skill.hitEffectPrefab != null && unitViews.ContainsKey(passiveSkillSelectedTarget.id))
                     StartCoroutine(combatAnimator.PlaySkillEffect(skill.hitEffectPrefab, unitViews[passiveSkillSelectedTarget.id].transform.position));
 

@@ -27,7 +27,8 @@ MonoBehaviour:
   rarity: 1
   gachaWeight: 1
   activeSkill: {fileID: 0}
-  passiveSkills: []
+  passiveSkills:
+  - {fileID: 11400000, guid: df734dd15499bde468392c7fbbe7964f, type: 2}
   hpEnhance: 0
   atkEnhance: 0
   spdEnhance: 0

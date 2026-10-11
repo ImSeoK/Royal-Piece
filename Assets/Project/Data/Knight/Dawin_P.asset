@@ -36,7 +36,7 @@ MonoBehaviour:
   secondaryBuffStatType: 1
   secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 3610639634387760082, guid: 3198602cfb39e344bb411cef5afa65bd, type: 3}
+  hitEffectPrefab: {fileID: 3610639634387760082, guid: c0d134d505bcab24c8e485ac8ced005b, type: 3}
   castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
   castSoundId: 
   hitSoundId: 

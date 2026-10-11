@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9942994e3e8aac64fb150836b1198dc3, type: 3}
+  m_Name: JS_P
+  m_EditorClassIdentifier: Assembly-CSharp::Chess.Core.SkillDefinition
+  skillName: "\uBCA0\uD14C\uB791\uC758 \uBCF8\uB2A5"
+  description: "\uD53C\uACA9 \uC2DC \uBC1B\uB294 \uB370\uBBF8\uC9C0\uB97C 1\uD134\uAC04
+    3 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4."
+  icon: {fileID: 0}
+  skillType: 1
+  trigger: 2
+  targetType: 0
+  effectType: 3
+  power: 3
+  buffStatType: 4
+  buffDuration: 1
+  auraRange: 0
+  hpConditionMin: 0
+  hpConditionMax: 100
+  selectRandomTarget: 0
+  maxUseCount: 2
+  isOneTimeUse: 0
+  damageMultiplier: 1
+  requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
+  castEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 0}
+  castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
+  castSoundId:
+  hitSoundId:

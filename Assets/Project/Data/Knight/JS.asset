@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
+  m_Name: JS
+  m_EditorClassIdentifier: Assembly-CSharp::Chess.Core.UnitDefinition
+  unitName: JS
+  icon: {fileID: -1963845882603784272, guid: 11731e84d95afe842bad79306ee9f46d, type: 3}
+  enhancedIcon: {fileID: 0}
+  typeSymbol: {fileID: -8558165415832902529, guid: dda7e5dda9e9ff3409389dd4357806bd, type: 3}
+  maxHP: 110
+  attackPower: 40
+  speed: 22
+  defense: 5
+  moveAttributes: 8
+  isKing: 0
+  isPawn: 0
+  isQueen: 0
+  rarity: 2
+  gachaWeight: 1
+  activeSkill: {fileID: 11400000, guid: 1e37d079877b78345b7d46c1c163fdd7, type: 2}
+  passiveSkills:
+  - {fileID: 11400000, guid: 6ee135614c0a42045b1881688a7353e7, type: 2}
+  hpEnhance: 8.8
+  atkEnhance: 3.2
+  spdEnhance: 1.8
+  defEnhance: 0.4
+  displayScale: 0.85
+  enhanceGoldCost: 500
