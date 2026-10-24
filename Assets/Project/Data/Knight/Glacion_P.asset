@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: "\uB3D9\uACB0\uC758 \uB0C9\uAE30"
   description: "\uACF5\uACA9 \uB300\uC0C1\uC758 SPD\uB97C 2 \uD134\uAC045 \uAC10\uC18C\uC2DC\uD0A8\uB2E4. "
-  icon: {fileID: 0}
+  icon: {fileID: 72813933568939049, guid: 08dd70600bd69104781c09ba151821e6, type: 3}
   skillType: 1
   trigger: 1
   targetType: 1

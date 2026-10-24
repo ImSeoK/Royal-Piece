@@ -185,6 +185,10 @@ namespace Chess.Simulation
             }
         }
 
+        // DamageReceived는 양수=취약/음수=저항이므로 Buff(보호)는 음수, Debuff(취약)는 양수로 저장
+        private static int DmgRecvAmount(StatType stat, int amount)
+            => stat == StatType.DamageReceived ? -amount : amount;
+
         private static SkillEffect CreateSecondaryEffect(SkillDefinition skill)
         {
             switch (skill.secondaryEffectType)
@@ -194,9 +198,9 @@ namespace Chess.Simulation
                 case SkillEffectType.Heal:
                     return new HealEffect(skill.secondaryPower);
                 case SkillEffectType.Buff:
-                    return new BuffEffect(skill.secondaryBuffStatType, skill.secondaryPower, skill.secondaryBuffDuration);
+                    return new BuffEffect(skill.secondaryBuffStatType, DmgRecvAmount(skill.secondaryBuffStatType, skill.secondaryPower), skill.secondaryBuffDuration);
                 case SkillEffectType.Debuff:
-                    return new BuffEffect(skill.secondaryBuffStatType, -skill.secondaryPower, skill.secondaryBuffDuration);
+                    return new BuffEffect(skill.secondaryBuffStatType, DmgRecvAmount(skill.secondaryBuffStatType, -skill.secondaryPower), skill.secondaryBuffDuration);
                 case SkillEffectType.LockMovement:
                     return new BuffEffect(StatType.MovementLock, 0, skill.secondaryBuffDuration);
                 case SkillEffectType.DamageOverTime:
@@ -217,10 +221,10 @@ namespace Chess.Simulation
                     return new HealEffect(skill.power);
 
                 case SkillEffectType.Buff:
-                    return new BuffEffect(skill.buffStatType, skill.power, skill.buffDuration);
+                    return new BuffEffect(skill.buffStatType, DmgRecvAmount(skill.buffStatType, skill.power), skill.buffDuration);
 
                 case SkillEffectType.Debuff:
-                    return new BuffEffect(skill.buffStatType, -skill.power, skill.buffDuration);
+                    return new BuffEffect(skill.buffStatType, DmgRecvAmount(skill.buffStatType, -skill.power), skill.buffDuration);
 
                 case SkillEffectType.Move:
                     return new MoveEffect(skill.power);

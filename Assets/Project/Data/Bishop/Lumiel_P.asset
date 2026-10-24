@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: "\uBE5B\uC758 \uC790\uBE44"
   description: "\uD53C\uACA9 \uC2DC \uC790\uC2E0\uC758 HP\uB97C 15 \uD68C\uBCF5\uD55C\uB2E4. "
-  icon: {fileID: 0}
+  icon: {fileID: -6569288547709111822, guid: 20fe00199630b2446bd2b928184dc970, type: 3}
   skillType: 1
   trigger: 2
   targetType: 0
@@ -30,6 +30,13 @@ MonoBehaviour:
   isOneTimeUse: 0
   damageMultiplier: 1
   requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
-  castAnimation: {fileID: 0}
+  hitEffectPrefab: {fileID: 3610639634387760082, guid: 7d27f6257ca33074c9f5a98d2f51cba4, type: 3}
+  castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
+  castSoundId: 
+  hitSoundId: 

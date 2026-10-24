@@ -1798,8 +1798,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1df917e86a4bd6a48b165d4555408a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmSourceA: {fileID: 1294035924}
-  bgmSourceB: {fileID: 1294035923}
   crossfadeDuration: 1
   lobbyBGM: {fileID: 8300000, guid: 655598d4736aa3b4bb7e0cae247b3bec, type: 3}
   gameBGM: {fileID: 0}
@@ -3307,6 +3305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ownedUnitInstances: []
   currency: 1000
+  gems: 10000
   allUnitsDatabase:
   - {fileID: 11400000, guid: 0ec27e33927227c45be22b7624a28eed, type: 2}
   - {fileID: 11400000, guid: f4b123cf7b5c0804a893bceab635b2cc, type: 2}
@@ -3345,6 +3344,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5b9a42950f74d4c44a6afa6aa35bd32d, type: 2}
   - {fileID: 11400000, guid: 5eccacf4340202349b4e9ddbc50b6129, type: 2}
   - {fileID: 11400000, guid: 822dd06ab00017843bddfe578a74d523, type: 2}
+  - {fileID: 11400000, guid: 7e5f3e71e36d1e04bb6d4ffe04e64e66, type: 2}
   - {fileID: 11400000, guid: 7c10b7623eaaee54a9faa9f6fead2cd1, type: 2}
   - {fileID: 11400000, guid: 68317b5a7dab7fa45a39bebab54e99d0, type: 2}
   - {fileID: 11400000, guid: 9819c947a2fa9724782aeee9831a5ae1, type: 2}
@@ -3357,6 +3357,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30ead36c97b25ee4d9d26f3d4b4e809b, type: 2}
   - {fileID: 11400000, guid: 69ec302fe01f2534f86a3b4e40bd5d1c, type: 2}
   - {fileID: 11400000, guid: 6600aba7b59ec3444804f3728a8869c1, type: 2}
+  ignoreFirestore: 1
 --- !u!114 &2075702076
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,0 +1,406 @@
+fileFormatVersion: 2
+guid: 8639a082de4b51e49844f87f2e57c452
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2923964158585471381
+    second: "\uC140\uB77C_0"
+  - first:
+      213: 6597525059167300726
+    second: "\uC140\uB77C_1"
+  - first:
+      213: -2890988727568268239
+    second: "\uC140\uB77C_2"
+  - first:
+      213: -3901637856583358522
+    second: "\uC140\uB77C_3"
+  - first:
+      213: -6647650449937501208
+    second: "\uC140\uB77C_4"
+  - first:
+      213: 6038927348709544017
+    second: "\uC140\uB77C_5"
+  - first:
+      213: 1231262886050591456
+    second: "\uC140\uB77C_6"
+  - first:
+      213: -3735707655728760585
+    second: "\uC140\uB77C_7"
+  - first:
+      213: -4735257104513111841
+    second: "\uC140\uB77C_8"
+  - first:
+      213: 5397155872350568711
+    second: "\uC140\uB77C_9"
+  - first:
+      213: -4558663473919952826
+    second: "\uC140\uB77C_10"
+  - first:
+      213: 401685950928953133
+    second: "\uC140\uB77C_11"
+  - first:
+      213: 8611576897365723331
+    second: "\uC140\uB77C_12"
+  - first:
+      213: -2195819921727608881
+    second: "\uC140\uB77C_13"
+  - first:
+      213: 4470506922049700243
+    second: "\uC140\uB77C_14"
+  - first:
+      213: -6584958301901383159
+    second: "\uC140\uB77C_15"
+  - first:
+      213: -6182042269238061435
+    second: "\uC140\uB77C_16"
+  - first:
+      213: -7245613883143692091
+    second: "\uC140\uB77C_17"
+  - first:
+      213: -542143424421769925
+    second: "\uC140\uB77C_18"
+  - first:
+      213: 2906676597514641496
+    second: "\uC140\uB77C_19"
+  - first:
+      213: 1052101874168218680
+    second: "\uC140\uB77C_20"
+  - first:
+      213: -7829779729241089499
+    second: "\uC140\uB77C_21"
+  - first:
+      213: 7210284864087297660
+    second: "\uC140\uB77C_22"
+  - first:
+      213: 6560385151771809332
+    second: "\uC140\uB77C_23"
+  - first:
+      213: -3248731913416751120
+    second: "\uC140\uB77C_24"
+  - first:
+      213: 7402622608413216626
+    second: "\uC140\uB77C_25"
+  - first:
+      213: -3944296118104435283
+    second: "\uC140\uB77C_26"
+  - first:
+      213: -8701895172648924278
+    second: "\uC140\uB77C_27"
+  - first:
+      213: -7590838132203626919
+    second: "\uC140\uB77C_28"
+  - first:
+      213: 7191934704520674793
+    second: "\uC140\uB77C_29"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "\uC140\uB77C_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6ef98fe61efb67d0800000000000000
+      internalID: -2923964158585471381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uC140\uB77C_1"
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67ca76c061e1f8b50800000000000000
+      internalID: 6597525059167300726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uC140\uB77C_2"
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13482a3c11521e7d0800000000000000
+      internalID: -2890988727568268239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uC140\uB77C_3"
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c7e12c8a099ad9c0800000000000000
+      internalID: -3901637856583358522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uC140\uB77C_4"
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e37284f22dceb3a0800000000000000
+      internalID: -6647650449937501208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uC140\uB77C_5"
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15059349d649ec350800000000000000
+      internalID: 6038927348709544017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uC140\uB77C_6"
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e2fa244213561110800000000000000
+      internalID: 1231262886050591456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "\uC140\uB77C_7"
+      rect:
+        serializedVersion: 2
+        x: 560
+        y: 0
+        width: 80
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f874930ea9182cc0800000000000000
+      internalID: -3735707655728760585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f3450d823cd6bda4f95e16f8022a185c
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":80.0,"y":80.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      "\uC140\uB77C_0": -2923964158585471381
+      "\uC140\uB77C_1": 6597525059167300726
+      "\uC140\uB77C_2": -2890988727568268239
+      "\uC140\uB77C_3": -3901637856583358522
+      "\uC140\uB77C_4": -6647650449937501208
+      "\uC140\uB77C_5": 6038927348709544017
+      "\uC140\uB77C_6": 1231262886050591456
+      "\uC140\uB77C_7": -3735707655728760585
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: "\uBD88\uAD74"
   description: "\uD53C\uACA9 \uC2DC \uC804\uC758\uAC00 \uBD88\uD0C0\uC62C\uB77C 1
     \uD134\uAC04 ATK\uAC00 12 \uC99D\uAC00\uD569\uB2C8\uB2E4."
-  icon: {fileID: 0}
+  icon: {fileID: -4193700559987890999, guid: 970e815e4fc563e4fbf5e96ff1f89c72, type: 3}
   skillType: 1
   trigger: 2
   targetType: 0

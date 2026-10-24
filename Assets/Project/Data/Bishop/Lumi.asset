@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
   m_Name: Lumi
   m_EditorClassIdentifier: 
-  unitName: "\uB974\uBBF8"
+  unitName: "\uB8E8\uBBF8"
   icon: {fileID: -7810814689558352980, guid: 315d4916b44953a4a897aaa6fa2a79a4, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: -6764041169911185898, guid: 84b42087ab652cb4d9fb5268e14560e0, type: 3}
   maxHP: 85
   attackPower: 18
   speed: 13
@@ -27,10 +27,11 @@ MonoBehaviour:
   rarity: 0
   gachaWeight: 1
   activeSkill: {fileID: 0}
-  passiveSkills: []
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
-  defEnhance: 0
+  passiveSkills:
+  - {fileID: 11400000, guid: faa8a3414e8a4eedbdabcbeccdd4538f, type: 2}
+  hpEnhance: 6.8
+  atkEnhance: 1.4
+  spdEnhance: 1
+  defEnhance: 0.6
   displayScale: 0.85
   enhanceGoldCost: 500

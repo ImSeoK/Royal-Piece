@@ -47,8 +47,6 @@ namespace Chess.Presentation
 
         [Header("필터")]
         public DeckFilterPanel filterPanel;
-        public Button filterButton;
-        public Image filterButtonImage;
 
         [Header("토스트 메시지")]
         public TextMeshProUGUI toastText;
@@ -87,7 +85,6 @@ namespace Chess.Presentation
             if (skillSlot1Button != null) skillSlot1Button.onClick.AddListener(() => OpenSkillPicker(0));
             if (skillSlot2Button != null) skillSlot2Button.onClick.AddListener(() => OpenSkillPicker(1));
             if (filterPanel != null) { filterPanel.Initialize(); filterPanel.OnApply = ApplyFilter; }
-            if (filterButton != null) filterButton.onClick.AddListener(OnFilterButtonClicked);
         }
 
         void OpenSkillPicker(int slotIndex)
@@ -104,7 +101,7 @@ namespace Chess.Presentation
 
             foreach (Transform child in boardGrid) Destroy(child.gameObject);
 
-            for (int rank = 8; rank >= 1; rank--)
+            for (int rank = 3; rank >= 1; rank--)
             {
                 for (int file = 0; file < 8; file++)
                 {
@@ -298,11 +295,6 @@ namespace Chess.Presentation
             ApplyFilter();
         }
 
-        void OnFilterButtonClicked()
-        {
-            if (filterPanel != null) filterPanel.Open();
-        }
-
         void ApplyFilter()
         {
             var types = filterPanel != null ? filterPanel.GetActiveTypes() : new HashSet<string>();
@@ -319,9 +311,6 @@ namespace Chess.Presentation
                 bool rarityPass = rarities.Count == 0 || rarities.Contains(card.unitDefinition.rarity);
                 cardObj.SetActive(typePass && rarityPass);
             }
-
-            if (filterButtonImage != null)
-                filterButtonImage.color = hasFilter ? new Color(0.4f, 0.7f, 1f) : Color.white;
 
             UnitSortUtility.SortPickerCards(pickerCards);
         }

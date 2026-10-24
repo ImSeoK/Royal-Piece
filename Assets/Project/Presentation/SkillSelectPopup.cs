@@ -21,6 +21,8 @@ namespace Chess.Presentation
         [Header("슬롯 (SkillPanel)")]
         public Image slot1Icon;
         public Image slot2Icon;
+        public GameObject slot1BorderFilled;
+        public GameObject slot2BorderFilled;
 
         private int activeSlotIndex = -1;
         private SkillDefinition[] slotSkills = new SkillDefinition[2];
@@ -96,6 +98,10 @@ namespace Chess.Presentation
                 slotIcon.color = Color.white;
                 slotIcon.gameObject.SetActive(true);
             }
+
+            // 금색 테두리 활성화
+            GameObject borderFilled = activeSlotIndex == 0 ? slot1BorderFilled : slot2BorderFilled;
+            if (borderFilled != null) borderFilled.SetActive(true);
 
             Close();
         }

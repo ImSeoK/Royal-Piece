@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: "\uCCB8"
   icon: {fileID: -2969619803940338421, guid: dace47b02437c6d4f91004e6653af2fb, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: 9027961639804364700, guid: 812b91d6b4a2cb14dbe26c084a3b0fd3, type: 3}
   maxHP: 95
   attackPower: 18
   speed: 9
@@ -29,9 +29,9 @@ MonoBehaviour:
   activeSkill: {fileID: 0}
   passiveSkills:
   - {fileID: 11400000, guid: 4a0d08b4dc96b934f81f38fea2d12f2b, type: 2}
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
-  defEnhance: 0
+  hpEnhance: 8
+  atkEnhance: 1
+  spdEnhance: 1
+  defEnhance: 1
   displayScale: 0.85
   enhanceGoldCost: 500

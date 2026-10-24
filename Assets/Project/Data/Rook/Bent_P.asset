@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: "\uD54F\uBE5B \uAD11\uAE30"
   description: "HP\uAC00 50% \uC774\uD558\uC77C \uB54C, \uACF5\uACA9\uB825\uC774
     20 \uC0C1\uC2B9\uD569\uB2C8\uB2E4"
-  icon: {fileID: 0}
+  icon: {fileID: -1942946859054281032, guid: 75b9f9bcbaa81484eae6046b1b9fcc51, type: 3}
   skillType: 1
   trigger: 7
   targetType: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: D.C
   icon: {fileID: -4305028461450562941, guid: 318a70c8c2abdcb4e9d90e97bc57c0f5, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: -4667458647447538721, guid: 441edccd4af18f44c8684488f594e41c, type: 3}
   maxHP: 105
   attackPower: 26
   speed: 20
@@ -28,9 +28,9 @@ MonoBehaviour:
   gachaWeight: 1
   activeSkill: {fileID: 0}
   passiveSkills: []
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
-  defEnhance: 0
+  hpEnhance: 8
+  atkEnhance: 2
+  spdEnhance: 2
+  defEnhance: 1
   displayScale: 0.85
   enhanceGoldCost: 500

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Chess.Core;
@@ -14,49 +15,49 @@ namespace Chess.Presentation
         public Button backButton;
         public TextMeshProUGUI unitCountText;
 
-        [Header("���� - ���")]
+        [Header("필터 - 등급")]
         public Button filterAll;
         public Button filterCommon;
         public Button filterRare;
         public Button filterEpic;
         public Button filterLegendary;
 
-        [Header("���� - �Ӽ�")]
+        [Header("필터 - 속성")]
         public Button filterAllAttr;
         public Button filterRook;
         public Button filterBishop;
         public Button filterKnight;
         public Button filterQueen;
 
-        [Header("���� Ĩ ��������Ʈ")]
+        [Header("필터 칩 스프라이트")]
         public Sprite chipCommon;
         public Sprite chipRare;
         public Sprite chipEpic;
         public Sprite chipLegendary;
 
-        [Header("ī�� �׸���")]
+        [Header("카드 그리드")]
         public Transform cardContent;
         public GameObject inventoryCardPrefab;
 
-        [Header("�Ǹ� ��ư")]
+        [Header("판매 버튼")]
         public Button sellButton;
 
-        [Header("���߼��� ��� UI")]
+        [Header("다중선택 판매 UI")]
         public GameObject sellConfirmBar;
         public TextMeshProUGUI sellCountText;
         public TextMeshProUGUI sellTotalGoldText;
         public Button sellConfirmButton;
         public Button sellCancelButton;
 
-        [Header("�˾�")]
+        [Header("팝업")]
         public UnitDetailPopup unitDetailPopup;
         public EnhancePopup enhancePopup;
 
-        // ���� ����
+        // 필터 상태
         private UnitRarity? selectedRarity = null;
         private MovementAttribute? selectedAttr = null;
 
-        // ���� ����
+        // 선택 상태
         private OwnedUnitInstance selectedInstance = null;
         private List<OwnedUnitInstance> multiSelected = new List<OwnedUnitInstance>();
         private bool isMultiSelectMode = false;
@@ -64,10 +65,11 @@ namespace Chess.Presentation
         private List<GameObject> spawnedCards = new List<GameObject>();
         private Dictionary<OwnedUnitInstance, InventoryCard> instanceToCard = new Dictionary<OwnedUnitInstance, InventoryCard>();
 
-        void Start()
+        IEnumerator Start()
         {
             if (sellConfirmBar != null) sellConfirmBar.SetActive(false);
             RegisterButtons();
+            yield return null; // 1프레임 대기: Instantiate 직후 EventSystem 등록 완료 보장
             RefreshGrid();
         }
 
@@ -95,7 +97,7 @@ namespace Chess.Presentation
             SceneManager.LoadScene("MainMenu");
         }
 
-        // ���� ���� ������������������������������������������������������������������
+        // 필터 적용 ────────────────────────────────────────────────────────────────
 
         void SetRarityFilter(UnitRarity? rarity)
         {
@@ -111,7 +113,7 @@ namespace Chess.Presentation
             UpdateFilterVisuals();
         }
 
-        // ���� ī�� �׸��� ����������������������������������������������������
+        // 카드 그리드 ────────────────────────────────────────────────────────────
 
         void RefreshGrid()
         {
@@ -177,7 +179,7 @@ namespace Chess.Presentation
             spawnedCards.Add(cardObj);
         }
 
-        // ���� ī�� Ŭ�� ��������������������������������������������������������
+        // 카드 클릭 ──────────────────────────────────────────────────────────────
 
         void OnCardClicked(OwnedUnitInstance inst, InventoryCard card)
         {
@@ -188,7 +190,7 @@ namespace Chess.Presentation
                 unitDetailPopup.Open(inst, OnEnhanceRequested);
         }
 
-        // ���� �˾� ���� ��������������������������������������������������������
+        // 강화 팝업 ──────────────────────────────────────────────────────────────
 
         void OnEnhanceRequested(OwnedUnitInstance inst)
         {
@@ -196,7 +198,7 @@ namespace Chess.Presentation
                 enhancePopup.Open(inst, RefreshGrid);
         }
 
-        // ���� ���߼��� ��� ������������������������������������������������
+        // 다중선택 판매 ──────────────────────────────────────────────────────────
 
         void EnterMultiSelectMode()
         {
@@ -229,8 +231,8 @@ namespace Chess.Presentation
                 UnitDefinition def = PlayerInventory.Instance.GetDefinition(inst.unitName);
                 if (def != null) totalGold += GetSellPrice(def.rarity);
             }
-            if (sellCountText != null) sellCountText.text = $"{multiSelected.Count}�� ����";
-            if (sellTotalGoldText != null) sellTotalGoldText.text = $"�� {totalGold:N0} ���";
+            if (sellCountText != null) sellCountText.text = $"{multiSelected.Count}개 선택";
+            if (sellTotalGoldText != null) sellTotalGoldText.text = $"총 {totalGold:N0} 골드";
             if (sellConfirmButton != null) sellConfirmButton.interactable = multiSelected.Count > 0;
         }
 
@@ -242,7 +244,7 @@ namespace Chess.Presentation
             RefreshGrid();
         }
 
-        // ���� ���� �ð�ȭ ����������������������������������������������������
+        // 필터 시각화 ────────────────────────────────────────────────────────────
 
         void UpdateFilterVisuals()
         {
@@ -266,7 +268,7 @@ namespace Chess.Presentation
             img.color = active ? Color.white : new Color(1f, 1f, 1f, 0.4f);
         }
 
-        // ���� ��ƿ ������������������������������������������������������������������
+        // 유틸 ──────────────────────────────────────────────────────────────────
 
         int GetSellPrice(UnitRarity rarity)
         {

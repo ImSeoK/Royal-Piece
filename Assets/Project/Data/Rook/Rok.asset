@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: "\uB85D"
   icon: {fileID: 4138172421983356087, guid: 9f0a1fdb82e325c40afbc6767727588b, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: 9027961639804364700, guid: 812b91d6b4a2cb14dbe26c084a3b0fd3, type: 3}
   maxHP: 90
   attackPower: 22
   speed: 8
@@ -29,9 +29,9 @@ MonoBehaviour:
   activeSkill: {fileID: 0}
   passiveSkills:
   - {fileID: 11400000, guid: aa71ad57379130744a4f584b0ec92f21, type: 2}
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
-  defEnhance: 0
+  hpEnhance: 7
+  atkEnhance: 2
+  spdEnhance: 1
+  defEnhance: 1
   displayScale: 0.85
   enhanceGoldCost: 500

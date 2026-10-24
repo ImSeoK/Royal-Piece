@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Chess.Core.SkillDefinition
   skillName: "\uC120\uC81C \uAE30\uB3D9"
   description: "SPD\uAC00 3 \uC99D\uAC00\uD569\uB2C8\uB2E4."
-  icon: {fileID: 0}
+  icon: {fileID: -6912863421977688626, guid: e2b78ba1428590d4c9c3f2f8f3ff7d69, type: 3}
   skillType: 1
   trigger: 7
   targetType: 0

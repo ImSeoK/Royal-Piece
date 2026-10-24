@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: "\uD314\uB77C\uB514\uC6C0"
   icon: {fileID: 2851352819002663342, guid: 19582cd0add1cfe44a48c5e09159f0ea, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: 9027961639804364700, guid: 812b91d6b4a2cb14dbe26c084a3b0fd3, type: 3}
   maxHP: 235
   attackPower: 30
   speed: 7

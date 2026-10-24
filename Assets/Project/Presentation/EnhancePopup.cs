@@ -85,8 +85,6 @@ namespace Chess.Presentation
 
         void Awake()
         {
-            if (popupRoot != null) popupRoot.SetActive(false);
-            if (pickerPanel != null) pickerPanel.SetActive(false);
             if (closeButton != null) closeButton.onClick.AddListener(Close);
             if (enhanceButton != null) enhanceButton.onClick.AddListener(OnEnhanceClicked);
         }
@@ -325,9 +323,8 @@ namespace Chess.Presentation
             foreach (var mat in selectedMaterials)
                 if (mat != null) PlayerInventory.Instance.ownedUnitInstances.Remove(mat);
 
-            PlayerInventory.Instance.SpendCurrency(targetDef.enhanceGoldCost);
             targetInstance.enhanceLevel++;
-            PlayerInventory.Instance.SaveInventory();
+            PlayerInventory.Instance.SpendCurrency(targetDef.enhanceGoldCost);
 
             selectedMaterials.Clear();
             SetupTargetPanel();

@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: "\uB2E8\uC988"
   icon: {fileID: -8862436811209724682, guid: 6b4540061c98eb84798381194fb7926c, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: -4667458647447538721, guid: 441edccd4af18f44c8684488f594e41c, type: 3}
   maxHP: 75
   attackPower: 22
   speed: 18
@@ -28,9 +28,9 @@ MonoBehaviour:
   gachaWeight: 1
   activeSkill: {fileID: 0}
   passiveSkills: []
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
+  hpEnhance: 6
+  atkEnhance: 2
+  spdEnhance: 1
   defEnhance: 0
   displayScale: 0.85
   enhanceGoldCost: 500

@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
   m_Name: Karve
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   unitName: "\uCE74\uBE0C"
   icon: {fileID: 547817270170094093, guid: f8511d869ee6841489082ee256e3f127, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: -6764041169911185898, guid: 84b42087ab652cb4d9fb5268e14560e0, type: 3}
   maxHP: 90
   attackPower: 20
   speed: 12
@@ -27,10 +27,11 @@ MonoBehaviour:
   rarity: 0
   gachaWeight: 1
   activeSkill: {fileID: 0}
-  passiveSkills: []
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
-  defEnhance: 0
-  displayScale: 0.85
+  passiveSkills:
+  - {fileID: 11400000, guid: 7f6cd994665c4a73b73ef31c00fc4bb9, type: 2}
+  hpEnhance: 7.2
+  atkEnhance: 1.6
+  spdEnhance: 1
+  defEnhance: 0.6
+  displayScale: 0.9
   enhanceGoldCost: 500

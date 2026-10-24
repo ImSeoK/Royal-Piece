@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Rap_P
   m_EditorClassIdentifier: Assembly-CSharp::Chess.Core.SkillDefinition
   skillName: "\uC57D\uD0C8\uC758 \uC77C\uACA9"
-  description: "\uACF5\uACA9 \uC2DC \uB300\uC0C1\uC758 ATK\uB97C 2 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4. (\uC601\uAD6C)"
-  icon: {fileID: 0}
+  description: "\uACF5\uACA9 \uC2DC \uB300\uC0C1\uC758 ATK\uB97C 2 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4.
+    (\uC601\uAD6C)"
+  icon: {fileID: -3329236816146935759, guid: 3e8cb4ed57600c140abe8956e302e454, type: 3}
   skillType: 1
   trigger: 1
   targetType: 1

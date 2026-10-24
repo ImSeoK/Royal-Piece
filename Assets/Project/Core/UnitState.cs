@@ -97,7 +97,9 @@ namespace Chess.Core
                     // requiresHighestSpeed 스킬은 전투 시점에 GameManager에서 처리
                     if (skill.requiresHighestSpeed) continue;
 
+                    // DamageReceived: 양수=취약/음수=저항 → Buff는 음수, Debuff는 양수
                     int delta = isBuff ? skill.power : -skill.power;
+                    if (skill.buffStatType == StatType.DamageReceived) delta = -delta;
                     if (!_alwaysCache.ContainsKey(skill.buffStatType))
                         _alwaysCache[skill.buffStatType] = 0;
                     _alwaysCache[skill.buffStatType] += delta;

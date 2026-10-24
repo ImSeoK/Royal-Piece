@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: "\uBCA0\uD14C\uB791\uC758 \uBCF8\uB2A5"
   description: "\uD53C\uACA9 \uC2DC \uBC1B\uB294 \uB370\uBBF8\uC9C0\uB97C 1\uD134\uAC04
     3 \uAC10\uC18C\uC2DC\uD0B5\uB2C8\uB2E4."
-  icon: {fileID: 0}
+  icon: {fileID: -4752723691748932590, guid: 2c2f7f47ac6771e46aafc5a6b99c5761, type: 3}
   skillType: 1
   trigger: 2
   targetType: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
   secondaryBuffStatType: 1
   secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 3610639634387760082, guid: 6251b75af812b1643a75929880e367b7, type: 3}
   castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
-  castSoundId:
-  hitSoundId:
+  castSoundId: 
+  hitSoundId: 

@@ -11,11 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0df175ab6ff77e844a7714af68dee6b7, type: 3}
   m_Name: Pebol
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   unitName: "\uD398\uBCFC"
   icon: {fileID: 1035063694526965263, guid: 3e432ce12c9f9ca4c9d2aca77b12053f, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: -6764041169911185898, guid: 84b42087ab652cb4d9fb5268e14560e0, type: 3}
   maxHP: 115
   attackPower: 22
   speed: 14
@@ -27,10 +27,11 @@ MonoBehaviour:
   rarity: 1
   gachaWeight: 1
   activeSkill: {fileID: 0}
-  passiveSkills: []
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
-  defEnhance: 0
+  passiveSkills:
+  - {fileID: 11400000, guid: 04813d6b0d1745fd8c001ef789373a01, type: 2}
+  hpEnhance: 9.2
+  atkEnhance: 1.8
+  spdEnhance: 1.1
+  defEnhance: 0.7
   displayScale: 1
   enhanceGoldCost: 500

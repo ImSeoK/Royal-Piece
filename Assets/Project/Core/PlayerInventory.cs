@@ -259,21 +259,33 @@ namespace Chess.Core
             AddStarterUnit("WKnight", 2);
             AddStarterUnit("WBishop", 2);
             AddStarterUnit("WQueen", 1);
-            AddStarterUnit("다윈", 1);
-            AddStarterUnit("폴", 1);
-            AddStarterUnit("라크", 1);
-            AddStarterUnit("랍", 1);
-            AddStarterUnit("카토", 1);
-            AddStarterUnit("토드라", 1);
-            AddStarterUnit("자르칸", 1);
-            AddStarterUnit("돔", 1);
-            AddStarterUnit("벨크라스", 1);
-            AddStarterUnit("글래시온", 1);
-            AddStarterUnit("제피로스", 1);
-            AddStarterUnit("JS", 1);
-            AddStarterUnit("리세", 1);
+            // 퀸 3종
             AddStarterUnit("레나", 1);
+            AddStarterUnit("리세", 1);
             AddStarterUnit("엘로비아", 1);
+            // 나이트 에픽+
+            AddStarterUnit("돔", 1);
+            AddStarterUnit("JS", 1);
+            AddStarterUnit("벨크라스", 1);
+            AddStarterUnit("제피로스", 1);
+            AddStarterUnit("글래시온", 1);
+            // 룩 에픽+
+            AddStarterUnit("모노", 1);
+            AddStarterUnit("워든", 1);
+            AddStarterUnit("팔라디움", 1);
+            // 비숍 에픽+
+            AddStarterUnit("크로노스", 1);
+            AddStarterUnit("르미엘", 1);
+            AddStarterUnit("모르카", 1);
+            AddStarterUnit("시르반", 1);
+            AddStarterUnit("아스트레오", 1);
+            // 인챈터 에픽+
+            AddStarterUnit("아노말리", 1);
+            AddStarterUnit("벨", 1);
+            AddStarterUnit("미요", 1);
+            AddStarterUnit("연각", 1);
+            AddStarterUnit("연무", 1);
+            AddStarterUnit("카이로스", 1);
             currency = 99999;
             gems     = 9999;
             SaveInventory();

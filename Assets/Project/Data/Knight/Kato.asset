@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: "\uCE74\uD1A0"
   icon: {fileID: -3966889912938411730, guid: f84f5177f2134bb469003f1776501673, type: 3}
   enhancedIcon: {fileID: 0}
-  typeSymbol: {fileID: 0}
+  typeSymbol: {fileID: -8558165415832902529, guid: dda7e5dda9e9ff3409389dd4357806bd, type: 3}
   maxHP: 80
   attackPower: 48
   speed: 23
@@ -29,9 +29,9 @@ MonoBehaviour:
   activeSkill: {fileID: 0}
   passiveSkills:
   - {fileID: 11400000, guid: df734dd15499bde468392c7fbbe7964f, type: 2}
-  hpEnhance: 0
-  atkEnhance: 0
-  spdEnhance: 0
+  hpEnhance: 6
+  atkEnhance: 4
+  spdEnhance: 2
   defEnhance: 0
   displayScale: 0.85
   enhanceGoldCost: 500

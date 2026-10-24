@@ -51,11 +51,14 @@ namespace Chess.Presentation
         public Sprite badgeLegendary;
 
         [Header("스킬 그룹")]
+        public Image activeSkillIconBG;
         public Image activeSkillIcon;
         public TextMeshProUGUI activeSkillNameText;
         public TextMeshProUGUI activeSkillDescText;
-        public Transform passiveSkillContainer;
-        public GameObject skillItemPrefab;
+        public Image passiveSkillIconBG;
+        public Image passiveSkillIcon;
+        public TextMeshProUGUI passiveSkillNameText;
+        public TextMeshProUGUI passiveSkillDescText;
 
         [Header("강화 버튼")]
         public Button enhanceButton;
@@ -66,7 +69,6 @@ namespace Chess.Presentation
 
         void Awake()
         {
-            if (popupRoot != null) popupRoot.SetActive(false);
             if (closeButton != null) closeButton.onClick.AddListener(Close);
             if (enhanceButton != null) enhanceButton.onClick.AddListener(OnEnhanceClicked);
         }
@@ -121,7 +123,10 @@ namespace Chess.Presentation
 
         void SetupSkills(UnitDefinition def)
         {
+            var iconBGSprite = GetIconBGSprite(def.rarity);
+
             // 액티브 스킬
+            if (activeSkillIconBG != null) activeSkillIconBG.sprite = iconBGSprite;
             if (def.activeSkill != null)
             {
                 if (activeSkillIcon != null) { activeSkillIcon.sprite = def.activeSkill.icon; activeSkillIcon.color = Color.white; }
@@ -135,33 +140,20 @@ namespace Chess.Presentation
                 if (activeSkillDescText != null) activeSkillDescText.text = "";
             }
 
-            // 패시브 스킬 목록 생성
-            if (passiveSkillContainer != null)
+            // 패시브 스킬 (첫 번째)
+            if (passiveSkillIconBG != null) passiveSkillIconBG.sprite = iconBGSprite;
+            var passive = (def.passiveSkills != null && def.passiveSkills.Count > 0) ? def.passiveSkills[0] : null;
+            if (passive != null)
             {
-                foreach (Transform child in passiveSkillContainer) Destroy(child.gameObject);
-
-                if (def.passiveSkills == null || def.passiveSkills.Count == 0)
-                {
-                    if (skillItemPrefab != null)
-                    {
-                        GameObject empty = Instantiate(skillItemPrefab, passiveSkillContainer);
-                        TextMeshProUGUI[] texts = empty.GetComponentsInChildren<TextMeshProUGUI>();
-                        if (texts.Length > 0) texts[0].text = "패시브 스킬 없음";
-                        if (texts.Length > 1) texts[1].text = "";
-                    }
-                    return;
-                }
-
-                foreach (var skill in def.passiveSkills)
-                {
-                    if (skill == null) continue;
-                    GameObject item = Instantiate(skillItemPrefab, passiveSkillContainer);
-                    Image icon = item.GetComponentInChildren<Image>();
-                    TextMeshProUGUI[] texts = item.GetComponentsInChildren<TextMeshProUGUI>();
-                    if (icon != null && skill.icon != null) { icon.sprite = skill.icon; icon.color = Color.white; }
-                    if (texts.Length > 0) texts[0].text = skill.skillName;
-                    if (texts.Length > 1) texts[1].text = skill.description;
-                }
+                if (passiveSkillIcon != null) { passiveSkillIcon.sprite = passive.icon; passiveSkillIcon.color = Color.white; }
+                if (passiveSkillNameText != null) passiveSkillNameText.text = passive.skillName;
+                if (passiveSkillDescText != null) passiveSkillDescText.text = passive.description;
+            }
+            else
+            {
+                if (passiveSkillIcon != null) passiveSkillIcon.color = Color.clear;
+                if (passiveSkillNameText != null) passiveSkillNameText.text = "패시브 스킬 없음";
+                if (passiveSkillDescText != null) passiveSkillDescText.text = "";
             }
         }
 

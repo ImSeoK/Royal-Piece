@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: "\uC2DC\uAC04\uC758 \uAC00\uC18D"
   description: "HP\uAC00 50% \uC774\uC0C1\uC77C \uB54C \uBAA8\uB4E0 \uC544\uAD70\uC758
     SPD\uAC00 3 \uC99D\uAC00\uD569\uB2C8\uB2E4."
-  icon: {fileID: 0}
+  icon: {fileID: 5217613644390645594, guid: 9a81020c310f212489e2b7196776536b, type: 3}
   skillType: 1
   trigger: 6
   targetType: 0
@@ -31,6 +31,13 @@ MonoBehaviour:
   isOneTimeUse: 0
   damageMultiplier: 1
   requiresHighestSpeed: 0
+  hasSecondaryEffect: 0
+  secondaryEffectType: 0
+  secondaryPower: 0
+  secondaryBuffStatType: 1
+  secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
-  castAnimation: {fileID: 0}
+  hitEffectPrefab: {fileID: 3610639634387760082, guid: f5a7bc68e3ecb6442b159a765a9b91fa, type: 3}
+  castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
+  castSoundId: 
+  hitSoundId: 
