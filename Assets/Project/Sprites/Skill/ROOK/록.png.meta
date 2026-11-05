@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a249e9766f719a744bec658852aa3e77
+guid: d2e5d512ee6cc7b45a995e1f2aae1c46
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -59,48 +59,6 @@ TextureImporter:
   - first:
       213: -1961197531435119007
     second: "\uB85D_18"
-  - first:
-      213: 7492394009579138231
-    second: "\uB85D_19"
-  - first:
-      213: -5928865369910324740
-    second: "\uB85D_20"
-  - first:
-      213: -1199161696601858291
-    second: "\uB85D_21"
-  - first:
-      213: 267519178104464218
-    second: "\uB85D_22"
-  - first:
-      213: 6922513331626595160
-    second: "\uB85D_23"
-  - first:
-      213: 6901886882767752190
-    second: "\uB85D_24"
-  - first:
-      213: 7568853824940658877
-    second: "\uB85D_25"
-  - first:
-      213: 3543716365674754941
-    second: "\uB85D_26"
-  - first:
-      213: -9171739748070141978
-    second: "\uB85D_27"
-  - first:
-      213: -4438949103784978143
-    second: "\uB85D_28"
-  - first:
-      213: -418922870449337876
-    second: "\uB85D_29"
-  - first:
-      213: -3565880113979050388
-    second: "\uB85D_30"
-  - first:
-      213: -3532407420463729698
-    second: "\uB85D_31"
-  - first:
-      213: 5363345950881732493
-    second: "\uB85D_32"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -214,8 +172,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 100
-        height: 100
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +192,10 @@ TextureImporter:
       name: "\uB85D_1"
       rect:
         serializedVersion: 2
-        x: 100
+        x: 150
         y: 0
-        width: 100
-        height: 100
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -256,10 +214,10 @@ TextureImporter:
       name: "\uB85D_2"
       rect:
         serializedVersion: 2
-        x: 200
+        x: 300
         y: 0
-        width: 100
-        height: 100
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,10 +236,10 @@ TextureImporter:
       name: "\uB85D_3"
       rect:
         serializedVersion: 2
-        x: 300
+        x: 450
         y: 0
-        width: 100
-        height: 100
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -300,10 +258,10 @@ TextureImporter:
       name: "\uB85D_4"
       rect:
         serializedVersion: 2
-        x: 400
+        x: 600
         y: 0
-        width: 100
-        height: 100
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -322,10 +280,10 @@ TextureImporter:
       name: "\uB85D_5"
       rect:
         serializedVersion: 2
-        x: 500
+        x: 750
         y: 0
-        width: 100
-        height: 100
+        width: 150
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -344,7 +302,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a518547645826684ea3b2e4b5ce8cbb7
+    spriteID: 2c92e99312e6215439b15e09a3261983
     internalID: 0
     vertices: []
     indices: 
@@ -354,7 +312,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":100.0,"y":100.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":150.0,"y":150.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       "\uB85D_0": 4923526161529468560
       "\uB85D_1": 8352470762855352384

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Kato_P
   m_EditorClassIdentifier: Assembly-CSharp::Chess.Core.SkillDefinition
   skillName: "\uACF5\uC911 \uC77C\uACA9"
-  description: "\uACF5\uACA9 \uC2DC \uB300\uC0C1\uC5D0\uAC8C 7\uC758 \uCD94\uAC00 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
+  description: "\uACF5\uACA9 \uC2DC \uB300\uC0C1\uC5D0\uAC8C 7\uC758 \uCD94\uAC00
+    \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
   icon: {fileID: 0}
   skillType: 1
   trigger: 1
@@ -36,7 +37,7 @@ MonoBehaviour:
   secondaryBuffStatType: 1
   secondaryBuffDuration: 1
   castEffectPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 3610639634387760082, guid: 21996494083084744955b3bd6a7252a7, type: 3}
   castAnimation: {fileID: 7400000, guid: 43802425896c7d740b1938f67a1478e5, type: 2}
   castSoundId: 
   hitSoundId: 

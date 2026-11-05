@@ -54,7 +54,7 @@ namespace Chess.Presentation
                 GameObject item = Instantiate(skillItemPrefab, skillListContent);
                 spawnedItems.Add(item);
 
-                Image icon = item.transform.Find("SkillIcon")?.GetComponent<Image>();
+                Image icon = item.transform.Find("SkillBG/SkillIcon")?.GetComponent<Image>();
                 if (icon != null && skill.icon != null) { icon.sprite = skill.icon; icon.color = Color.white; }
 
                 TextMeshProUGUI[] texts = item.GetComponentsInChildren<TextMeshProUGUI>();
